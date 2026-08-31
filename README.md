@@ -62,8 +62,10 @@ business-card scanning and follow-up tracking. No server, no build step, no depe
 ใช้ **secret gist** ของ GitHub เป็นที่พักข้อมูลกลาง เป็นการซิงก์แบบกดเอง ไม่ใช่อัตโนมัติ
 เพราะการซิงก์สองทางอัตโนมัติต้องตัดสินว่าฝั่งไหนชนะเมื่อแก้พร้อมกัน และการเดาแทนผู้ใช้คือวิธีที่ข้อมูลหาย
 
-1. สร้าง **fine-grained personal access token** ที่ https://github.com/settings/tokens
-   ให้สิทธิ์เฉพาะ **Gists: Read and write** เท่านั้น ไม่ต้องให้สิทธิ์ repo
+1. สร้าง **personal access token (classic)** ที่ https://github.com/settings/tokens
+   → Generate new token (classic) → ตั้งชื่อ → เลือกวันหมดอายุ → ติ๊กเฉพาะช่อง **gist** ช่องเดียว ไม่ต้องติ๊ก repo
+   > ต้องใช้ token แบบ classic เท่านั้น เพราะ fine-grained token ยังไม่รองรับการเขียน Gist ของผู้ใช้
+   > token จะขึ้นต้นด้วย `ghp_` และแสดงให้เห็นครั้งเดียว ต้องคัดลอกทันที
 2. กรอก token ที่หน้า **ตั้งค่า → คีย์และการเชื่อมต่อ** แล้วกดบันทึก
 3. กด **อัปโหลดขึ้น Gist** จากเครื่องที่ข้อมูลใหม่กว่า ระบบจะสร้าง secret gist ให้เองและแสดง Gist ID
 4. บนอีกเครื่อง กรอก token เดิมและ **Gist ID** เดียวกัน แล้วกด **ดึงข้อมูลลงมา**
