@@ -406,6 +406,16 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .mph figcaption{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:12.5px;color:var(--ink-3)}
 .mph figcaption span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mph-full{max-width:100%;max-height:70vh;border-radius:10px;display:block;margin:0 auto}
+.crop-stage{position:relative;width:320px;height:320px;max-width:100%;margin:0 auto;overflow:hidden;
+  border-radius:12px;background:#101a26;cursor:grab;touch-action:none;user-select:none}
+.crop-stage:active{cursor:grabbing}
+.crop-stage img{position:absolute;top:0;left:0;transform-origin:0 0;max-width:none;pointer-events:none;display:block}
+.crop-ring{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 50% 50%, transparent 0 49.5%, rgba(6,18,30,.62) 50%)}
+.crop-ring::after{content:'';position:absolute;left:50%;top:50%;width:99%;height:99%;transform:translate(-50%,-50%);
+  border-radius:50%;border:2px solid rgba(255,255,255,.85)}
+.crop-zoom{display:flex;align-items:center;gap:12px;margin-top:14px;color:var(--ink-3);font-size:12.5px}
+.crop-zoom input{flex:1;accent-color:var(--teal)}
 .ph{display:inline-flex;width:44px;height:44px;border-radius:50%;overflow:hidden;flex:none;background:var(--teal-soft)}
 .ph img,.ph .ph-svg{width:100%;height:100%;object-fit:cover;display:block}
 .ph.lg{width:104px;height:104px}
@@ -649,6 +659,8 @@ th:{
  'b.reading':'กำลังอ่านข้อมูลจากนามบัตร','b.readOk':'อ่านข้อมูลแล้ว ตรวจสอบและแก้ไขก่อนบันทึก',
  'b.readFail':'อ่านข้อมูลอัตโนมัติไม่สำเร็จ กรอกข้อมูลเองหรือลองอ่านใหม่อีกครั้ง',
  'b.review':'ตรวจสอบข้อมูลจากนามบัตร','b.st.new':'รอตรวจ','b.st.reviewed':'ตรวจแล้ว','b.st.linked':'บันทึกเป็นผู้ติดต่อแล้ว',
+ 'ph.cropTitle':'จัดตำแหน่งใบหน้า','ph.cropHelp':'ลากรูปให้ใบหน้าอยู่กลางวงกลม แล้วเลื่อนแถบด้านล่างเพื่อขยายหรือย่อ',
+ 'ph.useThis':'ใช้รูปนี้','ph.zoom':'ระดับการขยาย','ph.zoomOut':'ย่อ','ph.zoomIn':'ขยาย',
  'ph.add':'เพิ่มรูปประจำตัว','ph.change':'เปลี่ยนรูป','ph.remove':'ลบรูป','ph.saved':'บันทึกรูปแล้ว','ph.removed':'ลบรูปแล้ว',
  'b.f.image':'รูปนามบัตร','b.f.meeting':'ได้รับในการประชุม','b.f.note':'บันทึกเกี่ยวกับนามบัตร','b.f.received':'วันที่ได้รับ',
  'b.tooBig':'ไฟล์ใหญ่เกิน 8 MB กรุณาเลือกไฟล์ที่เล็กลง','b.badType':'รองรับเฉพาะไฟล์รูปภาพ',
@@ -822,6 +834,8 @@ en:{
  'b.reading':'Reading the card','b.readOk':'Read it. Check and correct before saving.',
  'b.readFail':'The card could not be read automatically. Fill it in by hand or try again.',
  'b.review':'Review card details','b.st.new':'To review','b.st.reviewed':'Reviewed','b.st.linked':'Saved as contact',
+ 'ph.cropTitle':'Position the face','ph.cropHelp':'Drag the photo so the face sits inside the circle, then use the slider to zoom.',
+ 'ph.useThis':'Use this photo','ph.zoom':'Zoom level','ph.zoomOut':'Out','ph.zoomIn':'In',
  'ph.add':'Add a photo','ph.change':'Change photo','ph.remove':'Remove photo','ph.saved':'Photo saved','ph.removed':'Photo removed',
  'b.f.image':'Card image','b.f.meeting':'Received at','b.f.note':'Note about this card','b.f.received':'Date received',
  'b.tooBig':'That file is over 8 MB. Choose a smaller one.','b.badType':'Image files only',
@@ -2017,8 +2031,10 @@ VIEWS.participants = function(el,id){
   const cols=[{label:t('p.f.name'),sort:'name'},{label:t('p.f.position')},{label:t('p.f.org'),sort:'org'},
               {label:t('p.f.email')},{label:t('g.relatedMeetings'),w:'110px'},{label:'',w:'92px'}];
   h += tableFrame('participants',cols,rows,p=>
-    '<tr><td><button class="lnk" onclick="go(\'#/participants/'+p.id+'\')">'+esc(personName(p))+'</button>'
-    + (p.tags&&p.tags.length?'<small>'+esc(p.tags.join(' · '))+'</small>':'')+'</td>'
+    '<tr><td><span class="name-cell">'+avatarHtml(p)
+    + '<span><button class="lnk" onclick="go(\'#/participants/'+p.id+'\')">'+esc(personName(p))+'</button>'
+    + (personAlt(p)?'<small>'+esc(personAlt(p))+'</small>':'')
+    + (p.tags&&p.tags.length?'<small>'+esc(p.tags.join(' · '))+'</small>':'')+'</span></span></td>'
     + '<td>'+esc(p.position||'—')+(p.division?'<small>'+esc(p.division)+'</small>':'')+'</td>'
     + '<td>'+esc(p.org||'—')+'</td>'
     + '<td>'+(p.email?'<a href="mailto:'+esc(p.email)+'">'+esc(p.email)+'</a>':'—')+(p.phone?'<small>'+esc(p.phone)+'</small>':'')+'</td>'
@@ -2027,18 +2043,22 @@ VIEWS.participants = function(el,id){
     + '<button class="btn btn-quiet btn-sm" aria-label="'+esc(t('act.edit'))+'" onclick="openForm(\'participants\',\''+p.id+'\')">'+ico('edit',15)+'</button>'
     + '<button class="btn btn-quiet btn-sm" aria-label="'+esc(t('act.delete'))+'" onclick="confirmDelete(\'participants\',\''+p.id+'\')">'+ico('trash',15)+'</button>'
     + '</div></td></tr>');
-  el.innerHTML=h; applyRefocus();
+  el.innerHTML=h; loadPhotos(); applyRefocus();
 };
 function participantDetail(el,id){
   const p=byId('participants',id);
   if(!p){ el.innerHTML=notFound('#/participants','nav.participants'); return; }
   const ms=REL.pMeetings(id);
   let h = crumb('#/participants','nav.participants',personName(p));
-  h += '<div class="page-head"><div><h1>'+esc(personName(p))+'</h1><p>'+esc([p.position,p.division,p.org].filter(Boolean).join(' · ')||t('p.title'))+'</p></div><div class="spacer"></div>'
+  h += '<div class="page-head"><div><h1>'+esc(personName(p))+'</h1>'
+    + (personAlt(p) ? '<div class="name-alt">'+esc(personAlt(p))+'</div>' : '')
+    + '<p>'+esc([p.position,p.division,p.org].filter(Boolean).join(' · ')||t('p.title'))+'</p></div><div class="spacer"></div>'
     + '<button class="btn btn-ghost" onclick="openForm(\'participants\',\''+p.id+'\')">'+ico('edit',15)+esc(t('act.edit'))+'</button>'
     + '<button class="btn btn-danger" onclick="confirmDelete(\'participants\',\''+p.id+'\')">'+ico('trash',15)+esc(t('act.delete'))+'</button></div>';
   h += '<div class="detail-grid"><div>';
-  h += '<section class="card" style="margin-bottom:16px"><div class="card-h"><h3>'+esc(t('g.info'))+'</h3></div><div class="card-pad"><dl class="dl">'
+  h += '<section class="card" style="margin-bottom:16px"><div class="card-h"><h3>'+esc(t('g.info'))+'</h3></div><div class="card-pad">'
+    + photoBlock('participants', p)
+    + '<dl class="dl">'
     + dlRow('p.f.nameLocal',p.nameLocal) + dlRow('p.f.position',p.position) + dlRow('p.f.division',p.division)
     + dlRow('p.f.org',p.org) + dlRow('p.f.email',p.email) + dlRow('p.f.phone',p.phone)
     + '</dl>' + (p.tags&&p.tags.length?'<div style="margin-top:14px">'+tagsHtml(p.tags)+'</div>':'')
@@ -2051,7 +2071,7 @@ function participantDetail(el,id){
   h += timelineCard(ms.map(m=>({when:fmtDate(m.date), what:m.title, note:label('mStatus',m.status), hash:'#/meetings/'+m.id, c:'var(--navy)'}))
         .concat(p.createdAt?[{when:fmtDateTime(p.createdAt), what:t('g.created'), c:'var(--ink-3)'}]:[]));
   h += '</div></div>';
-  el.innerHTML=h;
+  el.innerHTML=h; loadPhotos();
 }
 </script>
 
@@ -2577,6 +2597,125 @@ async function viewPhoto(id, idx){
         + '<button class="btn btn-ghost" onclick="viewPhoto(\'' + id + '\',' + ((idx+1)%photos.length) + ')">'+esc(t('m.nextPhoto'))+'</button></div>' : ''));
 }
 
+
+/* ---------------- PORTRAIT CROPPER ----------------
+   A photo of a person is rarely framed the way a round avatar needs. This lets
+   the face be dragged into the circle and zoomed, then saves only that square. */
+const CROP = { url:'', natW:0, natH:0, stage:320, z:1, tx:0, ty:0, coll:'', id:'', drag:null };
+
+/* Kept separate and side-effect free so the geometry can be reasoned about and
+   tested on its own. Returns the source rectangle in the original image's pixels. */
+function cropRect(stage, natW, natH, z, tx, ty){
+  const base = Math.max(stage/natW, stage/natH);   /* smallest scale that still covers */
+  const e = base * z;
+  return { sx: -tx/e, sy: -ty/e, sw: stage/e, sh: stage/e, scale: e };
+}
+function cropClamp(){
+  const base = Math.max(CROP.stage/CROP.natW, CROP.stage/CROP.natH);
+  const e = base * CROP.z;
+  const w = CROP.natW*e, hh = CROP.natH*e;
+  CROP.tx = Math.min(0, Math.max(CROP.stage - w, CROP.tx));
+  CROP.ty = Math.min(0, Math.max(CROP.stage - hh, CROP.ty));
+  return e;
+}
+function cropPaint(){
+  const e = cropClamp();
+  const img = $('#crop-img');
+  if(!img) return;
+  img.style.width  = (CROP.natW*e)+'px';
+  img.style.height = (CROP.natH*e)+'px';
+  img.style.transform = 'translate('+CROP.tx+'px,'+CROP.ty+'px)';
+}
+function cropZoom(v){
+  const prev = cropClamp();
+  const cx = CROP.stage/2 - CROP.tx, cy = CROP.stage/2 - CROP.ty;   /* keep the centre steady */
+  CROP.z = Math.max(1, Math.min(4, parseFloat(v)||1));
+  const next = cropClamp();
+  const k = next/prev;
+  CROP.tx = CROP.stage/2 - cx*k;
+  CROP.ty = CROP.stage/2 - cy*k;
+  cropPaint();
+  const sl = $('#crop-range'); if(sl && sl.value!=String(CROP.z)) sl.value = CROP.z;
+}
+function cropStart(ev){
+  const pt = ev.touches ? ev.touches[0] : ev;
+  CROP.drag = { x:pt.clientX, y:pt.clientY, tx:CROP.tx, ty:CROP.ty };
+  ev.preventDefault();
+}
+function cropMove(ev){
+  if(!CROP.drag) return;
+  const pt = ev.touches ? ev.touches[0] : ev;
+  CROP.tx = CROP.drag.tx + (pt.clientX - CROP.drag.x);
+  CROP.ty = CROP.drag.ty + (pt.clientY - CROP.drag.y);
+  cropPaint();
+  ev.preventDefault();
+}
+function cropEnd(){ CROP.drag = null; }
+
+function openCropper(dataUrl, coll, id){
+  CROP.url = dataUrl; CROP.coll = coll; CROP.id = id;
+  CROP.z = 1; CROP.tx = 0; CROP.ty = 0; CROP.natW = 0; CROP.natH = 0;
+  showModal('<div class="m-h"><h2 id="m-title">'+esc(t('ph.cropTitle'))+'</h2></div>'
+    + '<div class="m-b">'
+      + '<p class="help" style="margin:0 0 12px">'+esc(t('ph.cropHelp'))+'</p>'
+      + '<div class="crop-stage" id="crop-stage"><img id="crop-img" alt=""><div class="crop-ring"></div></div>'
+      + '<div class="crop-zoom"><span>'+esc(t('ph.zoomOut'))+'</span>'
+      + '<input type="range" id="crop-range" min="1" max="4" step="0.02" value="1" oninput="cropZoom(this.value)" aria-label="'+esc(t('ph.zoom'))+'">'
+      + '<span>'+esc(t('ph.zoomIn'))+'</span></div>'
+    + '</div>'
+    + '<div class="m-f"><button class="btn btn-ghost" onclick="closeModal()">'+esc(t('act.cancel'))+'</button>'
+    + '<button class="btn btn-primary" onclick="applyCrop()">'+esc(t('ph.useThis'))+'</button></div>');
+
+  const img = $('#crop-img');
+  img.onload = ()=>{
+    CROP.natW = img.naturalWidth || 1;
+    CROP.natH = img.naturalHeight || 1;
+    const e = Math.max(CROP.stage/CROP.natW, CROP.stage/CROP.natH);
+    CROP.tx = (CROP.stage - CROP.natW*e)/2;
+    CROP.ty = (CROP.stage - CROP.natH*e)/2;      /* start centred on the whole frame */
+    cropPaint();
+  };
+  img.src = dataUrl;
+  const stage = $('#crop-stage');
+  stage.addEventListener('mousedown', cropStart);
+  stage.addEventListener('touchstart', cropStart, {passive:false});
+  document.addEventListener('mousemove', cropMove);
+  stage.addEventListener('touchmove', cropMove, {passive:false});
+  document.addEventListener('mouseup', cropEnd);
+  stage.addEventListener('touchend', cropEnd);
+  stage.addEventListener('wheel', ev=>{ cropZoom(CROP.z + (ev.deltaY<0?0.12:-0.12)); ev.preventDefault(); }, {passive:false});
+}
+
+const PORTRAIT_PX = 512;
+async function applyCrop(){
+  const rec = byId(CROP.coll, CROP.id);
+  if(!rec){ closeModal(); return; }
+  const r = cropRect(CROP.stage, CROP.natW, CROP.natH, CROP.z, CROP.tx, CROP.ty);
+  let out = null;
+  try{
+    const img = $('#crop-img');
+    const cv = document.createElement('canvas');
+    cv.width = PORTRAIT_PX; cv.height = PORTRAIT_PX;
+    const cx = cv.getContext('2d');
+    if(cx){
+      cx.fillStyle = '#fff'; cx.fillRect(0,0,PORTRAIT_PX,PORTRAIT_PX);
+      cx.drawImage(img, r.sx, r.sy, r.sw, r.sh, 0, 0, PORTRAIT_PX, PORTRAIT_PX);
+      out = cv.toDataURL('image/jpeg', 0.85);
+    }
+  }catch(e){ console.error('crop failed', e); }
+  if(!out){ toast(t('b.badImage'),'bad'); closeModal(); return; }
+  const bid = rec.photoId || uid('ph');
+  const ok = await blobPut(bid, out);
+  if(!ok && hasStore()){ toast(t('g.offlineBody'),'bad'); closeModal(); return; }
+  rec.photoId = bid;
+  rec.updatedAt = Date.now();
+  await save(CROP.coll);
+  closeModal();
+  toast(t('ph.saved'),'ok');
+  route();
+  nudgeSync();
+}
+
 /* ---------------- PORTRAIT PHOTOS ---------------- */
 /* A drawn stand-in rather than a photo of anyone: a plain head-and-shoulders
    silhouette with no hair, clothing or feature cues that would read as a
@@ -2608,16 +2747,9 @@ function pickPhoto(coll, id){
     const rec = byId(coll, id);
     if(!rec) return;
     const raw = await readAsDataURL(file);
-    const small = await reencode(raw, 640, 0.82);      /* portraits do not need more */
-    const bid = rec.photoId || uid('ph');
-    const ok = await blobPut(bid, small);
-    if(!ok && hasStore()){ toast(t('g.offlineBody'),'bad'); return; }
-    rec.photoId = bid;
-    rec.updatedAt = Date.now();
-    await save(coll);
-    toast(t('ph.saved'),'ok');
-    route();
-    nudgeSync();
+    /* Downscaled first so the cropper handles a sane image, then cropped square. */
+    const fit = await reencode(raw, 1400, 0.9);
+    openCropper(fit, coll, id);
   });
 }
 async function removePhoto(coll, id){
