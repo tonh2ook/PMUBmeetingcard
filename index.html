@@ -649,7 +649,7 @@ th:{
  'c.title':'ผู้ติดต่อภายนอก','c.sub':'ทะเบียนผู้ติดต่อจากหน่วยงานภายนอกและต่างประเทศ',
  'c.f.name':'ชื่อ-นามสกุล (อักษรโรมัน)','c.f.nameLocal':'ชื่อ-นามสกุล (ภาษาอื่น)','c.f.position':'ตำแหน่ง','c.f.org':'หน่วยงาน',
  'c.f.dept':'ฝ่าย / แผนก','c.f.email':'อีเมล','c.f.phone':'โทรศัพท์','c.f.mobile':'มือถือ',
- 'c.f.website':'เว็บไซต์','c.f.country':'ประเทศ','c.f.address':'ที่อยู่','c.f.notes':'บันทึกเพิ่มเติม','c.f.source':'ที่มา',
+ 'c.f.website':'เว็บไซต์','c.f.linkedin':'LinkedIn','c.f.linkedinHint':'วางลิงก์โปรไฟล์ เช่น linkedin.com/in/ชื่อผู้ใช้','p.f.linkedin':'LinkedIn','c.f.country':'ประเทศ','c.f.address':'ที่อยู่','c.f.notes':'บันทึกเพิ่มเติม','c.f.source':'ที่มา',
  'c.empty':'ยังไม่มีผู้ติดต่อภายนอก','c.emptySub':'เพิ่มด้วยตนเอง หรืออัปโหลดนามบัตรแล้วให้ระบบอ่านข้อมูลให้',
  'c.new':'เพิ่มผู้ติดต่อภายนอก','c.edit':'แก้ไขผู้ติดต่อภายนอก','c.fromCard':'จากนามบัตร','c.manual':'กรอกเอง',
  'b.title':'นามบัตร','b.sub':'อัปโหลดรูปนามบัตร ตรวจข้อมูลที่ระบบอ่านได้ แล้วบันทึกเป็นผู้ติดต่อ',
@@ -824,7 +824,7 @@ en:{
  'c.title':'External contacts','c.sub':'People you work with outside PMU-B, at home and abroad',
  'c.f.name':'Full name (Latin script)','c.f.nameLocal':'Name in another script','c.f.position':'Job title','c.f.org':'Organisation',
  'c.f.dept':'Department','c.f.email':'Email','c.f.phone':'Phone','c.f.mobile':'Mobile',
- 'c.f.website':'Website','c.f.country':'Country','c.f.address':'Address','c.f.notes':'Notes','c.f.source':'Source',
+ 'c.f.website':'Website','c.f.linkedin':'LinkedIn','c.f.linkedinHint':'Paste the profile address, e.g. linkedin.com/in/username','p.f.linkedin':'LinkedIn','c.f.country':'Country','c.f.address':'Address','c.f.notes':'Notes','c.f.source':'Source',
  'c.empty':'No external contacts yet','c.emptySub':'Add someone by hand, or upload a business card and let it fill the form for you.',
  'c.new':'New external contact','c.edit':'Edit external contact','c.fromCard':'From a card','c.manual':'Entered by hand',
  'b.title':'Business cards','b.sub':'Upload a card, check what was read, then save it as a contact',
@@ -1981,6 +1981,19 @@ function meetingDetail(el,id){
   h += '</div></div>';
   el.innerHTML=h; loadThumbs();
 }
+/* People paste LinkedIn addresses in every shape: with or without https://, with
+   or without www. Stored as typed, opened as a working URL. */
+function linkHref(v){
+  const s = String(v||'').trim();
+  if(!s) return '';
+  return /^https?:/i.test(s) ? s : 'https://'+s.replace(/^\/+/,'');
+}
+function linkRow(k, v){
+  return '<dt>'+esc(t(k))+'</dt><dd>'
+    + (v ? '<a href="'+esc(linkHref(v))+'" target="_blank" rel="noopener noreferrer">'+esc(v)+'</a>'
+         : '<span style="color:var(--ink-3)">'+esc(t('g.none'))+'</span>')
+    + '</dd>';
+}
 function dlRow(k,v){ return '<dt>'+esc(t(k))+'</dt><dd>'+(v?esc(v):'<span style="color:var(--ink-3)">'+esc(t('g.none'))+'</span>')+'</dd>'; }
 function notFound(hash,key){
   return '<div class="card"><div class="empty"><div class="ill">'+ico('alert',26)+'</div><h3>404</h3>'
@@ -2010,7 +2023,7 @@ VIEWS.participants = function(el,id){
   if(id) return participantDetail(el,id);
   const f=FILT.participants;
   let rows = DB.participants.filter(p=>
-      matches(p,f.q,['name','nameLocal','position','division','org','email','phone','tags'])
+      matches(p,f.q,['name','nameLocal','position','division','org','email','phone','linkedin','tags'])
       && (!f.org||p.org===f.org) && (!f.tag||(p.tags||[]).includes(f.tag)));
   rows = sortRows(rows, f.sk, f.sd);
 
@@ -2061,6 +2074,7 @@ function participantDetail(el,id){
     + '<dl class="dl">'
     + dlRow('p.f.nameLocal',p.nameLocal) + dlRow('p.f.position',p.position) + dlRow('p.f.division',p.division)
     + dlRow('p.f.org',p.org) + dlRow('p.f.email',p.email) + dlRow('p.f.phone',p.phone)
+    + linkRow('p.f.linkedin',p.linkedin)
     + '</dl>' + (p.tags&&p.tags.length?'<div style="margin-top:14px">'+tagsHtml(p.tags)+'</div>':'')
     + (p.notes?'<div style="margin-top:16px"><div class="lbl">'+esc(t('p.f.notes'))+'</div><div style="white-space:pre-wrap">'+esc(p.notes)+'</div></div>':'')
     + '</div></section>';
@@ -2083,7 +2097,7 @@ VIEWS.contacts = function(el,id){
   if(id) return contactDetail(el,id);
   const f=FILT.contacts;
   let rows = DB.contacts.filter(c=>
-      matches(c,f.q,['name','nameLocal','position','org','dept','email','phone','mobile','country','address','tags'])
+      matches(c,f.q,['name','nameLocal','position','org','dept','email','phone','mobile','country','address','linkedin','tags'])
       && (!f.country||c.country===f.country) && (!f.org||c.org===f.org) && (!f.tag||(c.tags||[]).includes(f.tag)));
   rows = sortRows(rows, f.sk, f.sd);
 
@@ -2140,7 +2154,8 @@ function contactDetail(el,id){
     + '<dt>'+esc(t('c.f.email'))+'</dt><dd>'+(c.email?'<a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a>':'<span style="color:var(--ink-3)">—</span>')+'</dd>'
     + '<dt>'+esc(t('c.f.phone'))+'</dt><dd>'+(c.phone?'<a href="tel:'+esc(c.phone.replace(/\s/g,''))+'">'+esc(c.phone)+'</a>':'<span style="color:var(--ink-3)">—</span>')+'</dd>'
     + '<dt>'+esc(t('c.f.mobile'))+'</dt><dd>'+(c.mobile?'<a href="tel:'+esc(c.mobile.replace(/\s/g,''))+'">'+esc(c.mobile)+'</a>':'<span style="color:var(--ink-3)">—</span>')+'</dd>'
-    + '<dt>'+esc(t('c.f.website'))+'</dt><dd>'+(c.website?'<a href="'+esc(/^https?:/i.test(c.website)?c.website:'https://'+c.website)+'" target="_blank" rel="noopener noreferrer">'+esc(c.website)+'</a>':'<span style="color:var(--ink-3)">—</span>')+'</dd>'
+    + linkRow('c.f.website', c.website)
+    + linkRow('c.f.linkedin', c.linkedin)
     + dlRow('c.f.country',c.country) + dlRow('c.f.address',c.address)
     + '</dl>' + (c.tags&&c.tags.length?'<div style="margin-top:14px">'+tagsHtml(c.tags)+'</div>':'')
     + (c.notes?'<div style="margin-top:16px"><div class="lbl">'+esc(t('c.f.notes'))+'</div><div style="white-space:pre-wrap">'+esc(c.notes)+'</div></div>':'')
@@ -2344,7 +2359,7 @@ async function addCardImage(dataUrl, meetingId){
   if(!ok && hasStore()){ toast(t('g.offlineBody'),'bad'); return null; }
   DB.cards.unshift({ id, blobId:bid, status:'new', received: todayISO(),
     meetingId: meetingId||'', name:'', nameLocal:'', position:'', org:'', dept:'',
-    email:'', phone:'', mobile:'', website:'', address:'', country:'', note:'',
+    email:'', phone:'', mobile:'', website:'', linkedin:'', address:'', country:'', note:'',
     contactId:'', ocrRaw:'', createdAt:Date.now(), updatedAt:Date.now() });
   await save('cards');
   return { id, thumb:small };
@@ -2432,11 +2447,12 @@ async function runOCR(id){
     if(!pic) throw new Error(t('b.badImage'));
     const prompt = 'Extract the contact details from this business card image. '
       + 'Reply with ONE JSON object and nothing else — no markdown fences, no commentary. Keys: '
-      + 'name, nameLocal, position, org, dept, email, phone, mobile, website, address, country. '
+      + 'name, nameLocal, position, org, dept, email, phone, mobile, website, linkedin, address, country. '
       + 'Rules: "name" is the person\'s name in Latin script (English spelling) exactly as printed. '
       + 'If the card shows no Latin-script name at all, put the name as printed into "name" instead, so "name" is never empty when a name is visible. '
       + '"nameLocal" is the name in the other script shown on the card (Thai, Japanese, Chinese and so on), or "" if the card shows only one form. '
       + '"phone" is the office or landline number, "mobile" is the mobile number. '
+      + '"linkedin" is the LinkedIn profile address if the card prints one, otherwise "". '
       + 'Keep numbers formatted as printed. Use "" for anything not on the card. Do not invent values.';
     /* Inside the Claude sandbox the request is authenticated for us. Hosted
        elsewhere it is not, so the owner's own key is attached when present. */
@@ -2486,7 +2502,7 @@ async function runOCR(id){
       card.name = parsed.name.trim();
       card.nameLocal = (typeof parsed.nameLocal === 'string' ? parsed.nameLocal.trim() : '');
     }
-    ['name','nameLocal','position','org','dept','email','phone','mobile','website','address','country'].forEach(k=>{
+    ['name','nameLocal','position','org','dept','email','phone','mobile','website','linkedin','address','country'].forEach(k=>{
       const v = parsed[k];
       if(typeof v === 'string' && v.trim()) card[k] = v.trim();
     });
@@ -3121,7 +3137,7 @@ function loadThumbs(){
 }
 const CARD_FIELDS=[['name','c.f.name'],['nameLocal','c.f.nameLocal'],['position','c.f.position'],['org','c.f.org'],
   ['dept','c.f.dept'],['email','c.f.email'],['phone','c.f.phone'],['mobile','c.f.mobile'],
-  ['website','c.f.website'],['country','c.f.country'],['address','c.f.address']];
+  ['website','c.f.website'],['linkedin','c.f.linkedin'],['country','c.f.country'],['address','c.f.address']];
 
 function cardDetail(el,id){
   const c=byId('cards',id);
@@ -3245,6 +3261,7 @@ const FORMS = {
     {k:'org',l:'p.f.org',ty:'text'},
     {k:'email',l:'p.f.email',ty:'email'},
     {k:'phone',l:'p.f.phone',ty:'tel'},
+    {k:'linkedin',l:'p.f.linkedin',ty:'url',hint:'c.f.linkedinHint'},
     {k:'tags',l:'m.f.tags',ty:'tags',full:true},
     {k:'notes',l:'p.f.notes',ty:'textarea',full:true}
   ]},
@@ -3259,6 +3276,7 @@ const FORMS = {
     {k:'phone',l:'c.f.phone',ty:'tel'},
     {k:'mobile',l:'c.f.mobile',ty:'tel'},
     {k:'website',l:'c.f.website',ty:'url'},
+    {k:'linkedin',l:'c.f.linkedin',ty:'url',hint:'c.f.linkedinHint'},
     {k:'address',l:'c.f.address',ty:'textarea',full:true},
     {k:'tags',l:'m.f.tags',ty:'tags',full:true},
     {k:'notes',l:'c.f.notes',ty:'textarea',full:true}
@@ -3537,14 +3555,14 @@ function sheetRows(coll){
   if(coll==='participants') return DB.participants.map(p=>({
     [L('p.f.name')]:p.name||'', [L('p.f.nameLocal')]:p.nameLocal||'', [L('p.f.position')]:p.position||'',
     [L('p.f.division')]:p.division||'', [L('p.f.org')]:p.org||'', [L('p.f.email')]:p.email||'',
-    [L('p.f.phone')]:p.phone||'', [L('m.f.tags')]:(p.tags||[]).join('; '),
+    [L('p.f.phone')]:p.phone||'', [L('p.f.linkedin')]:p.linkedin||'', [L('m.f.tags')]:(p.tags||[]).join('; '),
     [L('g.relatedMeetings')]:REL.pMeetings(p.id).length, [L('p.f.notes')]:p.notes||''
   }));
   if(coll==='contacts') return DB.contacts.map(c=>({
     [L('c.f.name')]:c.name||'', [L('c.f.nameLocal')]:c.nameLocal||'', [L('c.f.position')]:c.position||'',
     [L('c.f.org')]:c.org||'', [L('c.f.dept')]:c.dept||'', [L('c.f.country')]:c.country||'',
     [L('c.f.email')]:c.email||'', [L('c.f.phone')]:c.phone||'', [L('c.f.mobile')]:c.mobile||'',
-    [L('c.f.website')]:c.website||'', [L('c.f.address')]:c.address||'',
+    [L('c.f.website')]:c.website||'', [L('c.f.linkedin')]:c.linkedin||'', [L('c.f.address')]:c.address||'',
     [L('c.f.source')]:c.cardId?t('c.fromCard'):t('c.manual'),
     [L('g.relatedMeetings')]:REL.cMeetings(c.id).length,
     [L('m.f.tags')]:(c.tags||[]).join('; '), [L('c.f.notes')]:c.notes||''
@@ -3555,6 +3573,7 @@ function sheetRows(coll){
       [L('c.f.name')]:c.name||'', [L('c.f.nameLocal')]:c.nameLocal||'', [L('c.f.position')]:c.position||'',
       [L('c.f.org')]:c.org||'', [L('c.f.dept')]:c.dept||'', [L('c.f.email')]:c.email||'',
       [L('c.f.phone')]:c.phone||'', [L('c.f.mobile')]:c.mobile||'', [L('c.f.website')]:c.website||'',
+      [L('c.f.linkedin')]:c.linkedin||'',
       [L('c.f.country')]:c.country||'', [L('c.f.address')]:c.address||'',
       [L('b.f.received')]:c.received||'', [L('b.f.meeting')]:mt?mt.title:'',
       [L('m.f.status')]:label('bStatus',c.status), [L('b.f.note')]:c.note||''
