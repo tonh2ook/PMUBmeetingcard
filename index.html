@@ -616,7 +616,10 @@ th:{
  'b.noKey':'ยังไม่ได้ตั้งค่า Anthropic API key ไปที่หน้าตั้งค่าเพื่อกรอกคีย์ก่อนใช้การอ่านนามบัตร',
  'b.badKey':'API key ไม่ถูกต้องหรือหมดสิทธิ์ ตรวจสอบคีย์ในหน้าตั้งค่า',
  'b.rateLimit':'เรียกใช้ถี่เกินกำหนด รอสักครู่แล้วลองใหม่',
- 'b.queueStopped':'หยุดอ่านข้อมูลชั่วคราวเพราะปัญหาคีย์ รูปนามบัตรถูกบันทึกไว้แล้ว แก้คีย์แล้วกดอ่านใหม่ได้','b.hintReady':'กำลังถ่าย…','b.hintNext':'ยกกล้องขึ้น แล้ววางใบถัดไปในกรอบ',
+ 'b.queueStopped':'หยุดอ่านข้อมูลชั่วคราวเพราะปัญหาคีย์ รูปนามบัตรถูกบันทึกไว้แล้ว แก้คีย์แล้วกดอ่านใหม่ได้',
+ 'b.badModel':'ชื่อโมเดล "{m}" ใช้ไม่ได้กับคีย์นี้ แก้ชื่อโมเดลได้ที่หน้าตั้งค่า',
+ 'b.noCredit':'บัญชี API ยังไม่มีเครดิตคงเหลือ ต้องเติมเครดิตที่ console.anthropic.com ก่อน (คนละส่วนกับค่าสมาชิกรายเดือน)',
+ 'b.badImage':'ไฟล์รูปนี้ส่งให้อ่านไม่ได้ ลองถ่ายใหม่หรือบันทึกเป็น JPG แล้วอัปโหลดอีกครั้ง','b.hintReady':'กำลังถ่าย…','b.hintNext':'ยกกล้องขึ้น แล้ววางใบถัดไปในกรอบ',
  'b.autoShot':'ถ่ายอัตโนมัติ','b.batch':'ถ่ายต่อเนื่อง','b.shutter':'ถ่ายภาพ','b.torch':'ไฟฉาย','b.flip':'สลับกล้อง','b.closeCam':'ปิดกล้อง',
  'b.shotCount':'ถ่ายแล้ว {n} ใบ','b.savedShot':'บันทึกแล้ว กำลังอ่านข้อมูล','b.queueDone':'อ่านข้อมูลครบทุกใบแล้ว',
  'b.doneN':'เสร็จสิ้น ({n})','b.done':'เสร็จสิ้น','b.shotFail':'ถ่ายภาพไม่สำเร็จ ลองใหม่อีกครั้ง',
@@ -643,8 +646,9 @@ th:{
  'g.quotaFull':'พื้นที่จัดเก็บของเบราว์เซอร์เต็ม ลบนามบัตรหรือไฟล์แนบเก่าออกบ้าง หรือสำรองข้อมูลแล้วล้างเครื่อง','set.stArtifact':'พื้นที่บัญชีของ Claude','set.stIdb':'IndexedDB ในเบราว์เซอร์เครื่องนี้',
  'set.stLocal':'localStorage ในเบราว์เซอร์เครื่องนี้','set.stMemory':'หน่วยความจำชั่วคราว (ปิดหน้าแล้วหาย)',
  'set.keys':'คีย์และการเชื่อมต่อ','set.keysHelp':'คีย์ทั้งหมดเก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ถูกรวมในไฟล์สำรองและไม่ถูกส่งขึ้นซิงก์',
+ 'set.model':'ชื่อโมเดลที่ใช้อ่าน','set.modelHelp':'เว้นว่างไว้จะใช้ {m} · เปลี่ยนได้หากคีย์ของท่านเข้าถึงโมเดลอื่น',
  'set.apiKey':'Anthropic API key (สำหรับอ่านนามบัตร)','set.apiKeyHelp':'จำเป็นเมื่อเปิดใช้งานนอกแอป Claude เช่นบน GitHub Pages · สร้างที่ console.anthropic.com',
- 'set.ghToken':'GitHub token (สำหรับซิงก์)','set.ghTokenHelp':'ใช้ fine-grained token ที่ให้สิทธิ์เฉพาะ Gist เท่านั้น',
+ 'set.ghToken':'GitHub token (สำหรับซิงก์)','set.ghTokenHelp':'ใช้ token แบบ classic ที่ติ๊กสิทธิ์ gist เพียงข้อเดียว (fine-grained token ยังใช้กับ Gist ไม่ได้)',
  'set.gistId':'Gist ID','set.gistIdHelp':'เว้นว่างไว้ ระบบจะสร้าง secret gist ให้เองเมื่อกดอัปโหลดครั้งแรก แล้วนำ ID นี้ไปกรอกในอุปกรณ์เครื่องอื่น',
  'set.clearKeys':'ล้างคีย์ทั้งหมด','set.keysCleared':'ล้างคีย์เรียบร้อยแล้ว',
  'set.keysWarn':'คีย์ที่กรอกไว้จะใช้งานได้กับทุกคนที่เข้าถึงเบราว์เซอร์เครื่องนี้ได้ ควรตั้งวงเงินและสิทธิ์ให้จำกัดที่สุด',
@@ -765,7 +769,10 @@ en:{
  'b.noKey':'No Anthropic API key set. Add one in Settings before using card reading.',
  'b.badKey':'That API key was rejected. Check it in Settings.',
  'b.rateLimit':'Too many requests just now. Wait a moment and try again.',
- 'b.queueStopped':'Reading paused because of a key problem. The card images are saved — fix the key and read them again.','b.hintReady':'Taking the shot…','b.hintNext':'Lift the camera, then frame the next card',
+ 'b.queueStopped':'Reading paused because of a key problem. The card images are saved — fix the key and read them again.',
+ 'b.badModel':'The model name "{m}" is not available to this key. Change it in Settings.',
+ 'b.noCredit':'This API account has no credit. Top it up at console.anthropic.com — it is billed separately from the monthly subscription.',
+ 'b.badImage':'This image could not be prepared for reading. Retake it, or save it as JPG and upload again.','b.hintReady':'Taking the shot…','b.hintNext':'Lift the camera, then frame the next card',
  'b.autoShot':'Auto shot','b.batch':'Keep scanning','b.shutter':'Take photo','b.torch':'Light','b.flip':'Switch camera','b.closeCam':'Close camera',
  'b.shotCount':'{n} scanned','b.savedShot':'Saved — reading it now','b.queueDone':'All cards read',
  'b.doneN':'Done ({n})','b.done':'Done','b.shotFail':'That shot failed. Try again.',
@@ -792,8 +799,9 @@ en:{
  'g.quotaFull':'Browser storage is full. Remove some old cards or attachments, or back up and clear.','set.stArtifact':'your Claude account storage','set.stIdb':'IndexedDB in this browser',
  'set.stLocal':'localStorage in this browser','set.stMemory':'temporary memory (lost when the page closes)',
  'set.keys':'Keys and connections','set.keysHelp':'Keys stay in this browser only. They are never included in a backup file or pushed to sync.',
+ 'set.model':'Model used for reading','set.modelHelp':'Leave blank to use {m}. Change it if your key reaches a different model.',
  'set.apiKey':'Anthropic API key (for card reading)','set.apiKeyHelp':'Needed when running outside the Claude app, such as on GitHub Pages. Create one at console.anthropic.com',
- 'set.ghToken':'GitHub token (for sync)','set.ghTokenHelp':'Use a fine-grained token scoped to gists only.',
+ 'set.ghToken':'GitHub token (for sync)','set.ghTokenHelp':'Use a classic token with only the gist scope ticked (fine-grained tokens do not cover gists).',
  'set.gistId':'Gist ID','set.gistIdHelp':'Leave blank and a secret gist is created on your first push. Copy the ID onto your other devices.',
  'set.clearKeys':'Clear all keys','set.keysCleared':'Keys cleared',
  'set.keysWarn':'Anyone who can open this browser can use these keys. Keep their scope and spending limit as small as possible.',
@@ -2173,6 +2181,58 @@ function pickCard(meetingId){
     if(DB.settings.autoOcr !== false) setTimeout(()=>runOCR(rec.id), 120);
   });
 }
+/* Inside the sandbox the request is proxied and uses the alias the harness accepts.
+   With the owner's own key it goes to the public API, where the model id differs. */
+const OCR_MODEL_SANDBOX = 'claude-sonnet-4-6';
+const OCR_MODEL_DEFAULT  = 'claude-sonnet-5';
+function ocrModel(){
+  if(SECRETS.apiKey) return (DB.settings.ocrModel || OCR_MODEL_DEFAULT).trim();
+  return OCR_MODEL_SANDBOX;
+}
+
+/* Claude accepts JPEG, PNG, GIF and WebP, up to 5 MB per image. A photo straight
+   off a phone can miss both marks, so it is re-encoded here rather than rejected
+   by the API with an error nobody can read. */
+const OK_MEDIA = ['image/jpeg','image/png','image/gif','image/webp'];
+const MAX_B64 = 4.6 * 1024 * 1024;
+async function prepImage(dataUrl){
+  let m = /^data:(image\/[a-z0-9+.\-]+);base64,(.*)$/i.exec(dataUrl || '');
+  if(!m) return null;
+  let type = m[1].toLowerCase();
+  if(type === 'image/jpg') type = 'image/jpeg';
+  let needsWork = OK_MEDIA.indexOf(type) < 0 || m[2].length > MAX_B64;
+  let out = dataUrl;
+  for(let step=0; needsWork && step<4; step++){
+    const px = [1600, 1280, 1024, 800][step];
+    const q  = [0.75, 0.68, 0.6, 0.5][step];
+    out = await reencode(out, px, q);
+    m = /^data:(image\/[a-z0-9+.\-]+);base64,(.*)$/i.exec(out || '');
+    if(!m) return null;
+    type = m[1].toLowerCase();
+    needsWork = OK_MEDIA.indexOf(type) < 0 || m[2].length > MAX_B64;
+  }
+  if(needsWork) return null;
+  return { media_type: type, data: m[2] };
+}
+function reencode(dataUrl, maxPx, quality){
+  return new Promise(res=>{
+    const img=new Image();
+    img.onload=()=>{
+      let w=img.width, h=img.height;
+      const sc=Math.min(1, maxPx/Math.max(w,h));
+      w=Math.max(1,Math.round(w*sc)); h=Math.max(1,Math.round(h*sc));
+      const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+      const cx=cv.getContext('2d');
+      if(!cx) return res(dataUrl);
+      cx.fillStyle='#fff'; cx.fillRect(0,0,w,h);      /* flatten any transparency */
+      cx.drawImage(img,0,0,w,h);
+      try{ res(cv.toDataURL('image/jpeg', quality)); }catch(e){ res(dataUrl); }
+    };
+    img.onerror=()=>res(dataUrl);
+    img.src=dataUrl;
+  });
+}
+
 async function runOCR(id){
   const card = byId('cards', id);
   if(!card || OCR_BUSY) return false;
@@ -2185,8 +2245,8 @@ async function runOCR(id){
   const banner = $('#ocr-msg');
   if(banner){ banner.className='banner banner-info'; banner.innerHTML=ico('clock',18)+'<div>'+esc(t('b.reading'))+'…</div>'; }
   try{
-    const m = /^data:(image\/[a-z+]+);base64,(.*)$/i.exec(data);
-    if(!m) throw new Error('bad image data');
+    const pic = await prepImage(data);
+    if(!pic) throw new Error(t('b.badImage'));
     const prompt = 'Extract the contact details from this business card image. '
       + 'Reply with ONE JSON object and nothing else — no markdown fences, no commentary. Keys: '
       + 'name, nameEn, position, org, dept, email, phone, mobile, website, address, country. '
@@ -2207,16 +2267,24 @@ async function runOCR(id){
     }
     const res = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST', headers:headers,
-      body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:1000,
+      body: JSON.stringify({ model: ocrModel(), max_tokens:1000,
         messages:[{ role:'user', content:[
-          { type:'image', source:{ type:'base64', media_type:m[1], data:m[2] } },
+          { type:'image', source:{ type:'base64', media_type:pic.media_type, data:pic.data } },
           { type:'text', text:prompt }
         ]}]})
     });
     if(!res.ok){
-      if(res.status===401 || res.status===403){ OCR_FATAL = true; throw new Error(t('b.badKey')); }
-      if(res.status===429) throw new Error(t('b.rateLimit'));
-      throw new Error('HTTP '+res.status);
+      /* The body carries the real reason. Without it a 400 is unreadable. */
+      let why = '';
+      try{
+        const eb = await res.json();
+        why = (eb && eb.error && eb.error.message) ? String(eb.error.message) : '';
+      }catch(e){}
+      if(res.status===401 || res.status===403){ OCR_FATAL = true; throw new Error(t('b.badKey')+(why?' — '+why:'')); }
+      if(res.status===429) throw new Error(t('b.rateLimit')+(why?' — '+why:''));
+      if(/model/i.test(why)){ OCR_FATAL = true; throw new Error(t('b.badModel',{m:ocrModel()})+' — '+why); }
+      if(/credit|balance|billing/i.test(why)){ OCR_FATAL = true; throw new Error(t('b.noCredit')+' — '+why); }
+      throw new Error('HTTP '+res.status+(why?' — '+why:''));
     }
     const j = await res.json();
     const txt = (j.content||[]).filter(x=>x.type==='text').map(x=>x.text).join('\n');
@@ -3106,8 +3174,11 @@ VIEWS.settings = function(el){
     + '<div class="field"><label for="s-apikey">'+esc(t('set.apiKey'))+'</label>'
     + '<input type="password" id="s-apikey" value="'+esc(SECRETS.apiKey||'')+'" autocomplete="off" spellcheck="false" placeholder="sk-ant-...">'
     + '<p class="help">'+esc(t('set.apiKeyHelp'))+'</p></div>'
+    + '<div class="field"><label for="s-model">'+esc(t('set.model'))+'</label>'
+    + '<input type="text" id="s-model" value="'+esc(DB.settings.ocrModel||'')+'" autocomplete="off" spellcheck="false" placeholder="'+esc(OCR_MODEL_DEFAULT)+'">'
+    + '<p class="help">'+esc(t('set.modelHelp',{m:OCR_MODEL_DEFAULT}))+'</p></div>'
     + '<div class="field"><label for="s-ghtoken">'+esc(t('set.ghToken'))+'</label>'
-    + '<input type="password" id="s-ghtoken" value="'+esc(SECRETS.ghToken||'')+'" autocomplete="off" spellcheck="false" placeholder="github_pat_...">'
+    + '<input type="password" id="s-ghtoken" value="'+esc(SECRETS.ghToken||'')+'" autocomplete="off" spellcheck="false" placeholder="ghp_...">'
     + '<p class="help">'+esc(t('set.ghTokenHelp'))+'</p></div>'
     + '<div class="field"><label for="s-gistid">'+esc(t('set.gistId'))+'</label>'
     + '<input type="text" id="s-gistid" value="'+esc(SECRETS.gistId||'')+'" autocomplete="off" spellcheck="false">'
@@ -3320,6 +3391,8 @@ function confirmPull(){
 }
 async function saveSecretForm(){
   SECRETS.apiKey  = ($('#s-apikey')  ? $('#s-apikey').value  : '').trim();
+  DB.settings.ocrModel = ($('#s-model') ? $('#s-model').value : '').trim();
+  await saveSettings();
   SECRETS.ghToken = ($('#s-ghtoken') ? $('#s-ghtoken').value : '').trim();
   const gid = ($('#s-gistid') ? $('#s-gistid').value : '').trim();
   SECRETS.gistId = gid;
