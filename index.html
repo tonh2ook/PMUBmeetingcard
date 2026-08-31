@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#0B2E58">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://api.anthropic.com https://api.github.com https://gist.githubusercontent.com; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="MeetingCard">
 <meta name="color-scheme" content="light">
@@ -18,7 +18,7 @@
 <meta property="og:description" content="Meetings, contacts, business cards and follow-ups in one private workspace.">
 <meta property="og:locale" content="th_TH">
 <meta property="og:locale:alternate" content="en_US">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B2E58'/%3E%3Cpath d='M8 22V10h3.4l4.6 7 4.6-7H24v12h-3.2v-6.6L16.8 21h-1.6l-4-5.6V22z' fill='%2316C0BC'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -75,8 +75,11 @@ a:hover{text-decoration:underline}
 }
 .lg-art>*{position:relative;z-index:1}
 .lg-mark{display:flex;align-items:center;gap:12px;font-weight:600;letter-spacing:.02em}
-.lg-mark .glyph{width:38px;height:38px;border-radius:10px;background:var(--teal-2);color:var(--navy);display:grid;place-items:center;font-weight:700;font-size:17px}
-.lg-head{font-size:clamp(30px,3.6vw,46px);line-height:1.14;font-weight:600;max-width:15ch;margin-bottom:14px}
+.lg-mark .lg-logo{background:#fff;border-radius:12px;padding:9px 13px;display:inline-flex;align-items:center;
+  box-shadow:0 2px 10px rgba(4,16,28,.18)}
+.lg-mark .lg-logo img{display:block;height:34px;width:auto}
+.lg-wordmark{font-size:17px;font-weight:500;letter-spacing:.01em}
+.lg-head{font-size:clamp(26px,3vw,38px);line-height:1.22;font-weight:600;max-width:20ch;margin-bottom:14px}
 .lg-sub{color:rgba(255,255,255,.72);max-width:44ch;font-weight:300}
 .lg-thread{display:flex;flex-direction:column;gap:0;margin-top:30px;max-width:400px}
 .lg-node{display:flex;gap:14px;align-items:flex-start;padding-bottom:16px;position:relative}
@@ -394,6 +397,39 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
   body{background:#fff}
 }
 
+.mphotos{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.mph{margin:0}
+.mph-open{display:block;width:100%;aspect-ratio:4/3;border:1px solid var(--line);border-radius:10px;
+  background:var(--wash);overflow:hidden;cursor:pointer;padding:0;color:var(--ink-3);display:grid;place-items:center}
+.mph-open img{width:100%;height:100%;object-fit:cover;display:block}
+.mph-open:hover{border-color:var(--teal)}
+.mph figcaption{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:12.5px;color:var(--ink-3)}
+.mph figcaption span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mph-full{max-width:100%;max-height:70vh;border-radius:10px;display:block;margin:0 auto}
+.ph{display:inline-flex;width:44px;height:44px;border-radius:50%;overflow:hidden;flex:none;background:var(--teal-soft)}
+.ph img,.ph .ph-svg{width:100%;height:100%;object-fit:cover;display:block}
+.ph.lg{width:104px;height:104px}
+.name-cell{display:flex;align-items:center;gap:10px}
+.name-cell .ph{width:34px;height:34px}
+.bc-top{display:flex;align-items:center;gap:9px}
+.bc-top .ph{width:30px;height:30px}
+.ph-block{display:flex;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.ph-acts{display:flex;gap:8px;flex-wrap:wrap}
+.name-alt{color:var(--ink-3);font-size:15px;font-weight:400;margin-top:2px}
+.sync-strip{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--wash);
+  border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:18px}
+.sync-strip.dirty{background:var(--orange-soft);border-color:#F0C9A8}
+.sync-strip.setup{background:transparent;border-style:dashed}
+.sync-strip .ss-txt{display:flex;align-items:flex-start;gap:10px;flex:1;min-width:220px;color:var(--ink-2)}
+.sync-strip .ss-txt b{display:block;color:var(--ink);font-weight:500;font-size:14.5px}
+.sync-strip .ss-txt small{display:block;color:var(--ink-3);font-size:12.5px;margin-top:2px}
+.sync-strip .ss-acts{display:flex;gap:8px;flex-wrap:wrap}
+.sync-strip #sync-msg{flex-basis:100%}
+.toast.act{display:flex;align-items:center;gap:10px;padding-right:8px}
+.toast.act .t-x{background:none;border:0;color:inherit;opacity:.7;cursor:pointer;display:grid;place-items:center;padding:4px}
+.toast.act .t-x:hover{opacity:1}
+@media(max-width:600px){ .sync-strip{align-items:flex-start} .sync-strip .ss-acts{width:100%} .sync-strip .ss-acts .btn{flex:1} }
+
 /* ---- business-card scanner ---- */
 .scan{position:fixed;inset:0;z-index:120;background:#04101c;color:#fff;display:flex;flex-direction:column}
 .scan-top{display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(4,16,28,.96);border-bottom:1px solid rgba(255,255,255,.08)}
@@ -446,9 +482,12 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 <!-- ============ LOGIN ============ -->
 <section id="login" aria-labelledby="lg-title">
   <div class="lg-art">
-    <div class="lg-mark"><span class="glyph">M</span><span>PMU-B MeetingCard</span></div>
+    <div class="lg-mark">
+      <span class="lg-logo"><img src="data:image/png;base64,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" alt="PMU-B"></span>
+      <span class="lg-wordmark">MeetingCard</span>
+    </div>
     <div>
-      <h1 class="lg-head" id="lg-title" data-i="login.head">ทุกการประชุม เชื่อมกันเป็นเส้นเดียว</h1>
+      <h1 class="lg-head" id="lg-title" data-i="login.head">ระบบเก็บข้อมูลการประชุมเครือข่ายกับต่างประเทศ</h1>
       <p class="lg-sub" data-i="login.sub">พื้นที่ทำงานส่วนตัวสำหรับบันทึกการประชุม ผู้เข้าร่วม ผู้ติดต่อ นามบัตร และงานที่ต้องติดตามของฝ่ายความร่วมมือระหว่างประเทศ</p>
       <div class="lg-thread">
         <div class="lg-node"><span class="lg-dot"></span><span data-i="login.t1">บันทึกการประชุมพร้อมวาระและผู้เข้าร่วม</span></div>
@@ -537,7 +576,7 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 const I18N = {
 th:{
  'a11y.skip':'ข้ามไปยังเนื้อหาหลัก',
- 'login.head':'ทุกการประชุม เชื่อมกันเป็นเส้นเดียว',
+ 'login.head':'ระบบเก็บข้อมูลการประชุมเครือข่ายกับต่างประเทศ',
  'login.sub':'พื้นที่ทำงานส่วนตัวสำหรับบันทึกการประชุม ผู้เข้าร่วม ผู้ติดต่อ นามบัตร และงานที่ต้องติดตามของฝ่ายความร่วมมือระหว่างประเทศ',
  'login.t1':'บันทึกการประชุมพร้อมวาระและผู้เข้าร่วม',
  'login.t2':'ถ่ายนามบัตร แล้วให้ระบบอ่านข้อมูลให้อัตโนมัติ',
@@ -557,8 +596,8 @@ th:{
  'search.none':'ไม่พบข้อมูลที่ตรงกับคำค้น',
  'search.hint':'พิมพ์อย่างน้อย 2 ตัวอักษรเพื่อค้นหา',
  'nav.main':'ภาพรวม','nav.records':'ข้อมูลหลัก','nav.system':'ระบบ',
- 'nav.dashboard':'แดชบอร์ด','nav.meetings':'การประชุม','nav.participants':'ผู้เข้าร่วม',
- 'nav.contacts':'ผู้ติดต่อ','nav.cards':'นามบัตร','nav.followups':'งานติดตาม',
+ 'nav.dashboard':'แดชบอร์ด','nav.meetings':'การประชุม','nav.participants':'ผู้เข้าร่วม - บพค.',
+ 'nav.contacts':'ผู้ติดต่อภายนอก','nav.cards':'นามบัตร','nav.followups':'งานติดตาม',
  'nav.settings':'ตั้งค่า','nav.privacy':'ความเป็นส่วนตัว','nav.logout':'ออกจากระบบ',
  'act.new':'สร้างใหม่','act.add':'เพิ่ม','act.edit':'แก้ไข','act.delete':'ลบ','act.save':'บันทึก',
  'act.cancel':'ยกเลิก','act.close':'ปิด','act.back':'ย้อนกลับ','act.export':'ส่งออก Excel',
@@ -568,7 +607,7 @@ th:{
  'act.clearFilters':'ล้างตัวกรอง','act.attach':'แนบไฟล์','act.download':'ดาวน์โหลด','act.saveChanges':'บันทึกการแก้ไข',
  'ph.search':'ค้นหา…','ph.all':'ทั้งหมด','ph.select':'— เลือก —','ph.tags':'พิมพ์แล้วกด Enter เพื่อเพิ่มแท็ก',
  'dash.title':'แดชบอร์ด','dash.sub':'ภาพรวมการประชุมและงานติดตามของคุณ',
- 'dash.kMeetings':'การประชุมทั้งหมด','dash.kUpcoming':'ที่กำลังจะถึง','dash.kContacts':'ผู้ติดต่อ',
+ 'dash.kMeetings':'การประชุมทั้งหมด','dash.kUpcoming':'ที่กำลังจะถึง','dash.kContacts':'ผู้ติดต่อภายนอก',
  'dash.kCards':'นามบัตรรอตรวจ','dash.kOpen':'งานติดตามค้าง','dash.kOverdue':'เกินกำหนด',
  'dash.byMonth':'การประชุมย้อนหลัง 6 เดือน','dash.fuStatus':'สถานะงานติดตาม',
  'dash.upcoming':'การประชุมที่กำลังจะถึง','dash.overdue':'งานที่ต้องจัดการ','dash.recent':'ความเคลื่อนไหวล่าสุด',
@@ -579,6 +618,11 @@ th:{
  'm.f.type':'รูปแบบ','m.f.status':'สถานะ','m.f.location':'สถานที่ / ลิงก์',
  'm.f.organizer':'ผู้จัดการประชุม','m.f.agenda':'วาระการประชุม','m.f.notes':'สรุปผล / บันทึกการประชุม',
  'm.f.participants':'ผู้เข้าร่วมภายใน','m.f.contacts':'ผู้ติดต่อภายนอก','m.f.tags':'แท็ก',
+ 'm.photos':'ภาพบรรยากาศการประชุม','m.addPhoto':'เพิ่มรูป','m.noPhotos':'ยังไม่มีรูป เพิ่มได้สูงสุด {n} รูป',
+ 'm.photoFull':'ครบ {n} รูปแล้ว','m.photoTrimmed':'เพิ่มได้อีก {n} รูป ระบบจึงเลือกเท่าที่ใส่ได้',
+ 'm.photoAdded':'เพิ่มรูปแล้ว {n} รูป','m.photoRemoved':'ลบรูปแล้ว','m.removePhoto':'ลบรูปนี้',
+ 'm.photoN':'รูปที่ {n}','m.viewPhoto':'ดูรูปขนาดเต็ม','m.prevPhoto':'รูปก่อนหน้า','m.nextPhoto':'รูปถัดไป',
+ 'm.photoMissing':'ไม่พบไฟล์รูปนี้แล้ว',
  'm.f.countries':'ประเทศ/เครือข่ายความร่วมมือ','m.f.countriesHint':'คั่นด้วยจุลภาค เช่น Japan, France หรือ ASEAN',
  'm.f.region':'ภูมิภาค','m.f.regionAuto':'เว้นว่างไว้ได้ ระบบเติมให้จากประเทศที่กรอก',
  'rg.asean':'อาเซียน','rg.eastasia':'เอเชียตะวันออก','rg.southasia':'เอเชียใต้','rg.oceania':'โอเชียเนีย',
@@ -588,17 +632,17 @@ th:{
  'm.st.planned':'วางแผนไว้','m.st.done':'ประชุมแล้ว','m.st.cancelled':'ยกเลิก',
  'm.empty':'ยังไม่มีการประชุมในระบบ','m.emptySub':'เริ่มจากบันทึกการประชุมครั้งล่าสุดของคุณ แล้วค่อยผูกผู้เข้าร่วมและนามบัตรเข้าไป',
  'm.new':'บันทึกการประชุม','m.edit':'แก้ไขการประชุม',
- 'p.title':'ผู้เข้าร่วม','p.sub':'ทะเบียนบุคลากรภายในที่เข้าร่วมการประชุม',
- 'p.f.name':'ชื่อ-นามสกุล','p.f.nameEn':'ชื่อภาษาอังกฤษ','p.f.position':'ตำแหน่ง','p.f.division':'ฝ่าย / กอง',
+ 'p.title':'ผู้เข้าร่วม - บพค.','p.sub':'ทะเบียนบุคลากรภายในที่เข้าร่วมการประชุม',
+ 'p.f.name':'ชื่อ-นามสกุล (อักษรโรมัน)','p.f.nameLocal':'ชื่อ-นามสกุล (ภาษาอื่น)','p.f.position':'ตำแหน่ง','p.f.division':'ฝ่าย / กอง',
  'p.f.org':'หน่วยงาน','p.f.email':'อีเมล','p.f.phone':'โทรศัพท์','p.f.notes':'บันทึกเพิ่มเติม',
- 'p.empty':'ยังไม่มีรายชื่อผู้เข้าร่วม','p.emptySub':'เพิ่มรายชื่อบุคลากรที่เข้าประชุมเป็นประจำ เพื่อเลือกใช้ซ้ำได้เร็วขึ้น',
+ 'p.empty':'ยังไม่มีรายชื่อผู้เข้าร่วมของ บพค.','p.emptySub':'เพิ่มรายชื่อบุคลากรที่เข้าประชุมเป็นประจำ เพื่อเลือกใช้ซ้ำได้เร็วขึ้น',
  'p.new':'เพิ่มผู้เข้าร่วม','p.edit':'แก้ไขผู้เข้าร่วม',
- 'c.title':'ผู้ติดต่อ','c.sub':'ทะเบียนผู้ติดต่อจากหน่วยงานภายนอกและต่างประเทศ',
- 'c.f.name':'ชื่อ-นามสกุล','c.f.nameEn':'ชื่อภาษาอังกฤษ','c.f.position':'ตำแหน่ง','c.f.org':'หน่วยงาน',
+ 'c.title':'ผู้ติดต่อภายนอก','c.sub':'ทะเบียนผู้ติดต่อจากหน่วยงานภายนอกและต่างประเทศ',
+ 'c.f.name':'ชื่อ-นามสกุล (อักษรโรมัน)','c.f.nameLocal':'ชื่อ-นามสกุล (ภาษาอื่น)','c.f.position':'ตำแหน่ง','c.f.org':'หน่วยงาน',
  'c.f.dept':'ฝ่าย / แผนก','c.f.email':'อีเมล','c.f.phone':'โทรศัพท์','c.f.mobile':'มือถือ',
  'c.f.website':'เว็บไซต์','c.f.country':'ประเทศ','c.f.address':'ที่อยู่','c.f.notes':'บันทึกเพิ่มเติม','c.f.source':'ที่มา',
- 'c.empty':'ยังไม่มีผู้ติดต่อ','c.emptySub':'เพิ่มด้วยตนเอง หรืออัปโหลดนามบัตรแล้วให้ระบบอ่านข้อมูลให้',
- 'c.new':'เพิ่มผู้ติดต่อ','c.edit':'แก้ไขผู้ติดต่อ','c.fromCard':'จากนามบัตร','c.manual':'กรอกเอง',
+ 'c.empty':'ยังไม่มีผู้ติดต่อภายนอก','c.emptySub':'เพิ่มด้วยตนเอง หรืออัปโหลดนามบัตรแล้วให้ระบบอ่านข้อมูลให้',
+ 'c.new':'เพิ่มผู้ติดต่อภายนอก','c.edit':'แก้ไขผู้ติดต่อภายนอก','c.fromCard':'จากนามบัตร','c.manual':'กรอกเอง',
  'b.title':'นามบัตร','b.sub':'อัปโหลดรูปนามบัตร ตรวจข้อมูลที่ระบบอ่านได้ แล้วบันทึกเป็นผู้ติดต่อ',
  'b.dropTitle':'เลือกรูปนามบัตร หรือลากไฟล์มาวางที่นี่',
  'b.dropSub':'รองรับ JPG, PNG และ WebP ขนาดไม่เกิน 8 MB · ถ่ายจากมือถือได้โดยตรง',
@@ -606,6 +650,7 @@ th:{
  'b.reading':'กำลังอ่านข้อมูลจากนามบัตร','b.readOk':'อ่านข้อมูลแล้ว ตรวจสอบและแก้ไขก่อนบันทึก',
  'b.readFail':'อ่านข้อมูลอัตโนมัติไม่สำเร็จ กรอกข้อมูลเองหรือลองอ่านใหม่อีกครั้ง',
  'b.review':'ตรวจสอบข้อมูลจากนามบัตร','b.st.new':'รอตรวจ','b.st.reviewed':'ตรวจแล้ว','b.st.linked':'บันทึกเป็นผู้ติดต่อแล้ว',
+ 'ph.add':'เพิ่มรูปประจำตัว','ph.change':'เปลี่ยนรูป','ph.remove':'ลบรูป','ph.saved':'บันทึกรูปแล้ว','ph.removed':'ลบรูปแล้ว',
  'b.f.image':'รูปนามบัตร','b.f.meeting':'ได้รับในการประชุม','b.f.note':'บันทึกเกี่ยวกับนามบัตร','b.f.received':'วันที่ได้รับ',
  'b.tooBig':'ไฟล์ใหญ่เกิน 8 MB กรุณาเลือกไฟล์ที่เล็กลง','b.badType':'รองรับเฉพาะไฟล์รูปภาพ',
  'b.linked':'บันทึกเป็นผู้ติดต่อเรียบร้อยแล้ว','b.openContact':'เปิดข้อมูลผู้ติดต่อ',
@@ -618,6 +663,7 @@ th:{
  'b.rateLimit':'เรียกใช้ถี่เกินกำหนด รอสักครู่แล้วลองใหม่',
  'b.queueStopped':'หยุดอ่านข้อมูลชั่วคราวเพราะปัญหาคีย์ รูปนามบัตรถูกบันทึกไว้แล้ว แก้คีย์แล้วกดอ่านใหม่ได้',
  'b.badModel':'ชื่อโมเดล "{m}" ใช้ไม่ได้กับคีย์นี้ แก้ชื่อโมเดลได้ที่หน้าตั้งค่า',
+ 'b.needWorkspace':'คีย์นี้ใช้ได้หลาย workspace จึงต้องระบุว่าจะเรียกในนามของ workspace ใด · แก้ได้สองทาง: กรอก Workspace ID ในหน้าตั้งค่า หรือสร้างคีย์ใหม่ที่ผูกกับ workspace เดียวใน console.anthropic.com',
  'b.noCredit':'บัญชี API ยังไม่มีเครดิตคงเหลือ ต้องเติมเครดิตที่ console.anthropic.com ก่อน (คนละส่วนกับค่าสมาชิกรายเดือน)',
  'b.badImage':'ไฟล์รูปนี้ส่งให้อ่านไม่ได้ ลองถ่ายใหม่หรือบันทึกเป็น JPG แล้วอัปโหลดอีกครั้ง','b.hintReady':'กำลังถ่าย…','b.hintNext':'ยกกล้องขึ้น แล้ววางใบถัดไปในกรอบ',
  'b.autoShot':'ถ่ายอัตโนมัติ','b.batch':'ถ่ายต่อเนื่อง','b.shutter':'ถ่ายภาพ','b.torch':'ไฟฉาย','b.flip':'สลับกล้อง','b.closeCam':'ปิดกล้อง',
@@ -646,6 +692,7 @@ th:{
  'g.quotaFull':'พื้นที่จัดเก็บของเบราว์เซอร์เต็ม ลบนามบัตรหรือไฟล์แนบเก่าออกบ้าง หรือสำรองข้อมูลแล้วล้างเครื่อง','set.stArtifact':'พื้นที่บัญชีของ Claude','set.stIdb':'IndexedDB ในเบราว์เซอร์เครื่องนี้',
  'set.stLocal':'localStorage ในเบราว์เซอร์เครื่องนี้','set.stMemory':'หน่วยความจำชั่วคราว (ปิดหน้าแล้วหาย)',
  'set.keys':'คีย์และการเชื่อมต่อ','set.keysHelp':'คีย์ทั้งหมดเก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ถูกรวมในไฟล์สำรองและไม่ถูกส่งขึ้นซิงก์',
+ 'set.workspace':'Workspace ID (เฉพาะบางคีย์)','set.workspaceHelp':'เว้นว่างไว้ก่อน กรอกเมื่อ API แจ้งว่าต้องระบุ workspace · หาได้จาก URL ในหน้า Console ขึ้นต้นด้วย wrkspc_',
  'set.model':'ชื่อโมเดลที่ใช้อ่าน','set.modelHelp':'เว้นว่างไว้จะใช้ {m} · เปลี่ยนได้หากคีย์ของท่านเข้าถึงโมเดลอื่น',
  'set.apiKey':'Anthropic API key (สำหรับอ่านนามบัตร)','set.apiKeyHelp':'จำเป็นเมื่อเปิดใช้งานนอกแอป Claude เช่นบน GitHub Pages · สร้างที่ console.anthropic.com',
  'set.ghToken':'GitHub token (สำหรับซิงก์)','set.ghTokenHelp':'ใช้ token แบบ classic ที่ติ๊กสิทธิ์ gist เพียงข้อเดียว (fine-grained token ยังใช้กับ Gist ไม่ได้)',
@@ -658,13 +705,22 @@ th:{
  'sync.pushed':'อัปโหลดสำเร็จ ({n} MB)','sync.pulled':'ดึงข้อมูลสำเร็จ · {n} การประชุม · {i} รูป',
  'sync.failed':'ไม่สำเร็จ: {m}','sync.needToken':'ยังไม่ได้กรอก GitHub token ในหน้าตั้งค่า',
  'sync.badToken':'GitHub token ไม่ถูกต้องหรือหมดอายุ','sync.noGist':'ไม่พบ Gist ตาม ID ที่กรอก','sync.noFile':'ไม่พบไฟล์ข้อมูลใน Gist นี้',
- 'sync.tooBig':'ข้อมูลใหญ่เกินไป ({n} MB) ลองยกเลิกการรวมรูปภาพ',
+ 'sync.tooBig':'ข้อมูลใหญ่เกินไป ({n} MB) เกินเพดาน {m} MB ที่ดึงกลับมาได้ · ใช้การสำรองเป็นไฟล์ JSON แทน ซึ่งไม่มีข้อจำกัดนี้',
+ 'sync.pushedNoImages':'อัปโหลดสำเร็จ ({n} MB) แต่ไม่ได้รวมรูปภาพ เพราะรวมแล้วเกิน {m} MB · รูปยังอยู่ครบในเครื่องนี้ หากต้องการย้ายรูปไปเครื่องอื่น ให้ใช้การสำรองเป็นไฟล์ JSON',
  'sync.pullWarn':'ข้อมูลในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลจาก Gist ทั้งหมด หากเครื่องนี้มีข้อมูลใหม่กว่า ให้กดอัปโหลดขึ้นก่อน',
  'sync.lastPush':'อัปโหลดล่าสุด','sync.lastPull':'ดึงลงล่าสุด',
+ 'sync.pullNow':'ดึงข้อมูลล่าสุด','sync.pushNow':'อัปโหลดข้อมูลล่าสุด',
+ 'sync.notSetUp':'ยังไม่ได้ตั้งค่าการซิงก์ข้ามอุปกรณ์','sync.notSetUpSub':'ตั้งค่าครั้งเดียว แล้วจะมีปุ่มดึงและอัปโหลดข้อมูลล่าสุดขึ้นตรงนี้',
+ 'sync.setUp':'ตั้งค่าการซิงก์',
+ 'sync.upToDate':'ข้อมูลตรงกับที่อัปโหลดไว้แล้ว','sync.pending':'มีการแก้ไขที่ยังไม่ได้อัปโหลด',
+ 'sync.nudge':'บันทึกแล้ว ต้องการอัปโหลดข้อมูลล่าสุดเลยไหม',
+ 'sync.justNow':'เมื่อครู่นี้','sync.minsAgo':'{n} นาทีที่แล้ว','sync.hoursAgo':'{n} ชั่วโมงที่แล้ว','sync.daysAgo':'{n} วันที่แล้ว',
  'set.lang':'ภาษาที่ใช้แสดงผล','set.data':'ข้อมูลของคุณ','set.exportAll':'ส่งออกข้อมูลทั้งหมดเป็น Excel',
  'set.backup':'สำรองข้อมูลเป็นไฟล์ JSON','set.restore':'กู้คืนจากไฟล์สำรอง','set.wipe':'ล้างข้อมูลทั้งหมด',
  'set.wipeWarn':'การล้างข้อมูลจะลบทุกอย่างถาวร ทั้งรายการ รูปนามบัตร ไฟล์แนบ และคีย์ที่บันทึกไว้ แนะนำให้สำรองข้อมูลก่อน',
  'set.storage':'พื้นที่จัดเก็บ','set.records':'รายการในระบบ','set.reminders':'การแจ้งเตือนงานติดตาม',
+ 'set.keepSignedIn':'จำการเข้าสู่ระบบ','set.keepHelp':'นับจากการใช้งานครั้งล่าสุด หากไม่ได้แตะเลยจนครบเวลา จะถามรหัสใหม่',
+ 'set.keep.off':'ถามรหัสทุกครั้งที่เปิด','set.keep.1h':'จำไว้ 1 ชั่วโมง','set.keep.8h':'จำไว้ 8 ชั่วโมง','set.keep.24h':'จำไว้ 24 ชั่วโมง',
  'set.autoShot':'ลั่นชัตเตอร์เองเมื่อภาพนิ่งและชัด','set.autoShotHelp':'ปิดไว้หากต้องการกดปุ่มถ่ายเอง',
  'set.batchScan':'ถ่ายต่อเนื่องหลายใบ','set.batchScanHelp':'กล้องจะเปิดค้างไว้ให้สแกนใบถัดไป ระบบอ่านข้อมูลของใบก่อนหน้าไปพร้อมกัน',
  'set.remindDefault':'ค่าเริ่มต้นการเตือนล่วงหน้า (วัน)','set.autoOcr':'อ่านนามบัตรอัตโนมัติทันทีที่อัปโหลด','set.autoOcrHelp':'หากปิดไว้ รูปนามบัตรจะไม่ถูกส่งออกไปประมวลผลจนกว่าคุณจะกดปุ่มอ่านข้อมูลเอง','set.restored':'กู้คืนข้อมูลเรียบร้อยแล้ว','set.badBackup':'ไฟล์สำรองไม่ถูกต้อง',
@@ -680,8 +736,8 @@ th:{
  'v.date':'รูปแบบวันที่ไม่ถูกต้อง','v.endBeforeStart':'เวลาสิ้นสุดต้องอยู่หลังเวลาเริ่ม','v.url':'รูปแบบเว็บไซต์ไม่ถูกต้อง','v.check':'ตรวจสอบข้อมูลที่มีเครื่องหมายอีกครั้ง',
  'g.confirmDelete':'ยืนยันการลบ','g.confirmDeleteBody':'ต้องการลบ “{n}” ใช่หรือไม่ การลบนี้ย้อนกลับไม่ได้ และการเชื่อมโยงกับรายการอื่นจะถูกตัดออก',
  'g.results':'{n} รายการ','g.of':'จาก','g.page':'หน้า','g.prev':'ก่อนหน้า','g.next':'ถัดไป','g.none':'—',
- 'g.relatedMeetings':'การประชุมที่เกี่ยวข้อง','g.relatedContacts':'ผู้ติดต่อที่เกี่ยวข้อง',
- 'g.relatedParticipants':'ผู้เข้าร่วม','g.relatedCards':'นามบัตร','g.relatedFollowups':'งานติดตาม',
+ 'g.relatedMeetings':'การประชุมที่เกี่ยวข้อง','g.relatedContacts':'ผู้ติดต่อภายนอกที่เกี่ยวข้อง',
+ 'g.relatedParticipants':'ผู้เข้าร่วม - บพค.','g.relatedCards':'นามบัตร','g.relatedFollowups':'งานติดตาม',
  'g.timeline':'ประวัติความเคลื่อนไหว','g.noTimeline':'ยังไม่มีประวัติสำหรับรายการนี้',
  'g.created':'สร้างรายการ','g.updated':'แก้ไขล่าสุด','g.info':'ข้อมูลรายการ','g.noRelated':'ยังไม่มีรายการเชื่อมโยง',
  'g.offlineTitle':'บันทึกข้อมูลไม่สำเร็จ','g.offlineBody':'การเชื่อมต่อฐานข้อมูลขัดข้อง การแก้ไขล่าสุดยังไม่ถูกบันทึก ลองใหม่อีกครั้งเมื่อเชื่อมต่อได้',
@@ -690,7 +746,7 @@ th:{
 },
 en:{
  'a11y.skip':'Skip to main content',
- 'login.head':'Every meeting, kept on one thread',
+ 'login.head':'A record of every international network meeting',
  'login.sub':'A private workspace for the meetings, participants, contacts, business cards and follow-ups of the international cooperation team.',
  'login.t1':'Record meetings with agenda and attendees',
  'login.t2':'Photograph a business card and let it read itself',
@@ -710,8 +766,8 @@ en:{
  'search.none':'Nothing matches that search',
  'search.hint':'Type at least 2 characters to search',
  'nav.main':'Overview','nav.records':'Records','nav.system':'System',
- 'nav.dashboard':'Dashboard','nav.meetings':'Meetings','nav.participants':'Participants',
- 'nav.contacts':'Contacts','nav.cards':'Business cards','nav.followups':'Follow-up',
+ 'nav.dashboard':'Dashboard','nav.meetings':'Meetings','nav.participants':'Participants — PMU-B',
+ 'nav.contacts':'External contacts','nav.cards':'Business cards','nav.followups':'Follow-up',
  'nav.settings':'Settings','nav.privacy':'Privacy','nav.logout':'Sign out',
  'act.new':'New','act.add':'Add','act.edit':'Edit','act.delete':'Delete','act.save':'Save',
  'act.cancel':'Cancel','act.close':'Close','act.back':'Back','act.export':'Export to Excel',
@@ -721,7 +777,7 @@ en:{
  'act.clearFilters':'Clear filters','act.attach':'Attach file','act.download':'Download','act.saveChanges':'Save changes',
  'ph.search':'Search…','ph.all':'All','ph.select':'— Select —','ph.tags':'Type a tag and press Enter',
  'dash.title':'Dashboard','dash.sub':'Where your meetings and follow-ups stand today',
- 'dash.kMeetings':'Meetings','dash.kUpcoming':'Upcoming','dash.kContacts':'Contacts',
+ 'dash.kMeetings':'Meetings','dash.kUpcoming':'Upcoming','dash.kContacts':'External contacts',
  'dash.kCards':'Cards to review','dash.kOpen':'Open follow-ups','dash.kOverdue':'Overdue',
  'dash.byMonth':'Meetings, last 6 months','dash.fuStatus':'Follow-up status',
  'dash.upcoming':'Coming up','dash.overdue':'Needs attention','dash.recent':'Recent activity',
@@ -732,6 +788,11 @@ en:{
  'm.f.type':'Format','m.f.status':'Status','m.f.location':'Location or link',
  'm.f.organizer':'Organiser','m.f.agenda':'Agenda','m.f.notes':'Minutes and outcomes',
  'm.f.participants':'Internal participants','m.f.contacts':'External contacts','m.f.tags':'Tags',
+ 'm.photos':'Photos from the meeting','m.addPhoto':'Add a photo','m.noPhotos':'No photos yet — up to {n} can be added.',
+ 'm.photoFull':'{n} photos, the maximum','m.photoTrimmed':'Only {n} more will fit, so the rest were skipped',
+ 'm.photoAdded':'{n} photo(s) added','m.photoRemoved':'Photo removed','m.removePhoto':'Remove this photo',
+ 'm.photoN':'Photo {n}','m.viewPhoto':'View full size','m.prevPhoto':'Previous','m.nextPhoto':'Next',
+ 'm.photoMissing':'That image is no longer stored',
  'm.f.countries':'Countries / partner network','m.f.countriesHint':'Separate with commas, e.g. Japan, France or ASEAN',
  'm.f.region':'Region','m.f.regionAuto':'Leave blank and it is filled in from the countries above',
  'rg.asean':'ASEAN','rg.eastasia':'East Asia','rg.southasia':'South Asia','rg.oceania':'Oceania',
@@ -741,17 +802,17 @@ en:{
  'm.st.planned':'Planned','m.st.done':'Held','m.st.cancelled':'Cancelled',
  'm.empty':'No meetings yet','m.emptySub':'Start with your most recent meeting, then attach the people and cards that came with it.',
  'm.new':'New meeting','m.edit':'Edit meeting',
- 'p.title':'Participants','p.sub':'Internal staff who attend your meetings',
- 'p.f.name':'Full name','p.f.nameEn':'Name in English','p.f.position':'Position','p.f.division':'Division',
+ 'p.title':'Participants — PMU-B','p.sub':'Internal staff who attend your meetings',
+ 'p.f.name':'Full name (Latin script)','p.f.nameLocal':'Name in another script','p.f.position':'Position','p.f.division':'Division',
  'p.f.org':'Organisation','p.f.email':'Email','p.f.phone':'Phone','p.f.notes':'Notes',
- 'p.empty':'No participants yet','p.emptySub':'Add the colleagues who attend regularly so you can pick them in one tap.',
+ 'p.empty':'No PMU-B participants yet','p.emptySub':'Add the colleagues who attend regularly so you can pick them in one tap.',
  'p.new':'New participant','p.edit':'Edit participant',
- 'c.title':'Contacts','c.sub':'People you work with outside PMU-B, at home and abroad',
- 'c.f.name':'Full name','c.f.nameEn':'Name in English','c.f.position':'Job title','c.f.org':'Organisation',
+ 'c.title':'External contacts','c.sub':'People you work with outside PMU-B, at home and abroad',
+ 'c.f.name':'Full name (Latin script)','c.f.nameLocal':'Name in another script','c.f.position':'Job title','c.f.org':'Organisation',
  'c.f.dept':'Department','c.f.email':'Email','c.f.phone':'Phone','c.f.mobile':'Mobile',
  'c.f.website':'Website','c.f.country':'Country','c.f.address':'Address','c.f.notes':'Notes','c.f.source':'Source',
- 'c.empty':'No contacts yet','c.emptySub':'Add someone by hand, or upload a business card and let it fill the form for you.',
- 'c.new':'New contact','c.edit':'Edit contact','c.fromCard':'From a card','c.manual':'Entered by hand',
+ 'c.empty':'No external contacts yet','c.emptySub':'Add someone by hand, or upload a business card and let it fill the form for you.',
+ 'c.new':'New external contact','c.edit':'Edit external contact','c.fromCard':'From a card','c.manual':'Entered by hand',
  'b.title':'Business cards','b.sub':'Upload a card, check what was read, then save it as a contact',
  'b.dropTitle':'Choose a card image, or drop one here',
  'b.dropSub':'JPG, PNG or WebP up to 8 MB · works straight from a phone camera',
@@ -759,6 +820,7 @@ en:{
  'b.reading':'Reading the card','b.readOk':'Read it. Check and correct before saving.',
  'b.readFail':'The card could not be read automatically. Fill it in by hand or try again.',
  'b.review':'Review card details','b.st.new':'To review','b.st.reviewed':'Reviewed','b.st.linked':'Saved as contact',
+ 'ph.add':'Add a photo','ph.change':'Change photo','ph.remove':'Remove photo','ph.saved':'Photo saved','ph.removed':'Photo removed',
  'b.f.image':'Card image','b.f.meeting':'Received at','b.f.note':'Note about this card','b.f.received':'Date received',
  'b.tooBig':'That file is over 8 MB. Choose a smaller one.','b.badType':'Image files only',
  'b.linked':'Saved as a contact','b.openContact':'Open the contact',
@@ -771,6 +833,7 @@ en:{
  'b.rateLimit':'Too many requests just now. Wait a moment and try again.',
  'b.queueStopped':'Reading paused because of a key problem. The card images are saved — fix the key and read them again.',
  'b.badModel':'The model name "{m}" is not available to this key. Change it in Settings.',
+ 'b.needWorkspace':'This key reaches more than one workspace, so each request must name the one it acts in. Either enter the Workspace ID in Settings, or create a key bound to a single workspace at console.anthropic.com.',
  'b.noCredit':'This API account has no credit. Top it up at console.anthropic.com — it is billed separately from the monthly subscription.',
  'b.badImage':'This image could not be prepared for reading. Retake it, or save it as JPG and upload again.','b.hintReady':'Taking the shot…','b.hintNext':'Lift the camera, then frame the next card',
  'b.autoShot':'Auto shot','b.batch':'Keep scanning','b.shutter':'Take photo','b.torch':'Light','b.flip':'Switch camera','b.closeCam':'Close camera',
@@ -799,6 +862,7 @@ en:{
  'g.quotaFull':'Browser storage is full. Remove some old cards or attachments, or back up and clear.','set.stArtifact':'your Claude account storage','set.stIdb':'IndexedDB in this browser',
  'set.stLocal':'localStorage in this browser','set.stMemory':'temporary memory (lost when the page closes)',
  'set.keys':'Keys and connections','set.keysHelp':'Keys stay in this browser only. They are never included in a backup file or pushed to sync.',
+ 'set.workspace':'Workspace ID (only some keys)','set.workspaceHelp':'Leave blank unless the API asks for it. Find it in the Console URL — it starts with wrkspc_.',
  'set.model':'Model used for reading','set.modelHelp':'Leave blank to use {m}. Change it if your key reaches a different model.',
  'set.apiKey':'Anthropic API key (for card reading)','set.apiKeyHelp':'Needed when running outside the Claude app, such as on GitHub Pages. Create one at console.anthropic.com',
  'set.ghToken':'GitHub token (for sync)','set.ghTokenHelp':'Use a classic token with only the gist scope ticked (fine-grained tokens do not cover gists).',
@@ -811,13 +875,22 @@ en:{
  'sync.pushed':'Pushed ({n} MB)','sync.pulled':'Pulled · {n} meetings · {i} images',
  'sync.failed':'Failed: {m}','sync.needToken':'No GitHub token set in Settings',
  'sync.badToken':'That GitHub token was rejected','sync.noGist':'No gist found with that ID','sync.noFile':'No data file inside that gist',
- 'sync.tooBig':'That snapshot is too large ({n} MB). Try unticking images.',
+ 'sync.tooBig':'That snapshot is {n} MB, over the {m} MB ceiling a browser can pull back. Use the JSON backup file instead — it has no such limit.',
+ 'sync.pushedNoImages':'Pushed ({n} MB) without images — including them went over {m} MB. The images are still here on this device; use a JSON backup to move them.',
  'sync.pullWarn':'Everything on this device is replaced by what is in the gist. If this device is the more current one, push first.',
  'sync.lastPush':'Last push','sync.lastPull':'Last pull',
+ 'sync.pullNow':'Pull latest','sync.pushNow':'Upload latest',
+ 'sync.notSetUp':'Sync across devices is not set up yet','sync.notSetUpSub':'Set it up once and the pull and upload buttons appear here.',
+ 'sync.setUp':'Set up sync',
+ 'sync.upToDate':'Everything here has been uploaded','sync.pending':'Changes here have not been uploaded yet',
+ 'sync.nudge':'Saved. Upload the latest data now?',
+ 'sync.justNow':'just now','sync.minsAgo':'{n} min ago','sync.hoursAgo':'{n} h ago','sync.daysAgo':'{n} d ago',
  'set.lang':'Interface language','set.data':'Your data','set.exportAll':'Export everything to Excel',
  'set.backup':'Download a JSON backup','set.restore':'Restore from a backup','set.wipe':'Erase all data',
  'set.wipeWarn':'Erasing removes everything permanently — records, card images, attachments and saved keys. Take a backup first.',
  'set.storage':'Storage','set.records':'records in total','set.reminders':'Follow-up reminders',
+ 'set.keepSignedIn':'Stay signed in','set.keepHelp':'Counted from your last activity. Leave it untouched for that long and it asks for the code again.',
+ 'set.keep.off':'Ask every time','set.keep.1h':'For 1 hour','set.keep.8h':'For 8 hours','set.keep.24h':'For 24 hours',
  'set.autoShot':'Release the shutter once the image is still and sharp','set.autoShotHelp':'Turn this off to press the shutter yourself.',
  'set.batchScan':'Keep the camera open for the next card','set.batchScanHelp':'The camera stays open so you can scan a stack; earlier cards are read in the background.',
  'set.remindDefault':'Default reminder (days before due)','set.autoOcr':'Read a card as soon as it is uploaded','set.autoOcrHelp':'With this off, no card image leaves the device until you press the read button yourself.','set.restored':'Backup restored','set.badBackup':'That backup file could not be read',
@@ -833,8 +906,8 @@ en:{
  'v.date':'That is not a valid date','v.endBeforeStart':'The end time must come after the start','v.url':'That is not a valid web address','v.check':'Check the marked fields',
  'g.confirmDelete':'Delete this record','g.confirmDeleteBody':'Delete \u201c{n}\u201d? This cannot be undone and any links to it will be cut.',
  'g.results':'{n} records','g.of':'of','g.page':'Page','g.prev':'Previous','g.next':'Next','g.none':'—',
- 'g.relatedMeetings':'Related meetings','g.relatedContacts':'Related contacts',
- 'g.relatedParticipants':'Participants','g.relatedCards':'Business cards','g.relatedFollowups':'Follow-ups',
+ 'g.relatedMeetings':'Related meetings','g.relatedContacts':'Related external contacts',
+ 'g.relatedParticipants':'Participants — PMU-B','g.relatedCards':'Business cards','g.relatedFollowups':'Follow-ups',
  'g.timeline':'History','g.noTimeline':'No history for this record yet',
  'g.created':'Record created','g.updated':'Last edited','g.info':'Details','g.noRelated':'Nothing linked yet',
  'g.offlineTitle':'Could not save','g.offlineBody':'The database connection failed, so your last change was not stored. Try again once you are back online.',
@@ -1107,7 +1180,30 @@ function appState(){ return DB; }
 function appSecrets(){ return SECRETS; }
 
 const DB = { meetings:[], participants:[], contacts:[], cards:[], followups:[],
-             settings:{ lang:'th', owner:'', org:'PMU-B (บพค.)', remindDefault:3, autoOcr:true, autoShot:true, batchScan:true } };
+             settings:{ lang:'th', owner:'', org:'PMU-B (บพค.)', remindDefault:3, autoOcr:true, autoShot:true, batchScan:true, keepSignedIn:'1h', syncImages:true } };
+
+/* Until now "name" held the card's primary script and "nameEn" the Latin form.
+   The heading is now the Latin name, so the two swap and "nameEn" retires.
+   Runs once, guarded by a schema stamp, and leaves nothing behind. */
+async function migrateNames(){
+  if((DB.settings.schema||1) >= 2) return;
+  let touched = 0;
+  ['participants','contacts','cards'].forEach(coll=>{
+    (DB[coll]||[]).forEach(r=>{
+      if(!('nameEn' in r) && !('nameLocal' in r)) { r.nameLocal = r.nameLocal || ''; return; }
+      const latin = (r.nameEn||'').trim();
+      const other = (r.name||'').trim();
+      if(latin){ r.name = latin; r.nameLocal = (other && other!==latin) ? other : ''; }
+      else { r.name = other; r.nameLocal = ''; }
+      delete r.nameEn;
+      touched++;
+    });
+  });
+  DB.settings.schema = 2;
+  for(const coll of ['participants','contacts','cards']) await save(coll);
+  await saveSettings();
+  if(touched) console.info('migrated '+touched+' records to the new name fields');
+}
 
 async function loadAll(){
   await loadSecrets();
@@ -1123,6 +1219,10 @@ async function loadAll(){
   if(s && typeof s==='object') DB.settings = Object.assign(DB.settings, s);
 }
 async function save(coll){
+  /* Stamped so the app can tell the owner whether the gist is behind. Written
+     straight to storage rather than through saveSettings() to avoid recursion. */
+  DB.settings.lastChange = Date.now();
+  sSet(KEYS.settings, DB.settings);
   const ok = await sSet(KEYS[coll], DB[coll]);
   if(!ok && hasStore()) toast(t(QUOTA_HIT ? 'g.quotaFull' : 'g.offlineTitle'),'bad');
   return ok;
@@ -1132,7 +1232,7 @@ async function saveSettings(){ return sSet(KEYS.settings, DB.settings); }
 /* Credentials live in their own key. They are deliberately NOT part of DB.settings,
    so they never ride along in a JSON backup or a Gist snapshot. */
 const SECRET_KEY = 'mc:secrets';
-let SECRETS = { apiKey:'', ghToken:'', gistId:'' };
+let SECRETS = { apiKey:'', workspaceId:'', ghToken:'', gistId:'' };
 async function loadSecrets(){
   const s = await sGet(SECRET_KEY, null);
   if(s && typeof s==='object') SECRETS = Object.assign(SECRETS, s);
@@ -1328,6 +1428,36 @@ async function doLogin(){
   } finally { const b=$('#lg-go'); if(b) b.disabled=false; }
 }
 
+
+/* ---------------- SESSION ----------------
+   The unlock used to live only in memory, so every refresh asked for the code
+   again. A short idle window is kept instead: the clock restarts while the app
+   is being used and only runs out after a real gap of inactivity.
+   This is a convenience, not a security boundary — anyone who can open this
+   browser can read the stored data directly either way. */
+const SESSION_KEY = 'mc:session';
+const SESSION_CHOICES = { off:0, '1h':3600000, '8h':28800000, '24h':86400000 };
+function sessionMs(){
+  const k = DB.settings.keepSignedIn || '1h';
+  return SESSION_CHOICES[k] === undefined ? SESSION_CHOICES['1h'] : SESSION_CHOICES[k];
+}
+let SESSION_TOUCHED = 0;
+async function touchSession(force){
+  const ms = sessionMs();
+  if(!ms){ await sDel(SESSION_KEY); return; }
+  const now = Date.now();
+  if(!force && now - SESSION_TOUCHED < 60000) return;   /* at most once a minute */
+  SESSION_TOUCHED = now;
+  await sSet(SESSION_KEY, { until: now + ms });
+}
+async function sessionAlive(){
+  const s = await sGet(SESSION_KEY, null);
+  if(!s || !s.until) return false;
+  if(Date.now() >= s.until){ await sDel(SESSION_KEY); return false; }
+  return true;
+}
+async function endSession(){ SESSION_TOUCHED = 0; await sDel(SESSION_KEY); }
+
 async function unlock(){
   $('#lg-pass').value=''; lgMsg('');
   $('#lg-pass').type='password';
@@ -1335,8 +1465,10 @@ async function unlock(){
   $('#login').style.display='none';
   $('#app').classList.add('on');
   await loadAll();
+  await migrateNames();
   if(DB.settings.lang && DB.settings.lang!==LANG){ LANG = DB.settings.lang; }
   APP_READY = true;
+  await touchSession(true);
   applyLang();
   renderNav();
   if(!location.hash || location.hash==='#') location.hash = '#/dashboard';
@@ -1346,6 +1478,7 @@ async function unlock(){
 
 async function logout(){
   APP_READY=false;
+  await endSession();
   $('#app').classList.remove('on');
   $('#login').style.display='';
   $('#gsearch').value=''; closeSearch();
@@ -1392,6 +1525,7 @@ function renderNav(){
 const VIEWS = {};
 let LAST_ROUTE = null;
 function route(){
+  if(APP_READY) touchSession();
   if(!APP_READY) return;
   const parts = location.hash.replace(/^#\/?/,'').split('/').filter(Boolean);
   const page = parts[0] || 'dashboard';
@@ -1439,7 +1573,13 @@ function isReminded(f){
   return d >= 0 && d <= f.remind;
 }
 function needsAttention(f){ return isOverdue(f) || isReminded(f); }
-function personName(r){ return LANG==='en' ? (r.nameEn || r.name || '') : (r.name || r.nameEn || ''); }
+/* The Latin-script name leads. If a card carried no Latin form, the other-script
+   name was promoted into `name` at scan time, so this still reads correctly. */
+function personName(r){ return (r.name || r.nameLocal || '').trim(); }
+function personAlt(r){
+  const a=(r.nameLocal||'').trim(), n=(r.name||'').trim();
+  return (a && a!==n) ? a : '';
+}
 </script>
 
 <script>
@@ -1592,6 +1732,8 @@ VIEWS.dashboard = function(el){
   const thisMonth = DB.meetings.filter(m=>m.date && m.date.slice(0,7)===today.slice(0,7)).length;
   const dueSoon = openFu.filter(f=>f.due && daysBetween(f.due,today)>=0 && daysBetween(f.due,today)<=7).length;
 
+  const strip = syncStrip();
+
   const kpi=(kc,lbl,val,sub,hash)=>'<button class="kpi" style="--kc:'+kc+'" onclick="go(\''+hash+'\')">'
     +'<span class="k-l">'+esc(lbl)+'</span><span class="k-v">'+val+'</span><span class="k-s">'+esc(sub)+'</span></button>';
 
@@ -1603,6 +1745,8 @@ VIEWS.dashboard = function(el){
     h += '<div class="banner banner-warn">'+ico('alert',18)+'<div><b>'+esc(t('dash.attention',{n:attention.length}))+'</b> '
       + '<button class="lnk" style="font-weight:500" onclick="go(\'#/followups\')">'+esc(t('dash.seeAll'))+'</button></div></div>';
   }
+
+  h += strip;
 
   h += '<div class="kpis">'
     + kpi('#0B2E58', t('dash.kMeetings'), DB.meetings.length, t('dash.thisMonth',{n:thisMonth}), '#/meetings')
@@ -1793,6 +1937,7 @@ function meetingDetail(el,id){
     + (m.notes?'<div style="margin-top:16px"><div class="lbl">'+esc(t('m.f.notes'))+'</div><div style="white-space:pre-wrap">'+esc(m.notes)+'</div></div>':'')
     + '</div></section>';
 
+  h += photoGallery(m);
   h += attachSection('meetings', m);
 
   h += relCard('g.relatedFollowups', fus.map(f=>
@@ -1815,7 +1960,7 @@ function meetingDetail(el,id){
 
   h += timelineCard(meetingTimeline(m));
   h += '</div></div>';
-  el.innerHTML=h;
+  el.innerHTML=h; loadThumbs();
 }
 function dlRow(k,v){ return '<dt>'+esc(t(k))+'</dt><dd>'+(v?esc(v):'<span style="color:var(--ink-3)">'+esc(t('g.none'))+'</span>')+'</dd>'; }
 function notFound(hash,key){
@@ -1846,7 +1991,7 @@ VIEWS.participants = function(el,id){
   if(id) return participantDetail(el,id);
   const f=FILT.participants;
   let rows = DB.participants.filter(p=>
-      matches(p,f.q,['name','nameEn','position','division','org','email','phone','tags'])
+      matches(p,f.q,['name','nameLocal','position','division','org','email','phone','tags'])
       && (!f.org||p.org===f.org) && (!f.tag||(p.tags||[]).includes(f.tag)));
   rows = sortRows(rows, f.sk, f.sd);
 
@@ -1889,7 +2034,7 @@ function participantDetail(el,id){
     + '<button class="btn btn-danger" onclick="confirmDelete(\'participants\',\''+p.id+'\')">'+ico('trash',15)+esc(t('act.delete'))+'</button></div>';
   h += '<div class="detail-grid"><div>';
   h += '<section class="card" style="margin-bottom:16px"><div class="card-h"><h3>'+esc(t('g.info'))+'</h3></div><div class="card-pad"><dl class="dl">'
-    + dlRow('p.f.nameEn',p.nameEn) + dlRow('p.f.position',p.position) + dlRow('p.f.division',p.division)
+    + dlRow('p.f.nameLocal',p.nameLocal) + dlRow('p.f.position',p.position) + dlRow('p.f.division',p.division)
     + dlRow('p.f.org',p.org) + dlRow('p.f.email',p.email) + dlRow('p.f.phone',p.phone)
     + '</dl>' + (p.tags&&p.tags.length?'<div style="margin-top:14px">'+tagsHtml(p.tags)+'</div>':'')
     + (p.notes?'<div style="margin-top:16px"><div class="lbl">'+esc(t('p.f.notes'))+'</div><div style="white-space:pre-wrap">'+esc(p.notes)+'</div></div>':'')
@@ -1913,7 +2058,7 @@ VIEWS.contacts = function(el,id){
   if(id) return contactDetail(el,id);
   const f=FILT.contacts;
   let rows = DB.contacts.filter(c=>
-      matches(c,f.q,['name','nameEn','position','org','dept','email','phone','mobile','country','address','tags'])
+      matches(c,f.q,['name','nameLocal','position','org','dept','email','phone','mobile','country','address','tags'])
       && (!f.country||c.country===f.country) && (!f.org||c.org===f.org) && (!f.tag||(c.tags||[]).includes(f.tag)));
   rows = sortRows(rows, f.sk, f.sd);
 
@@ -1937,8 +2082,10 @@ VIEWS.contacts = function(el,id){
   const cols=[{label:t('c.f.name'),sort:'name'},{label:t('c.f.org'),sort:'org'},{label:t('c.f.country'),sort:'country',w:'130px'},
               {label:t('c.f.email')},{label:t('g.relatedMeetings'),w:'110px'},{label:'',w:'92px'}];
   h += tableFrame('contacts',cols,rows,c=>
-    '<tr><td><button class="lnk" onclick="go(\'#/contacts/'+c.id+'\')">'+esc(personName(c))+'</button>'
-    + (c.position?'<small>'+esc(c.position)+'</small>':'')+'</td>'
+    '<tr><td><span class="name-cell">'+avatarHtml(c)
+    + '<span><button class="lnk" onclick="go(\'#/contacts/'+c.id+'\')">'+esc(personName(c))+'</button>'
+    + (personAlt(c)?'<small>'+esc(personAlt(c))+'</small>':'')
+    + (c.position?'<small>'+esc(c.position)+'</small>':'')+'</span></span></td>'
     + '<td>'+esc(c.org||'—')+(c.dept?'<small>'+esc(c.dept)+'</small>':'')+'</td>'
     + '<td>'+esc(c.country||'—')+'</td>'
     + '<td>'+(c.email?'<a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a>':'—')+((c.mobile||c.phone)?'<small>'+esc(c.mobile||c.phone)+'</small>':'')+'</td>'
@@ -1947,20 +2094,24 @@ VIEWS.contacts = function(el,id){
     + '<button class="btn btn-quiet btn-sm" aria-label="'+esc(t('act.edit'))+'" onclick="openForm(\'contacts\',\''+c.id+'\')">'+ico('edit',15)+'</button>'
     + '<button class="btn btn-quiet btn-sm" aria-label="'+esc(t('act.delete'))+'" onclick="confirmDelete(\'contacts\',\''+c.id+'\')">'+ico('trash',15)+'</button>'
     + '</div></td></tr>');
-  el.innerHTML=h; applyRefocus();
+  el.innerHTML=h; loadPhotos(); applyRefocus();
 };
 function contactDetail(el,id){
   const c=byId('contacts',id);
   if(!c){ el.innerHTML=notFound('#/contacts','nav.contacts'); return; }
   const ms=REL.cMeetings(id), cards=REL.cCards(id), fus=REL.cFollowups(id);
   let h = crumb('#/contacts','nav.contacts',personName(c));
-  h += '<div class="page-head"><div><h1>'+esc(personName(c))+'</h1><p>'+esc([c.position,c.org,c.country].filter(Boolean).join(' · ')||t('c.title'))+'</p></div><div class="spacer"></div>'
+  h += '<div class="page-head"><div><h1>'+esc(personName(c))+'</h1>'
+    + (personAlt(c) ? '<div class="name-alt">'+esc(personAlt(c))+'</div>' : '')
+    + '<p>'+esc([c.position,c.org,c.country].filter(Boolean).join(' · ')||t('c.title'))+'</p></div><div class="spacer"></div>'
     + '<span class="chip '+(c.cardId?'chip-orange':'chip')+'">'+esc(c.cardId?t('c.fromCard'):t('c.manual'))+'</span>'
     + '<button class="btn btn-ghost" onclick="openForm(\'contacts\',\''+c.id+'\')">'+ico('edit',15)+esc(t('act.edit'))+'</button>'
     + '<button class="btn btn-danger" onclick="confirmDelete(\'contacts\',\''+c.id+'\')">'+ico('trash',15)+esc(t('act.delete'))+'</button></div>';
   h += '<div class="detail-grid"><div>';
-  h += '<section class="card" style="margin-bottom:16px"><div class="card-h"><h3>'+esc(t('g.info'))+'</h3></div><div class="card-pad"><dl class="dl">'
-    + dlRow('c.f.nameEn',c.nameEn) + dlRow('c.f.position',c.position) + dlRow('c.f.org',c.org) + dlRow('c.f.dept',c.dept)
+  h += '<section class="card" style="margin-bottom:16px"><div class="card-h"><h3>'+esc(t('g.info'))+'</h3></div><div class="card-pad">'
+    + photoBlock('contacts', c)
+    + '<dl class="dl">'
+    + dlRow('c.f.nameLocal',c.nameLocal) + dlRow('c.f.position',c.position) + dlRow('c.f.org',c.org) + dlRow('c.f.dept',c.dept)
     + '<dt>'+esc(t('c.f.email'))+'</dt><dd>'+(c.email?'<a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a>':'<span style="color:var(--ink-3)">—</span>')+'</dd>'
     + '<dt>'+esc(t('c.f.phone'))+'</dt><dd>'+(c.phone?'<a href="tel:'+esc(c.phone.replace(/\s/g,''))+'">'+esc(c.phone)+'</a>':'<span style="color:var(--ink-3)">—</span>')+'</dd>'
     + '<dt>'+esc(t('c.f.mobile'))+'</dt><dd>'+(c.mobile?'<a href="tel:'+esc(c.mobile.replace(/\s/g,''))+'">'+esc(c.mobile)+'</a>':'<span style="color:var(--ink-3)">—</span>')+'</dd>'
@@ -1981,6 +2132,7 @@ function contactDetail(el,id){
   h += timelineCard(contactTimeline(c));
   h += '</div></div>';
   el.innerHTML=h;
+  loadPhotos();
 }
 function contactTimeline(c){
   const n=[];
@@ -2105,6 +2257,12 @@ function downscale(dataUrl, maxPx){
     img.src=dataUrl;
   });
 }
+function pickFiles(accept, cb){
+  const inp=document.createElement('input');
+  inp.type='file'; inp.accept=accept; inp.multiple=true; inp.style.display='none';
+  inp.onchange=()=>{ if(inp.files && inp.files.length) cb(inp.files); inp.remove(); };
+  document.body.appendChild(inp); inp.click();
+}
 function pickFile(accept, cb){
   const inp=document.createElement('input');
   inp.type='file'; inp.accept=accept; inp.style.display='none';
@@ -2160,7 +2318,7 @@ async function addCardImage(dataUrl, meetingId){
   const ok = await blobPut(bid, small);
   if(!ok && hasStore()){ toast(t('g.offlineBody'),'bad'); return null; }
   DB.cards.unshift({ id, blobId:bid, status:'new', received: todayISO(),
-    meetingId: meetingId||'', name:'', nameEn:'', position:'', org:'', dept:'',
+    meetingId: meetingId||'', name:'', nameLocal:'', position:'', org:'', dept:'',
     email:'', phone:'', mobile:'', website:'', address:'', country:'', note:'',
     contactId:'', ocrRaw:'', createdAt:Date.now(), updatedAt:Date.now() });
   await save('cards');
@@ -2249,9 +2407,10 @@ async function runOCR(id){
     if(!pic) throw new Error(t('b.badImage'));
     const prompt = 'Extract the contact details from this business card image. '
       + 'Reply with ONE JSON object and nothing else — no markdown fences, no commentary. Keys: '
-      + 'name, nameEn, position, org, dept, email, phone, mobile, website, address, country. '
-      + 'Rules: "name" is the person\'s name in the primary script shown on the card (Thai if the card is Thai); '
-      + '"nameEn" is the Latin-script form if present, otherwise "". '
+      + 'name, nameLocal, position, org, dept, email, phone, mobile, website, address, country. '
+      + 'Rules: "name" is the person\'s name in Latin script (English spelling) exactly as printed. '
+      + 'If the card shows no Latin-script name at all, put the name as printed into "name" instead, so "name" is never empty when a name is visible. '
+      + '"nameLocal" is the name in the other script shown on the card (Thai, Japanese, Chinese and so on), or "" if the card shows only one form. '
       + '"phone" is the office or landline number, "mobile" is the mobile number. '
       + 'Keep numbers formatted as printed. Use "" for anything not on the card. Do not invent values.';
     /* Inside the Claude sandbox the request is authenticated for us. Hosted
@@ -2261,6 +2420,9 @@ async function runOCR(id){
       headers['x-api-key'] = SECRETS.apiKey;
       headers['anthropic-version'] = '2023-06-01';
       headers['anthropic-dangerous-direct-browser-access'] = 'true';
+      /* A key scoped to one workspace carries its own. A personal or
+         multi-workspace key must say which workspace the call acts in. */
+      if(SECRETS.workspaceId) headers['anthropic-workspace-id'] = SECRETS.workspaceId;
     } else if(ST.mode !== 'artifact'){
       OCR_FATAL = true;
       throw new Error(t('b.noKey'));
@@ -2282,6 +2444,7 @@ async function runOCR(id){
       }catch(e){}
       if(res.status===401 || res.status===403){ OCR_FATAL = true; throw new Error(t('b.badKey')+(why?' — '+why:'')); }
       if(res.status===429) throw new Error(t('b.rateLimit')+(why?' — '+why:''));
+      if(/workspace/i.test(why)){ OCR_FATAL = true; throw new Error(t('b.needWorkspace')); }
       if(/model/i.test(why)){ OCR_FATAL = true; throw new Error(t('b.badModel',{m:ocrModel()})+' — '+why); }
       if(/credit|balance|billing/i.test(why)){ OCR_FATAL = true; throw new Error(t('b.noCredit')+' — '+why); }
       throw new Error('HTTP '+res.status+(why?' — '+why:''));
@@ -2292,7 +2455,13 @@ async function runOCR(id){
     const start = clean.indexOf('{'), end = clean.lastIndexOf('}');
     if(start<0 || end<0) throw new Error('no JSON in response');
     const parsed = JSON.parse(clean.slice(start, end+1));
-    ['name','nameEn','position','org','dept','email','phone','mobile','website','address','country'].forEach(k=>{
+    /* Applied as a pair, so a re-scan cannot leave one card's Latin name sitting
+       beside another card's local name. */
+    if(typeof parsed.name === 'string' && parsed.name.trim()){
+      card.name = parsed.name.trim();
+      card.nameLocal = (typeof parsed.nameLocal === 'string' ? parsed.nameLocal.trim() : '');
+    }
+    ['name','nameLocal','position','org','dept','email','phone','mobile','website','address','country'].forEach(k=>{
       const v = parsed[k];
       if(typeof v === 'string' && v.trim()) card[k] = v.trim();
     });
@@ -2313,6 +2482,158 @@ async function runOCR(id){
     else toast(OCR_FATAL ? detail : t('b.readFail'),'bad');
     return false;
   }
+}
+
+
+
+/* ---------------- MEETING PHOTOS ----------------
+   Up to three pictures of the occasion itself, so opening a meeting shows what
+   it looked like rather than only who attended. Stored like every other image:
+   downscaled once, kept in blob storage, referenced by id. */
+const MAX_MEETING_PHOTOS = 3;
+
+function photoGallery(m){
+  const photos = m.photos || [];
+  const room = MAX_MEETING_PHOTOS - photos.length;
+  let h = '<section class="card" style="margin-bottom:16px"><div class="card-h"><h3>'+esc(t('m.photos'))+'</h3>'
+    + '<div class="spacer"></div>'
+    + (room > 0
+        ? '<button class="btn btn-ghost btn-sm" onclick="pickMeetingPhotos(\'' + m.id + '\')">'
+          + ico('camera',14) + esc(t('m.addPhoto')) + '</button>'
+        : '<span class="chip">'+esc(t('m.photoFull',{n:MAX_MEETING_PHOTOS}))+'</span>')
+    + '</div><div class="card-pad">';
+  if(!photos.length){
+    h += '<p class="help" style="margin:0">'+esc(t('m.noPhotos',{n:MAX_MEETING_PHOTOS}))+'</p>';
+  }else{
+    h += '<div class="mphotos">' + photos.map((ph,i)=>
+      '<figure class="mph">'
+      + '<button class="mph-open" data-blob="'+esc(ph.id)+'" onclick="viewPhoto(\'' + m.id + '\',' + i + ')" '
+      + 'aria-label="'+esc(t('m.viewPhoto'))+'">'+ico('cards',22)+'</button>'
+      + '<figcaption>'
+        + '<span>'+esc(ph.caption || t('m.photoN',{n:i+1}))+'</span>'
+        + '<button class="btn btn-quiet btn-sm" onclick="removeMeetingPhoto(\'' + m.id + '\',\'' + ph.id + '\')" '
+        + 'aria-label="'+esc(t('m.removePhoto'))+'">'+ico('trash',14)+'</button>'
+      + '</figcaption></figure>').join('') + '</div>';
+  }
+  return h + '</div></section>';
+}
+
+function pickMeetingPhotos(id){
+  const m = byId('meetings', id);
+  if(!m) return;
+  const room = MAX_MEETING_PHOTOS - (m.photos||[]).length;
+  if(room <= 0){ toast(t('m.photoFull',{n:MAX_MEETING_PHOTOS}),'bad'); return; }
+  pickFiles('image/*', async files=>{
+    const chosen = Array.from(files);
+    if(chosen.length > room) toast(t('m.photoTrimmed',{n:room}),'bad');
+    let added = 0;
+    for(const file of chosen.slice(0, room)){
+      if(!/^image\//.test(file.type||'')){ toast(t('b.badType'),'bad'); continue; }
+      if(file.size > MAX_IMG){ toast(t('b.tooBig'),'bad'); continue; }
+      const raw = await readAsDataURL(file);
+      const small = await reencode(raw, 1600, 0.8);
+      const bid = uid('mp');
+      const ok = await blobPut(bid, small);
+      if(!ok && hasStore()){ toast(t('g.offlineBody'),'bad'); break; }
+      m.photos = (m.photos||[]).concat([{ id:bid, caption:'', addedAt:Date.now() }]);
+      added++;
+    }
+    if(!added) return;
+    m.updatedAt = Date.now();
+    await save('meetings');
+    toast(t('m.photoAdded',{n:added}),'ok');
+    route();
+    nudgeSync();
+  });
+}
+async function removeMeetingPhoto(id, photoId){
+  const m = byId('meetings', id);
+  if(!m) return;
+  await blobDel(photoId);
+  m.photos = (m.photos||[]).filter(p=>p.id!==photoId);
+  m.updatedAt = Date.now();
+  await save('meetings');
+  toast(t('m.photoRemoved'),'ok');
+  route();
+}
+/* Opened at full size, with arrows when there is more than one. */
+async function viewPhoto(id, idx){
+  const m = byId('meetings', id);
+  const photos = (m && m.photos) || [];
+  if(!photos[idx]) return;
+  const data = await blobGet(photos[idx].id);
+  if(!data){ toast(t('m.photoMissing'),'bad'); return; }
+  const many = photos.length > 1;
+  showModal('<div class="m-h"><h2 id="m-title">'+esc(t('m.photoN',{n:idx+1}))+' / '+photos.length+'</h2>'
+    + '<button class="btn btn-quiet btn-sm" onclick="closeModal()" aria-label="'+esc(t('act.close'))+'">'+ico('close',16)+'</button></div>'
+    + '<div class="m-b" style="text-align:center"><img src="'+data+'" alt="'+esc(t('m.photos'))+'" class="mph-full"></div>'
+    + (many ? '<div class="m-f">'
+        + '<button class="btn btn-ghost" onclick="viewPhoto(\'' + id + '\',' + ((idx-1+photos.length)%photos.length) + ')">'+esc(t('m.prevPhoto'))+'</button>'
+        + '<button class="btn btn-ghost" onclick="viewPhoto(\'' + id + '\',' + ((idx+1)%photos.length) + ')">'+esc(t('m.nextPhoto'))+'</button></div>' : ''));
+}
+
+/* ---------------- PORTRAIT PHOTOS ---------------- */
+/* A drawn stand-in rather than a photo of anyone: a plain head-and-shoulders
+   silhouette with no hair, clothing or feature cues that would read as a
+   particular gender or ethnicity. */
+function avatarFallback(){
+  return '<svg viewBox="0 0 64 64" class="ph-svg" aria-hidden="true">'
+    + '<circle cx="32" cy="32" r="32" fill="var(--teal-soft)"/>'
+    + '<circle cx="32" cy="25" r="10.5" fill="var(--teal)"/>'
+    + '<path d="M12 56c0-11 9-17 20-17s20 6 20 17z" fill="var(--teal)"/>'
+    + '</svg>';
+}
+/* The image lives in blob storage, so the markup goes out with a data-photo hook
+   and loadPhotos() fills it in once the read resolves. */
+function avatarHtml(rec, cls){
+  const id = rec && rec.photoId;
+  return '<span class="ph '+(cls||'')+'"'+(id?' data-photo="'+esc(id)+'"':'')+'>'+avatarFallback()+'</span>';
+}
+function loadPhotos(){
+  $$('[data-photo]').forEach(n=>{
+    blobGet(n.getAttribute('data-photo')).then(d=>{
+      if(d && n.isConnected) n.innerHTML='<img src="'+d+'" alt="">';
+    });
+  });
+}
+function pickPhoto(coll, id){
+  pickFile('image/*', async file=>{
+    if(!/^image\//.test(file.type||'')){ toast(t('b.badType'),'bad'); return; }
+    if(file.size > MAX_IMG){ toast(t('b.tooBig'),'bad'); return; }
+    const rec = byId(coll, id);
+    if(!rec) return;
+    const raw = await readAsDataURL(file);
+    const small = await reencode(raw, 640, 0.82);      /* portraits do not need more */
+    const bid = rec.photoId || uid('ph');
+    const ok = await blobPut(bid, small);
+    if(!ok && hasStore()){ toast(t('g.offlineBody'),'bad'); return; }
+    rec.photoId = bid;
+    rec.updatedAt = Date.now();
+    await save(coll);
+    toast(t('ph.saved'),'ok');
+    route();
+    nudgeSync();
+  });
+}
+async function removePhoto(coll, id){
+  const rec = byId(coll, id);
+  if(!rec || !rec.photoId) return;
+  await blobDel(rec.photoId);
+  rec.photoId = '';
+  rec.updatedAt = Date.now();
+  await save(coll);
+  toast(t('ph.removed'),'ok');
+  route();
+}
+function photoBlock(coll, rec){
+  return '<div class="ph-block">'
+    + avatarHtml(rec,'lg')
+    + '<div class="ph-acts">'
+      + '<button class="btn btn-ghost btn-sm" onclick="pickPhoto(\'' + coll + '\',\'' + rec.id + '\')">'
+        + ico('upload',14) + esc(t(rec.photoId?'ph.change':'ph.add')) + '</button>'
+      + (rec.photoId ? '<button class="btn btn-quiet btn-sm" onclick="removePhoto(\'' + coll + '\',\'' + rec.id + '\')">'
+        + esc(t('ph.remove')) + '</button>' : '')
+    + '</div></div>';
 }
 
 /* ---------------- CAMERA SCANNER ---------------- */
@@ -2615,7 +2936,7 @@ function closeScanner(silent){
 VIEWS.cards = function(el,id){
   if(id) return cardDetail(el,id);
   const f=FILT.cards;
-  let rows = DB.cards.filter(c=> matches(c,f.q,['name','nameEn','org','position','email','phone','mobile','country','note'])
+  let rows = DB.cards.filter(c=> matches(c,f.q,['name','nameLocal','org','position','email','phone','mobile','country','note'])
                                  && (!f.status||c.status===f.status));
   rows = sortRows(rows,f.sk,f.sd);
 
@@ -2642,7 +2963,7 @@ VIEWS.cards = function(el,id){
   h += '<div class="card-gal">'+rows.map(c=>
     '<button class="bcard" onclick="go(\'#/cards/'+c.id+'\')">'
     + '<span class="thumb" data-blob="'+esc(c.blobId)+'">'+ico('cards',26)+'</span>'
-    + '<span class="bc-b"><b>'+esc(c.name||c.nameEn||t('b.st.new'))+'</b>'
+    + '<span class="bc-b"><span class="bc-top">'+avatarHtml(c,'sm')+'<b>'+esc(personName(c)||t('b.st.new'))+'</b></span>'
     + '<small>'+esc([c.position,c.org].filter(Boolean).join(' · ')||fmtDate(c.received))+'</small>'
     + '<span style="display:block;margin-top:8px">'+statusChip('bStatus',c.status)+'</span></span></button>').join('')+'</div>';
   el.innerHTML=h; bindDrop(); loadThumbs(); applyRefocus();
@@ -2664,7 +2985,7 @@ function loadThumbs(){
     blobGet(n.getAttribute('data-blob')).then(d=>{ if(d && n.isConnected) n.innerHTML='<img src="'+d+'" alt="">'; });
   });
 }
-const CARD_FIELDS=[['name','c.f.name'],['nameEn','c.f.nameEn'],['position','c.f.position'],['org','c.f.org'],
+const CARD_FIELDS=[['name','c.f.name'],['nameLocal','c.f.nameLocal'],['position','c.f.position'],['org','c.f.org'],
   ['dept','c.f.dept'],['email','c.f.email'],['phone','c.f.phone'],['mobile','c.f.mobile'],
   ['website','c.f.website'],['country','c.f.country'],['address','c.f.address']];
 
@@ -2673,7 +2994,10 @@ function cardDetail(el,id){
   if(!c){ el.innerHTML=notFound('#/cards','nav.cards'); return; }
   const linked = c.contactId ? byId('contacts',c.contactId) : null;
   let h = crumb('#/cards','nav.cards', c.name||t('b.review'));
-  h += '<div class="page-head"><div><h1>'+esc(c.name||t('b.review'))+'</h1><p>'+esc(t('b.f.received'))+' '+esc(fmtDate(c.received))+'</p></div><div class="spacer"></div>'
+  const alt = personAlt(c);
+  h += '<div class="page-head"><div><h1>'+esc(personName(c)||t('b.review'))+'</h1>'
+    + (alt ? '<div class="name-alt">'+esc(alt)+'</div>' : '')
+    + '<p>'+esc(t('b.f.received'))+' '+esc(fmtDate(c.received))+'</p></div><div class="spacer"></div>'
     + statusChip('bStatus',c.status)
     + '<button class="btn btn-danger" onclick="confirmDelete(\'cards\',\''+c.id+'\')">'+ico('trash',15)+esc(t('act.delete'))+'</button></div>';
 
@@ -2682,6 +3006,7 @@ function cardDetail(el,id){
     + '<button class="lnk" onclick="go(\'#/contacts/'+linked.id+'\')">'+esc(t('b.openContact'))+'</button></div></div>';
 
   h += '<div class="card card-pad"><div class="ocr-grid"><div>';
+  h += photoBlock('cards', c);
   h += '<div class="lbl">'+esc(t('b.f.image'))+'</div><div class="preview" id="card-img">'+ico('cards',26)+'</div>';
   h += '<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">'
     + '<button class="btn btn-teal" id="ocr-btn" onclick="runOCR(\''+c.id+'\')">'+ico('search',15)+esc(t(c.ocrRaw?'act.rescan':'act.scan'))+'</button>'
@@ -2715,6 +3040,7 @@ function cardDetail(el,id){
   }
   el.innerHTML=h;
   blobGet(c.blobId).then(d=>{ const n=$('#card-img'); if(n&&d) n.innerHTML='<img src="'+d+'" alt="'+esc(t('b.f.image'))+'">'; });
+  loadPhotos();
 }
 
 async function saveCard(id, alsoContact){
@@ -2724,9 +3050,9 @@ async function saveCard(id, alsoContact){
   c.meetingId = $('#cf-meeting') ? $('#cf-meeting').value : c.meetingId;
   c.note = $('#cf-note') ? $('#cf-note').value.trim() : c.note;
   if(c.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(c.email)){ toast(t('v.email'),'bad'); return; }
-  if(!c.name && !c.nameEn && alsoContact){ toast(t('v.required')+': '+t('c.f.name'),'bad'); $('#cf-name') && $('#cf-name').focus(); return; }
+  if(!c.name && !c.nameLocal && alsoContact){ toast(t('v.required')+': '+t('c.f.name'),'bad'); $('#cf-name') && $('#cf-name').focus(); return; }
   c.updatedAt=Date.now();
-  if(c.status==='new' && (c.name||c.nameEn)) c.status='reviewed';
+  if(c.status==='new' && (c.name||c.nameLocal)) c.status='reviewed';
 
   if(alsoContact){
     let ct = c.contactId ? byId('contacts',c.contactId) : null;
@@ -2736,6 +3062,7 @@ async function saveCard(id, alsoContact){
       c.contactId = ct.id;
     }
     CARD_FIELDS.forEach(([k])=>{ ct[k] = c[k]; });
+    if(c.photoId) ct.photoId = c.photoId;
     ct.notes = c.note || ct.notes || '';
     ct.updatedAt = Date.now();
     c.status='linked';
@@ -2749,6 +3076,7 @@ async function saveCard(id, alsoContact){
   }
   await save('cards');
   toast(t(alsoContact?'b.linked':'st.saved'),'ok');
+  nudgeSync();
   route();
 }
 </script>
@@ -2777,7 +3105,7 @@ const FORMS = {
   ]},
   participants:{ new:'p.new', edit:'p.edit', name:r=>personName(r), fields:[
     {k:'name',l:'p.f.name',ty:'text',req:true},
-    {k:'nameEn',l:'p.f.nameEn',ty:'text'},
+    {k:'nameLocal',l:'p.f.nameLocal',ty:'text'},
     {k:'position',l:'p.f.position',ty:'text'},
     {k:'division',l:'p.f.division',ty:'text'},
     {k:'org',l:'p.f.org',ty:'text'},
@@ -2788,7 +3116,7 @@ const FORMS = {
   ]},
   contacts:{ new:'c.new', edit:'c.edit', name:r=>personName(r), fields:[
     {k:'name',l:'c.f.name',ty:'text',req:true},
-    {k:'nameEn',l:'c.f.nameEn',ty:'text'},
+    {k:'nameLocal',l:'c.f.nameLocal',ty:'text'},
     {k:'position',l:'c.f.position',ty:'text'},
     {k:'org',l:'c.f.org',ty:'text'},
     {k:'dept',l:'c.f.dept',ty:'text'},
@@ -2966,6 +3294,7 @@ async function submitForm(coll, id){
   const ok=await save(coll);
   closeModal();
   toast(t(id?'st.updated':'st.saved'), ok?'ok':'bad');
+  if(ok) nudgeSync();
   route();
 }
 
@@ -2984,6 +3313,14 @@ async function doDelete(coll,id){
   const rec=byId(coll,id);
   if(rec && rec.files) for(const f of rec.files) await blobDel(f.id);
   if(coll==='cards' && rec && rec.blobId) await blobDel(rec.blobId);
+  if(coll==='meetings' && rec && rec.photos) for(const ph of rec.photos) await blobDel(ph.id);
+  /* The portrait may be shared with the linked contact, so only drop it when
+     nothing else still points at it. */
+  if(rec && rec.photoId){
+    const stillUsed = ['cards','contacts','participants'].some(k=>
+      (DB[k]||[]).some(r=>r!==rec && r.photoId===rec.photoId));
+    if(!stillUsed) await blobDel(rec.photoId);
+  }
   DB[coll]=DB[coll].filter(r=>r.id!==id);
   const dirty=new Set([coll]);
   const touch=(c,r)=>{ r.updatedAt=Date.now(); dirty.add(c); };
@@ -3033,9 +3370,9 @@ function globalSearch(q){
   if(s.length<2){ box.innerHTML='<div class="sr-empty">'+esc(t('search.hint'))+'</div>'; box.classList.add('on'); $('#gsearch').setAttribute('aria-expanded','true'); return; }
   const groups=[
     ['nav.meetings','meetings', DB.meetings.filter(r=>matches(r,s,['title','location','organizer','agenda','notes','tags','countries'])).slice(0,5), r=>r.title, r=>fmtDate(r.date)+' · '+label('mType',r.type)+((r.countries||[]).length?' · '+r.countries.join(', '):'')],
-    ['nav.contacts','contacts', DB.contacts.filter(r=>matches(r,s,['name','nameEn','org','position','email','phone','mobile','country','tags'])).slice(0,5), r=>personName(r), r=>[r.position,r.org].filter(Boolean).join(' · ')],
-    ['nav.participants','participants', DB.participants.filter(r=>matches(r,s,['name','nameEn','org','position','division','email','tags'])).slice(0,5), r=>personName(r), r=>[r.position,r.org].filter(Boolean).join(' · ')],
-    ['nav.cards','cards', DB.cards.filter(r=>matches(r,s,['name','nameEn','org','position','email','phone','mobile','note'])).slice(0,5), r=>(r.name||r.nameEn||t('b.st.new')), r=>[r.position,r.org].filter(Boolean).join(' · ')||fmtDate(r.received)],
+    ['nav.contacts','contacts', DB.contacts.filter(r=>matches(r,s,['name','nameLocal','org','position','email','phone','mobile','country','tags'])).slice(0,5), r=>personName(r), r=>[r.position,r.org].filter(Boolean).join(' · ')],
+    ['nav.participants','participants', DB.participants.filter(r=>matches(r,s,['name','nameLocal','org','position','division','email','tags'])).slice(0,5), r=>personName(r), r=>[r.position,r.org].filter(Boolean).join(' · ')],
+    ['nav.cards','cards', DB.cards.filter(r=>matches(r,s,['name','nameLocal','org','position','email','phone','mobile','note'])).slice(0,5), r=>(personName(r)||t('b.st.new')), r=>[r.position,r.org].filter(Boolean).join(' · ')||fmtDate(r.received)],
     ['nav.followups','followups', DB.followups.filter(r=>matches(r,s,['title','detail','owner','tags'])).slice(0,5), r=>r.title, r=>label('fStatus',r.status)+' · '+fmtDate(r.due)]
   ];
   let h='', any=false;
@@ -3064,13 +3401,13 @@ function sheetRows(coll){
     [L('m.f.tags')]:(m.tags||[]).join('; ')
   }));
   if(coll==='participants') return DB.participants.map(p=>({
-    [L('p.f.name')]:p.name||'', [L('p.f.nameEn')]:p.nameEn||'', [L('p.f.position')]:p.position||'',
+    [L('p.f.name')]:p.name||'', [L('p.f.nameLocal')]:p.nameLocal||'', [L('p.f.position')]:p.position||'',
     [L('p.f.division')]:p.division||'', [L('p.f.org')]:p.org||'', [L('p.f.email')]:p.email||'',
     [L('p.f.phone')]:p.phone||'', [L('m.f.tags')]:(p.tags||[]).join('; '),
     [L('g.relatedMeetings')]:REL.pMeetings(p.id).length, [L('p.f.notes')]:p.notes||''
   }));
   if(coll==='contacts') return DB.contacts.map(c=>({
-    [L('c.f.name')]:c.name||'', [L('c.f.nameEn')]:c.nameEn||'', [L('c.f.position')]:c.position||'',
+    [L('c.f.name')]:c.name||'', [L('c.f.nameLocal')]:c.nameLocal||'', [L('c.f.position')]:c.position||'',
     [L('c.f.org')]:c.org||'', [L('c.f.dept')]:c.dept||'', [L('c.f.country')]:c.country||'',
     [L('c.f.email')]:c.email||'', [L('c.f.phone')]:c.phone||'', [L('c.f.mobile')]:c.mobile||'',
     [L('c.f.website')]:c.website||'', [L('c.f.address')]:c.address||'',
@@ -3081,7 +3418,7 @@ function sheetRows(coll){
   if(coll==='cards') return DB.cards.map(c=>{
     const mt=c.meetingId?byId('meetings',c.meetingId):null;
     return {
-      [L('c.f.name')]:c.name||'', [L('c.f.nameEn')]:c.nameEn||'', [L('c.f.position')]:c.position||'',
+      [L('c.f.name')]:c.name||'', [L('c.f.nameLocal')]:c.nameLocal||'', [L('c.f.position')]:c.position||'',
       [L('c.f.org')]:c.org||'', [L('c.f.dept')]:c.dept||'', [L('c.f.email')]:c.email||'',
       [L('c.f.phone')]:c.phone||'', [L('c.f.mobile')]:c.mobile||'', [L('c.f.website')]:c.website||'',
       [L('c.f.country')]:c.country||'', [L('c.f.address')]:c.address||'',
@@ -3143,6 +3480,9 @@ VIEWS.settings = function(el){
     + '<div class="field" style="grid-column:1/-1"><label style="display:flex;gap:10px;align-items:flex-start;font-weight:400;cursor:pointer">'
     + '<input type="checkbox" id="s-ocr" style="width:auto;margin:4px 0 0"'+(DB.settings.autoOcr!==false?' checked':'')+'>'
     + '<span><b style="font-weight:500">'+esc(t('set.autoOcr'))+'</b><br><span class="help">'+esc(t('set.autoOcrHelp'))+'</span></span></label></div>'
+    + '<div class="field"><label for="s-keep">'+esc(t('set.keepSignedIn'))+'</label><select id="s-keep">'
+    + ['off','1h','8h','24h'].map(k=>'<option value="'+k+'"'+((DB.settings.keepSignedIn||'1h')===k?' selected':'')+'>'+esc(t('set.keep.'+k))+'</option>').join('')
+    + '</select><p class="help">'+esc(t('set.keepHelp'))+'</p></div>'
     + '<div class="field" style="grid-column:1/-1"><label class="chk" for="s-shot" style="display:flex;gap:10px;align-items:flex-start">'
     + '<input type="checkbox" id="s-shot" style="width:auto;margin:4px 0 0"'+(DB.settings.autoShot!==false?' checked':'')+'>'
     + '<span><b style="font-weight:500">'+esc(t('set.autoShot'))+'</b><br><span class="help">'+esc(t('set.autoShotHelp'))+'</span></span></label></div>'
@@ -3174,6 +3514,9 @@ VIEWS.settings = function(el){
     + '<div class="field"><label for="s-apikey">'+esc(t('set.apiKey'))+'</label>'
     + '<input type="password" id="s-apikey" value="'+esc(SECRETS.apiKey||'')+'" autocomplete="off" spellcheck="false" placeholder="sk-ant-...">'
     + '<p class="help">'+esc(t('set.apiKeyHelp'))+'</p></div>'
+    + '<div class="field"><label for="s-workspace">'+esc(t('set.workspace'))+'</label>'
+    + '<input type="text" id="s-workspace" value="'+esc(SECRETS.workspaceId||'')+'" autocomplete="off" spellcheck="false" placeholder="wrkspc_...">'
+    + '<p class="help">'+esc(t('set.workspaceHelp'))+'</p></div>'
     + '<div class="field"><label for="s-model">'+esc(t('set.model'))+'</label>'
     + '<input type="text" id="s-model" value="'+esc(DB.settings.ocrModel||'')+'" autocomplete="off" spellcheck="false" placeholder="'+esc(OCR_MODEL_DEFAULT)+'">'
     + '<p class="help">'+esc(t('set.modelHelp',{m:OCR_MODEL_DEFAULT}))+'</p></div>'
@@ -3191,7 +3534,8 @@ VIEWS.settings = function(el){
 
   h += '<section class="card" style="margin-bottom:16px"><div class="card-h"><h3>'+esc(t('set.sync'))+'</h3></div><div class="card-pad">'
     + '<p style="color:var(--ink-2);font-size:14px;margin-bottom:14px">'+esc(t('set.syncHelp'))+'</p>'
-    + '<label class="lg-show" for="sync-images" style="margin:0 0 14px"><input type="checkbox" id="sync-images" checked>'
+    + '<label class="lg-show" for="sync-images" style="margin:0 0 14px">'
+    + '<input type="checkbox" id="sync-images"'+(DB.settings.syncImages!==false?' checked':'')+' onchange="setSyncImages(this.checked)">'
     + '<span>'+esc(t('sync.withImages'))+'</span></label>'
     + '<div style="display:flex;gap:8px;flex-wrap:wrap">'
     + '<button class="btn btn-primary" onclick="syncPush()">'+ico('upload',15)+esc(t('sync.push'))+'</button>'
@@ -3232,6 +3576,10 @@ async function saveSettingsForm(){
   DB.settings.org=$('#s-org').value.trim();
   DB.settings.remindDefault=Math.max(0,Math.min(60,parseInt($('#s-remind').value,10)||0));
   DB.settings.autoOcr = $('#s-ocr') ? $('#s-ocr').checked : true;
+  DB.settings.keepSignedIn = $('#s-keep') ? $('#s-keep').value : '1h';
+  /* apply the new window immediately: switching to "ask every time" should log
+     the next refresh out, not wait for the old timer to run down */
+  await touchSession(true);
   DB.settings.autoShot = $('#s-shot') ? $('#s-shot').checked : true;
   DB.settings.batchScan = $('#s-batch') ? $('#s-batch').checked : true;
   const l=$('#s-lang').value;
@@ -3277,6 +3625,10 @@ function restore(){
    resolution, and silently picking a winner is how notes get lost.
 ------------------------------------------------------------------ */
 const GIST_FILE = 'pmub-meetingcard.json';
+/* The gist API hands back at most 1 MB inline and raw_url for the rest, but a
+   file over 10 MB can only be retrieved by cloning the gist, which is not
+   possible from a browser. Staying under that keeps every push pullable. */
+const SYNC_MAX_MB = 9;
 let SYNC_BUSY = false;
 
 let SYNC_STATE = null;
@@ -3323,10 +3675,18 @@ async function syncPush(){
   if(!SECRETS.ghToken){ syncMsg('sync.needToken','bad'); return; }
   SYNC_BUSY = true; syncMsg('sync.pushing');
   try{
-    const withImages = $('#sync-images') ? $('#sync-images').checked : false;
-    const body = JSON.stringify(await snapshot(withImages), null, 1);
-    const mb = body.length/1048576;
-    if(mb > 45) throw new Error(t('sync.tooBig',{n:mb.toFixed(1)}));
+    const withImages = DB.settings.syncImages !== false;
+    let body = JSON.stringify(await snapshot(withImages), null, 1);
+    let mb = body.length/1048576;
+    let droppedImages = false;
+    if(withImages && mb > SYNC_MAX_MB){
+      /* Rather than refuse outright, send the records — losing the pictures from
+         the snapshot is far better than losing the sync. */
+      body = JSON.stringify(await snapshot(false), null, 1);
+      mb = body.length/1048576;
+      droppedImages = true;
+    }
+    if(mb > SYNC_MAX_MB) throw new Error(t('sync.tooBig',{n:mb.toFixed(1), m:SYNC_MAX_MB}));
     const files = {}; files[GIST_FILE] = { content: body };
     let g;
     if(SECRETS.gistId){
@@ -3338,7 +3698,8 @@ async function syncPush(){
     }
     SECRETS.lastPush = new Date().toISOString();
     await saveSecrets();
-    syncMsg('sync.pushed','ok',{n:mb.toFixed(2)});
+    if(droppedImages) syncMsg('sync.pushedNoImages','warn',{n:mb.toFixed(2), m:SYNC_MAX_MB});
+    else syncMsg('sync.pushed','ok',{n:mb.toFixed(2)});
     route();
   }catch(e){
     console.error('push failed', e);
@@ -3374,6 +3735,8 @@ async function syncPull(){
         await sSet(k, d.blobs[k]); imgs++;
       }
     }
+    DB.settings.schema = Math.min(DB.settings.schema||1, (d.settings && d.settings.schema) || 1);
+    await migrateNames();
     SECRETS.lastPull = new Date().toISOString();
     await saveSecrets();
     syncMsg('sync.pulled','ok',{n:DB.meetings.length, i:imgs});
@@ -3391,6 +3754,7 @@ function confirmPull(){
 }
 async function saveSecretForm(){
   SECRETS.apiKey  = ($('#s-apikey')  ? $('#s-apikey').value  : '').trim();
+  SECRETS.workspaceId = ($('#s-workspace') ? $('#s-workspace').value : '').trim();
   DB.settings.ocrModel = ($('#s-model') ? $('#s-model').value : '').trim();
   await saveSettings();
   SECRETS.ghToken = ($('#s-ghtoken') ? $('#s-ghtoken').value : '').trim();
@@ -3401,9 +3765,86 @@ async function saveSecretForm(){
   route();
 }
 async function clearSecrets(){
-  SECRETS = { apiKey:'', ghToken:'', gistId:'' };
+  SECRETS = { apiKey:'', workspaceId:'', ghToken:'', gistId:'' };
   await saveSecrets();
   toast(t('set.keysCleared'),'ok'); route();
+}
+
+
+/* ---------------- SYNC SHORTCUTS ---------------- */
+function syncReady(){ return !!SECRETS.ghToken; }
+function canPull(){ return syncReady() && !!SECRETS.gistId; }
+function syncDirty(){
+  const changed = DB.settings.lastChange || 0;
+  const pushed  = SECRETS.lastPush ? Date.parse(SECRETS.lastPush) : 0;
+  return changed > pushed;
+}
+function agoText(iso){
+  if(!iso) return t('g.none');
+  const ms = Date.now() - Date.parse(iso);
+  if(isNaN(ms)) return t('g.none');
+  const mins = Math.floor(ms/60000);
+  if(mins < 1) return t('sync.justNow');
+  if(mins < 60) return t('sync.minsAgo',{n:mins});
+  const hrs = Math.floor(mins/60);
+  if(hrs < 24) return t('sync.hoursAgo',{n:hrs});
+  return t('sync.daysAgo',{n:Math.floor(hrs/24)});
+}
+
+/* The strip that sits at the top of the dashboard. It only appears once sync is
+   set up — before that it would be a button that cannot do anything. */
+function syncStrip(){
+  if(!syncReady()){
+    return '<section class="sync-strip setup" id="sync-strip">'
+      + '<div class="ss-txt">'+ico('clock',18)
+      + '<div><b>'+esc(t('sync.notSetUp'))+'</b><small>'+esc(t('sync.notSetUpSub'))+'</small></div></div>'
+      + '<div class="ss-acts"><button class="btn btn-ghost btn-sm" onclick="go(\'#/settings\')">'
+      + ico('settings',15)+esc(t('sync.setUp'))+'</button></div></section>';
+  }
+  const dirty = syncDirty();
+  return '<section class="sync-strip'+(dirty?' dirty':'')+'" id="sync-strip">'
+    + '<div class="ss-txt">'
+      + ico(dirty?'alert':'check',18)
+      + '<div><b>'+esc(t(dirty?'sync.pending':'sync.upToDate'))+'</b>'
+      + '<small>'+esc(t('sync.lastPull'))+' '+esc(agoText(SECRETS.lastPull))
+      + ' · '+esc(t('sync.lastPush'))+' '+esc(agoText(SECRETS.lastPush))+'</small></div>'
+    + '</div>'
+    + '<div class="ss-acts">'
+      + (canPull() ? '<button class="btn btn-ghost btn-sm" onclick="confirmPull()">'+ico('file',15)+esc(t('sync.pullNow'))+'</button>' : '')
+      + '<button class="btn '+(dirty?'btn-primary':'btn-ghost')+' btn-sm" onclick="syncPushQuick()">'+ico('upload',15)+esc(t('sync.pushNow'))+'</button>'
+    + '</div>'
+    + '<div id="sync-msg">'+syncMsgHtml()+'</div>'
+    + '</section>';
+}
+
+/* Push from wherever the owner happens to be, then land them back on the page
+   they were on rather than dropping them into Settings. */
+async function setSyncImages(on){
+  DB.settings.syncImages = !!on;
+  await saveSettings();
+}
+async function syncPushQuick(){
+  if(!syncReady()){ toast(t('sync.needToken'),'bad'); go('#/settings'); return; }
+  toast(t('sync.pushing'));
+  await syncPush();
+}
+
+/* After a save, offer the upload instead of demanding it. A blocking dialog on
+   every single save would be in the way far more often than it would help. */
+let SYNC_NUDGE_AT = 0;
+function nudgeSync(){
+  if(!syncReady() || !syncDirty()) return;
+  if(Date.now() - SYNC_NUDGE_AT < 20000) return;   /* not on every keystroke-fast edit */
+  SYNC_NUDGE_AT = Date.now();
+  const el=document.createElement('div');
+  el.className='toast act';
+  el.innerHTML='<span>'+esc(t('sync.nudge'))+'</span>'
+    + '<button class="btn btn-teal btn-sm" id="nudge-go">'+esc(t('sync.pushNow'))+'</button>'
+    + '<button class="t-x" aria-label="'+esc(t('act.close'))+'">'+ico('close',15)+'</button>';
+  $('#toasts').appendChild(el);
+  el.querySelector('#nudge-go').onclick=()=>{ el.remove(); syncPushQuick(); };
+  el.querySelector('.t-x').onclick=()=>el.remove();
+  setTimeout(()=>{ if(el.isConnected){ el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),320); } }, 9000);
 }
 
 function confirmWipe(){
@@ -3420,7 +3861,8 @@ async function doWipe(){
   DB.meetings=[]; DB.participants=[]; DB.contacts=[]; DB.cards=[]; DB.followups=[];
   for(const k of ['meetings','participants','contacts','cards','followups']) await save(k);
   for(const k of await sKeys('mc:blob:')) await sDel(k);
-  SECRETS = { apiKey:'', ghToken:'', gistId:'' };
+  SECRETS = { apiKey:'', workspaceId:'', ghToken:'', gistId:'' };
+  await endSession();
   await sDel(SECRET_KEY);
   await sDel(KEYS.auth);
   closeModal();
@@ -3489,7 +3931,12 @@ function boot(){
   });
   window.addEventListener('hashchange', route);
 
-  initStorage().then(initAuth).then(()=>{ $('#lg-pass').focus(); });
+  initStorage()
+    .then(initAuth)
+    .then(async ()=>{
+      if(await sessionAlive()){ await unlock(); return; }
+      $('#lg-pass').focus();
+    });
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot);
 else boot();
