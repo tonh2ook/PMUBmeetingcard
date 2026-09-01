@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>PMU-B MeetingCard — ระบบบันทึกการประชุมและนามบัตร</title>
-<meta name="description" content="PMU-B MeetingCard: private workspace for meetings, participants, contacts, business cards and follow-up actions. ระบบส่วนตัวสำหรับบันทึกการประชุม ผู้เข้าร่วม ผู้ติดต่อ นามบัตร และการติดตามงาน">
+<title>PMU-B MeetingCard — ระบบเก็บข้อมูลการติดต่อเครือข่ายต่างประเทศ</title>
+<meta name="description" content="PMU-B MeetingCard — International Network Contact Database. ระบบเก็บข้อมูลการติดต่อเครือข่ายต่างประเทศ สำหรับบันทึกการประชุม ผู้เข้าร่วม ผู้ติดต่อภายนอก นามบัตร และงานติดตาม">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0B2E58">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://api.anthropic.com https://api.github.com https://gist.githubusercontent.com; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'">
@@ -86,7 +86,11 @@ a:hover{text-decoration:underline}
 .lg-node:not(:last-child)::before{content:'';position:absolute;left:8px;top:20px;bottom:0;width:2px;background:linear-gradient(180deg,var(--teal-2),rgba(22,192,188,.15))}
 .lg-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--teal-2);flex-shrink:0;margin-top:3px;background:var(--navy)}
 .lg-node span{color:rgba(255,255,255,.85);font-size:14px}
-.lg-foot{color:rgba(255,255,255,.45);font-size:12.5px}
+.lg-foot{color:rgba(255,255,255,.5);font-size:12.5px;line-height:1.55;max-width:46ch}
+.lg-by{color:rgba(255,255,255,.38);font-size:11.5px;letter-spacing:.02em;margin-bottom:3px}
+.lg-div{color:rgba(255,255,255,.72);font-weight:500;margin-bottom:7px}
+.lg-org{margin:0}
+.lg-org + .lg-org{margin-top:2px}
 .lg-form{background:var(--paper);display:flex;align-items:center;justify-content:center;padding:40px 28px}
 .lg-box{width:100%;max-width:372px}
 .lg-box h2{font-size:24px;font-weight:600;margin-bottom:6px}
@@ -358,6 +362,11 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .scrim.on{display:flex;align-items:flex-start;justify-content:center}
 .modal{background:var(--paper);border-radius:var(--r-l);width:100%;max-width:660px;box-shadow:var(--shadow-l);margin:auto;animation:pop .18s ease}
 .modal.wide{max-width:940px}
+.modal.small{max-width:400px}
+.modal.small .m-h{padding:16px 20px 12px;border-bottom:0}
+.modal.small .m-h h2{font-size:17px}
+.modal.small .m-b{padding:0 20px 4px}
+.modal.small .m-f{padding:12px 20px 16px;border-top:0}
 @keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .m-h{padding:18px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
 .m-h h2{font-size:18px;font-weight:600;flex:1}
@@ -496,7 +505,7 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
       <span class="lg-wordmark">MeetingCard</span>
     </div>
     <div>
-      <h1 class="lg-head" id="lg-title" data-i="login.head">ระบบเก็บข้อมูลการประชุมเครือข่ายกับต่างประเทศ</h1>
+      <h1 class="lg-head" id="lg-title" data-i="login.head">ระบบเก็บข้อมูลการติดต่อเครือข่ายต่างประเทศ</h1>
       <p class="lg-sub" data-i="login.sub">พื้นที่ทำงานส่วนตัวสำหรับบันทึกการประชุม ผู้เข้าร่วม ผู้ติดต่อ นามบัตร และงานที่ต้องติดตามของฝ่ายความร่วมมือระหว่างประเทศ</p>
       <div class="lg-thread">
         <div class="lg-node"><span class="lg-dot"></span><span data-i="login.t1">บันทึกการประชุมพร้อมวาระและผู้เข้าร่วม</span></div>
@@ -505,7 +514,12 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
         <div class="lg-node"><span class="lg-dot"></span><span data-i="login.t4">ตั้งงานติดตามและดูประวัติย้อนหลังได้ทั้งเส้น</span></div>
       </div>
     </div>
-    <p class="lg-foot" data-i="login.foot">ใช้งานส่วนบุคคล ข้อมูลผูกกับบัญชีของเจ้าของระบบเท่านั้น</p>
+    <div class="lg-foot">
+      <p class="lg-by" data-i="foot.by">จัดทำโดย</p>
+      <p class="lg-div" data-i="foot.div">ฝ่ายความร่วมมือระหว่างประเทศและการร่วมลงทุนด้านเทคโนโลยีอนาคต</p>
+      <p class="lg-org" data-i="foot.org1">หน่วยบริหารจัดการทุนด้านเทคโนโลยีและนวัตกรรมเพื่ออุตสาหกรรมแห่งอนาคต (บพค.)</p>
+      <p class="lg-org" data-i="foot.org2">สำนักงานเร่งรัดการวิจัยและนวัตกรรมเพื่อเพิ่มความสามารถการแข่งขันและการพัฒนาพื้นที่ (องค์การมหาชน) รวพ.</p>
+    </div>
   </div>
 
   <div class="lg-form">
@@ -585,13 +599,16 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 const I18N = {
 th:{
  'a11y.skip':'ข้ามไปยังเนื้อหาหลัก',
- 'login.head':'ระบบเก็บข้อมูลการประชุมเครือข่ายกับต่างประเทศ',
+ 'login.head':'ระบบเก็บข้อมูลการติดต่อเครือข่ายต่างประเทศ',
  'login.sub':'พื้นที่ทำงานส่วนตัวสำหรับบันทึกการประชุม ผู้เข้าร่วม ผู้ติดต่อ นามบัตร และงานที่ต้องติดตามของฝ่ายความร่วมมือระหว่างประเทศ',
  'login.t1':'บันทึกการประชุมพร้อมวาระและผู้เข้าร่วม',
  'login.t2':'ถ่ายนามบัตร แล้วให้ระบบอ่านข้อมูลให้อัตโนมัติ',
  'login.t3':'ตรวจแก้ก่อนบันทึกเข้าทะเบียนผู้ติดต่อ',
  'login.t4':'ตั้งงานติดตามและดูประวัติย้อนหลังได้ทั้งเส้น',
- 'login.foot':'ใช้งานส่วนบุคคล ข้อมูลเก็บอยู่ในเครื่องของเจ้าของระบบเท่านั้น',
+ 'foot.by':'จัดทำโดย',
+ 'foot.div':'ฝ่ายความร่วมมือระหว่างประเทศและการร่วมลงทุนด้านเทคโนโลยีอนาคต',
+ 'foot.org1':'หน่วยบริหารจัดการทุนด้านเทคโนโลยีและนวัตกรรมเพื่ออุตสาหกรรมแห่งอนาคต (บพค.)',
+ 'foot.org2':'สำนักงานเร่งรัดการวิจัยและนวัตกรรมเพื่อเพิ่มความสามารถการแข่งขันและการพัฒนาพื้นที่ (องค์การมหาชน) รวพ.',
  'login.signin':'เข้าสู่ระบบ','login.enter':'เข้าสู่ระบบ',
  'login.hint':'กรอกรหัสรับรองเพื่อเปิดข้อมูล',
  'login.needCode':'กรุณากรอกรหัสรับรอง','login.show':'แสดงรหัส',
@@ -719,7 +736,8 @@ th:{
  'sync.tooBig':'ข้อมูลใหญ่เกินไป ({n} MB) เกินเพดาน {m} MB ที่ดึงกลับมาได้ · ใช้การสำรองเป็นไฟล์ JSON แทน ซึ่งไม่มีข้อจำกัดนี้',
  'sync.pushedNoImages':'อัปโหลดสำเร็จ ({n} MB) แต่ไม่ได้รวมรูปภาพ เพราะรวมแล้วเกิน {m} MB · รูปยังอยู่ครบในเครื่องนี้ หากต้องการย้ายรูปไปเครื่องอื่น ให้ใช้การสำรองเป็นไฟล์ JSON',
  'sync.pullWarn':'ข้อมูลในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลจาก Gist ทั้งหมด หากเครื่องนี้มีข้อมูลใหม่กว่า ให้กดอัปโหลดขึ้นก่อน',
- 'sync.doneTitle':'อัปโหลดลงระบบเรียบร้อย','sync.doneBody':'บันทึกขึ้นระบบแล้วเมื่อเวลา {t} น. · ขนาดข้อมูล {n} MB',
+ 'sync.doneTitle':'อัปโหลดลงระบบเรียบร้อย','sync.doneBody':'บันทึกขึ้นระบบแล้วเมื่อ {t} น. · ขนาดข้อมูล {n} MB',
+ 'sync.doneTight':'ข้อมูลใกล้เต็มเพดานแล้ว ({n} จาก {m} MB) หากเกินระบบจะอัปโหลดเฉพาะข้อความโดยไม่รวมรูป',
  'sync.doneNoImages':'ครั้งนี้ไม่ได้รวมรูปภาพ เพราะรวมแล้วเกิน {m} MB · ข้อมูลตัวหนังสือขึ้นครบแล้ว',
  'sync.doneHint':'เปิดเครื่องอื่นแล้วกดดึงข้อมูลจากระบบ เพื่อให้ข้อมูลตรงกัน',
  'sync.lastPush':'อัปโหลดล่าสุด','sync.lastPull':'ดึงลงล่าสุด',
@@ -760,13 +778,16 @@ th:{
 },
 en:{
  'a11y.skip':'Skip to main content',
- 'login.head':'A record of every international network meeting',
+ 'login.head':'International Network Contact Database',
  'login.sub':'A private workspace for the meetings, participants, contacts, business cards and follow-ups of the international cooperation team.',
  'login.t1':'Record meetings with agenda and attendees',
  'login.t2':'Photograph a business card and let it read itself',
  'login.t3':'Review and edit before it joins your contacts',
  'login.t4':'Set follow-ups and trace the whole history back',
- 'login.foot':'Personal use. The data stays on the owner\u2019s own device.',
+ 'foot.by':'Prepared by',
+ 'foot.div':'International Partnership and Future Technology Co-Investment Division',
+ 'foot.org1':'Program Management Unit for Frontier Brainpower and Future Industries (PMU-B)',
+ 'foot.org2':'Research and Innovation Acceleration Agency for Competitiveness and Area Development (RCAD)',
  'login.signin':'Sign in','login.enter':'Sign in',
  'login.hint':'Enter the access code to unlock your data',
  'login.needCode':'Enter the access code','login.show':'Show the code',
@@ -894,7 +915,8 @@ en:{
  'sync.tooBig':'That snapshot is {n} MB, over the {m} MB ceiling a browser can pull back. Use the JSON backup file instead — it has no such limit.',
  'sync.pushedNoImages':'Pushed ({n} MB) without images — including them went over {m} MB. The images are still here on this device; use a JSON backup to move them.',
  'sync.pullWarn':'Everything on this device is replaced by what is in the gist. If this device is the more current one, push first.',
- 'sync.doneTitle':'Uploaded','sync.doneBody':'Saved to the store at {t} · {n} MB',
+ 'sync.doneTitle':'Uploaded','sync.doneBody':'Saved to the store on {t} · {n} MB',
+ 'sync.doneTight':'Getting close to the ceiling ({n} of {m} MB). Past it, pushes go up without images.',
  'sync.doneNoImages':'Images were left out this time — including them went past {m} MB. All the records went up.',
  'sync.doneHint':'On your other device, press download so both hold the same data.',
  'sync.lastPush':'Last push','sync.lastPull':'Last pull',
@@ -3524,10 +3546,10 @@ async function doDelete(coll,id){
 
 /* ---------------- modal plumbing ---------------- */
 let LAST_FOCUS=null;
-function showModal(html, wide){
+function showModal(html, size){
   LAST_FOCUS = document.activeElement;
   const m=$('#modal');
-  m.className='modal'+(wide?' wide':'');
+  m.className='modal'+(size==='wide'?' wide':size==='small'?' small':(size?' wide':''));
   m.innerHTML=html;
   $('#scrim').classList.add('on');
   document.body.style.overflow='hidden';
@@ -3928,15 +3950,20 @@ async function syncPull(){
 /* Shown after every successful upload. The inline strip message alone was easy
    to miss, and "did that actually save?" is the whole reason this exists. */
 function uploadedDialog(mb, droppedImages){
-  const when = new Date().toLocaleTimeString(LANG==='th'?'th-TH':'en-GB',{hour:'2-digit',minute:'2-digit'});
+  const d = new Date();
+  const iso = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const when = fmtDate(iso)+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  const tight = mb > SYNC_MAX_MB*0.8;   /* worth saying before pushes start dropping images */
   showModal('<div class="m-h"><h2 id="m-title">'+esc(t('sync.doneTitle'))+'</h2></div>'
     + '<div class="m-b">'
       + '<div class="banner banner-ok">'+ico('check',18)+'<div>'+esc(t('sync.doneBody',{t:when, n:mb.toFixed(2)}))+'</div></div>'
       + (droppedImages ? '<div class="banner banner-warn" style="margin-top:10px">'+ico('alert',18)
           + '<div>'+esc(t('sync.doneNoImages',{m:SYNC_MAX_MB}))+'</div></div>' : '')
+      + (!droppedImages && tight ? '<div class="banner banner-warn" style="margin-top:10px">'+ico('alert',18)
+          + '<div>'+esc(t('sync.doneTight',{n:mb.toFixed(1), m:SYNC_MAX_MB}))+'</div></div>' : '')
       + '<p class="help" style="margin-top:12px">'+esc(t('sync.doneHint'))+'</p>'
     + '</div>'
-    + '<div class="m-f"><button class="btn btn-primary" onclick="closeModal()">'+esc(t('act.close'))+'</button></div>');
+    + '<div class="m-f"><button class="btn btn-primary" onclick="closeModal()">'+esc(t('act.close'))+'</button></div>', 'small');
 }
 
 function confirmPull(){
