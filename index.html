@@ -751,7 +751,7 @@ th:{
  'g.confirmDelete':'ยืนยันการลบ','g.confirmDeleteBody':'ต้องการลบ “{n}” ใช่หรือไม่ การลบนี้ย้อนกลับไม่ได้ และการเชื่อมโยงกับรายการอื่นจะถูกตัดออก',
  'g.results':'{n} รายการ','g.of':'จาก','g.page':'หน้า','g.prev':'ก่อนหน้า','g.next':'ถัดไป','g.none':'—',
  'g.relatedMeetings':'การประชุมที่เกี่ยวข้อง','g.relatedContacts':'ผู้ติดต่อภายนอกที่เกี่ยวข้อง',
- 'g.relatedParticipants':'ผู้เข้าร่วม - บพค.','g.relatedCards':'นามบัตร','g.relatedFollowups':'งานติดตาม',
+ 'g.relatedParticipants':'ผู้เข้าร่วม - บพค.','col.internal':'ภายใน','col.external':'ภายนอก','g.relatedCards':'นามบัตร','g.relatedFollowups':'งานติดตาม',
  'g.timeline':'ประวัติความเคลื่อนไหว','g.noTimeline':'ยังไม่มีประวัติสำหรับรายการนี้',
  'g.created':'สร้างรายการ','g.updated':'แก้ไขล่าสุด','g.info':'ข้อมูลรายการ','g.noRelated':'ยังไม่มีรายการเชื่อมโยง',
  'g.offlineTitle':'บันทึกข้อมูลไม่สำเร็จ','g.offlineBody':'การเชื่อมต่อฐานข้อมูลขัดข้อง การแก้ไขล่าสุดยังไม่ถูกบันทึก ลองใหม่อีกครั้งเมื่อเชื่อมต่อได้',
@@ -926,7 +926,7 @@ en:{
  'g.confirmDelete':'Delete this record','g.confirmDeleteBody':'Delete \u201c{n}\u201d? This cannot be undone and any links to it will be cut.',
  'g.results':'{n} records','g.of':'of','g.page':'Page','g.prev':'Previous','g.next':'Next','g.none':'—',
  'g.relatedMeetings':'Related meetings','g.relatedContacts':'Related external contacts',
- 'g.relatedParticipants':'Participants — PMU-B','g.relatedCards':'Business cards','g.relatedFollowups':'Follow-ups',
+ 'g.relatedParticipants':'Participants — PMU-B','col.internal':'Internal','col.external':'External','g.relatedCards':'Business cards','g.relatedFollowups':'Follow-ups',
  'g.timeline':'History','g.noTimeline':'No history for this record yet',
  'g.created':'Record created','g.updated':'Last edited','g.info':'Details','g.noRelated':'Nothing linked yet',
  'g.offlineTitle':'Could not save','g.offlineBody':'The database connection failed, so your last change was not stored. Try again once you are back online.',
@@ -1907,9 +1907,10 @@ VIEWS.meetings = function(el,id){
   const cols=[{label:t('m.f.title'),sort:'title'},{label:t('m.f.date'),sort:'date',w:'150px'},
               {label:t('m.f.countries'),w:'180px'},
               {label:t('m.f.type'),w:'140px'},{label:t('m.f.status'),w:'110px'},
-              {label:t('g.relatedParticipants'),w:'110px'},{label:'',w:'92px'}];
+              {label:t('col.internal'),w:'95px'},{label:t('col.external'),w:'95px'},
+              {label:'',w:'92px'}];
   h += tableFrame('meetings',cols,rows,m=>{
-    const np=(m.participantIds||[]).length+(m.contactIds||[]).length;
+    const nIn=(m.participantIds||[]).length, nOut=(m.contactIds||[]).length;
     return '<tr><td><button class="lnk" onclick="go(\'#/meetings/'+m.id+'\')">'+esc(m.title)+'</button>'
       + (m.tags&&m.tags.length?'<small>'+esc(m.tags.join(' · '))+'</small>':'')+'</td>'
       + '<td>'+esc(fmtDate(m.date))+(m.start?'<small>'+esc(m.start+(m.end?'–'+m.end:''))+'</small>':'')+'</td>'
@@ -1917,7 +1918,8 @@ VIEWS.meetings = function(el,id){
       + (m.region?'<small>'+esc(label('region',m.region))+'</small>':'')+'</td>'
       + '<td>'+esc(label('mType',m.type))+(m.location?'<small>'+esc(m.location)+'</small>':'')+'</td>'
       + '<td>'+statusChip('mStatus',m.status)+'</td>'
-      + '<td>'+np+'</td>'
+      + '<td>'+nIn+'</td>'
+      + '<td>'+nOut+'</td>'
       + '<td><div class="row-acts">'
       + '<button class="btn btn-quiet btn-sm" aria-label="'+esc(t('act.edit'))+'" onclick="openForm(\'meetings\',\''+m.id+'\')">'+ico('edit',15)+'</button>'
       + '<button class="btn btn-quiet btn-sm" aria-label="'+esc(t('act.delete'))+'" onclick="confirmDelete(\'meetings\',\''+m.id+'\')">'+ico('trash',15)+'</button>'
@@ -2726,6 +2728,11 @@ async function applyCrop(){
   rec.photoId = bid;
   rec.updatedAt = Date.now();
   await save(CROP.coll);
+  const twin = twinOf(rec);
+  if(twin && twin.photoId !== bid){
+    twin.photoId = bid; twin.updatedAt = Date.now();
+    await save(CROP.coll==='cards' ? 'contacts' : 'cards');
+  }
   closeModal();
   toast(t('ph.saved'),'ok');
   route();
@@ -2745,8 +2752,20 @@ function avatarFallback(){
 }
 /* The image lives in blob storage, so the markup goes out with a data-photo hook
    and loadPhotos() fills it in once the read resolves. */
+function twinOf(rec){
+  if(!rec) return null;
+  if(rec.contactId) return byId('contacts', rec.contactId);   /* card -> contact */
+  if(rec.cardId) return byId('cards', rec.cardId);            /* contact -> card */
+  return null;
+}
+function personPhotoId(rec){
+  if(!rec) return '';
+  if(rec.photoId) return rec.photoId;
+  const twin = twinOf(rec);
+  return (twin && twin.photoId) || '';
+}
 function avatarHtml(rec, cls){
-  const id = rec && rec.photoId;
+  const id = personPhotoId(rec);
   return '<span class="ph '+(cls||'')+'"'+(id?' data-photo="'+esc(id)+'"':'')+'>'+avatarFallback()+'</span>';
 }
 function loadPhotos(){
@@ -2770,8 +2789,14 @@ function pickPhoto(coll, id){
 }
 async function removePhoto(coll, id){
   const rec = byId(coll, id);
-  if(!rec || !rec.photoId) return;
-  await blobDel(rec.photoId);
+  const shown = personPhotoId(rec);
+  if(!rec || !shown) return;
+  const twin = twinOf(rec);
+  if(twin && twin.photoId === shown){
+    twin.photoId = ''; twin.updatedAt = Date.now();
+    await save(coll==='cards' ? 'contacts' : 'cards');
+  }
+  await blobDel(shown);
   rec.photoId = '';
   rec.updatedAt = Date.now();
   await save(coll);
@@ -2783,8 +2808,8 @@ function photoBlock(coll, rec){
     + avatarHtml(rec,'lg')
     + '<div class="ph-acts">'
       + '<button class="btn btn-ghost btn-sm" onclick="pickPhoto(\'' + coll + '\',\'' + rec.id + '\')">'
-        + ico('upload',14) + esc(t(rec.photoId?'ph.change':'ph.add')) + '</button>'
-      + (rec.photoId ? '<button class="btn btn-quiet btn-sm" onclick="removePhoto(\'' + coll + '\',\'' + rec.id + '\')">'
+        + ico('upload',14) + esc(t(personPhotoId(rec)?'ph.change':'ph.add')) + '</button>'
+      + (personPhotoId(rec) ? '<button class="btn btn-quiet btn-sm" onclick="removePhoto(\'' + coll + '\',\'' + rec.id + '\')">'
         + esc(t('ph.remove')) + '</button>' : '')
     + '</div></div>';
 }
@@ -3116,7 +3141,7 @@ VIEWS.cards = function(el,id){
     + '<span class="bc-b"><span class="bc-top">'+avatarHtml(c,'sm')+'<b>'+esc(personName(c)||t('b.st.new'))+'</b></span>'
     + '<small>'+esc([c.position,c.org].filter(Boolean).join(' · ')||fmtDate(c.received))+'</small>'
     + '<span style="display:block;margin-top:8px">'+statusChip('bStatus',c.status)+'</span></span></button>').join('')+'</div>';
-  el.innerHTML=h; bindDrop(); loadThumbs(); applyRefocus();
+  el.innerHTML=h; bindDrop(); loadThumbs(); loadPhotos(); applyRefocus();
 };
 function bindDrop(){
   const d=$('#drop'); if(!d) return;
