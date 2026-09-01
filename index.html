@@ -3829,6 +3829,14 @@ const GIST_FILE = 'pmub-meetingcard.json';
    file over 10 MB can only be retrieved by cloning the gist, which is not
    possible from a browser. Staying under that keeps every push pullable. */
 const SYNC_MAX_MB = 9;
+/* The 9 MB ceiling is per file, and a gist holds many files. Images are therefore
+   split across numbered parts instead of being crammed in beside the records,
+   which lifts the practical limit from 9 MB to roughly 140 MB. */
+const IMG_FILE_RE = /^mc-images-(\d+)\.json$/;
+const CHUNK_MB = 7;
+const MAX_CHUNKS = 20;
+function imgFileName(i){ return 'mc-images-'+String(i).padStart(2,'0')+'.json'; }
+function syncCapacityMB(){ return SYNC_MAX_MB + CHUNK_MB*MAX_CHUNKS; }
 let SYNC_BUSY = false;
 
 let SYNC_STATE = null;
@@ -3870,24 +3878,71 @@ async function snapshot(withImages){
   }
   return payload;
 }
+/* Packs the stored images into parts, each comfortably under the per-file limit. */
+async function imageParts(){
+  const parts = [];
+  let cur = {}, curBytes = 0;
+  const cap = CHUNK_MB*1048576;
+  for(const k of await sKeys('mc:blob:')){
+    const v = await sGet(k, null);
+    if(typeof v!=='string' || v.slice(0,5)!=='data:') continue;
+    if(curBytes + v.length > cap && curBytes > 0){ parts.push(cur); cur = {}; curBytes = 0; }
+    cur[k] = v; curBytes += v.length + k.length + 8;
+  }
+  if(curBytes > 0) parts.push(cur);
+  return parts;
+}
+/* A gist file over 1 MB comes back truncated with a raw link instead of content. */
+async function gistFileText(f){
+  if(f && f.truncated && f.raw_url){
+    const r = await fetch(f.raw_url);
+    if(!r.ok) throw new Error('raw HTTP '+r.status);
+    return r.text();
+  }
+  return (f && f.content) || '';
+}
+async function restoreBlobs(blobs){
+  if(!blobs || typeof blobs!=='object') return 0;
+  let n = 0;
+  for(const k in blobs){
+    if(k.indexOf('mc:blob:')!==0) continue;
+    if(typeof blobs[k]!=='string' || blobs[k].slice(0,5)!=='data:') continue;
+    await sSet(k, blobs[k]); n++;
+  }
+  return n;
+}
 async function syncPush(){
   if(SYNC_BUSY) return;
   if(!SECRETS.ghToken){ syncMsg('sync.needToken','bad'); return; }
   SYNC_BUSY = true; syncMsg('sync.pushing');
   try{
     const withImages = DB.settings.syncImages !== false;
-    let body = JSON.stringify(await snapshot(withImages), null, 1);
+    const body = JSON.stringify(await snapshot(false), null, 1);   /* records only */
     let mb = body.length/1048576;
-    let droppedImages = false;
-    if(withImages && mb > SYNC_MAX_MB){
-      /* Rather than refuse outright, send the records — losing the pictures from
-         the snapshot is far better than losing the sync. */
-      body = JSON.stringify(await snapshot(false), null, 1);
-      mb = body.length/1048576;
-      droppedImages = true;
-    }
     if(mb > SYNC_MAX_MB) throw new Error(t('sync.tooBig',{n:mb.toFixed(1), m:SYNC_MAX_MB}));
+
     const files = {}; files[GIST_FILE] = { content: body };
+    let parts = withImages ? await imageParts() : [];
+    let droppedImages = false;
+    if(parts.length > MAX_CHUNKS){ parts = []; droppedImages = true; }
+    parts.forEach((blobs,i)=>{
+      const c = JSON.stringify({ part:i+1, of:parts.length, blobs }, null, 1);
+      files[imgFileName(i+1)] = { content: c };
+      mb += c.length/1048576;
+    });
+
+    /* Parts left over from a larger previous push have to be removed, or a pull
+       would restore images that were deleted here. */
+    if(SECRETS.gistId){
+      try{
+        const cur = await gh('/gists/'+SECRETS.gistId);
+        Object.keys(cur.files||{}).forEach(name=>{
+          const m = IMG_FILE_RE.exec(name);
+          if(m && parseInt(m[1],10) > parts.length) files[name] = null;
+        });
+      }catch(e){ console.warn('could not list existing parts', e); }
+    }
+
     let g;
     if(SECRETS.gistId){
       g = await gh('/gists/'+SECRETS.gistId, {method:'PATCH', body:JSON.stringify({files})});
@@ -3898,7 +3953,7 @@ async function syncPush(){
     }
     SECRETS.lastPush = new Date().toISOString();
     await saveSecrets();
-    if(droppedImages) syncMsg('sync.pushedNoImages','warn',{n:mb.toFixed(2), m:SYNC_MAX_MB});
+    if(droppedImages) syncMsg('sync.pushedNoImages','warn',{n:mb.toFixed(2), m:syncCapacityMB()});
     else syncMsg('sync.pushed','ok',{n:mb.toFixed(2)});
     uploadedDialog(mb, droppedImages);
     route();
@@ -3916,25 +3971,21 @@ async function syncPull(){
     const g = await gh('/gists/'+SECRETS.gistId);
     const f = g.files && g.files[GIST_FILE];
     if(!f) throw new Error(t('sync.noFile'));
-    let text = f.content;
-    if(f.truncated && f.raw_url){
-      const r = await fetch(f.raw_url);
-      if(!r.ok) throw new Error('raw HTTP '+r.status);
-      text = await r.text();
-    }
-    const d = JSON.parse(text);
+    const d = JSON.parse(await gistFileText(f));
     if(!d || !Array.isArray(d.meetings)) throw new Error(t('set.badBackup'));
     ['meetings','participants','contacts','cards','followups'].forEach(k=>{ if(Array.isArray(d[k])) DB[k]=d[k]; });
     if(d.settings && typeof d.settings==='object') DB.settings = Object.assign(DB.settings, d.settings);
     for(const k of ['meetings','participants','contacts','cards','followups']) await save(k);
     await saveSettings();
-    let imgs=0;
-    if(d.blobs && typeof d.blobs==='object'){
-      for(const k in d.blobs){
-        if(k.indexOf('mc:blob:')!==0) continue;
-        if(typeof d.blobs[k]!=='string' || d.blobs[k].slice(0,5)!=='data:') continue;
-        await sSet(k, d.blobs[k]); imgs++;
-      }
+    let imgs = await restoreBlobs(d.blobs);
+    /* Images now arrive in numbered parts alongside the records. */
+    const partNames = Object.keys(g.files||{}).filter(n=>IMG_FILE_RE.test(n))
+      .sort((a,b)=>parseInt(IMG_FILE_RE.exec(a)[1],10)-parseInt(IMG_FILE_RE.exec(b)[1],10));
+    for(const name of partNames){
+      try{
+        const part = JSON.parse(await gistFileText(g.files[name]));
+        imgs += await restoreBlobs(part && part.blobs);
+      }catch(e){ console.error('part failed: '+name, e); }
     }
     DB.settings.schema = Math.min(DB.settings.schema||1, (d.settings && d.settings.schema) || 1);
     await migrateNames();
@@ -3953,14 +4004,14 @@ function uploadedDialog(mb, droppedImages){
   const d = new Date();
   const iso = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   const when = fmtDate(iso)+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-  const tight = mb > SYNC_MAX_MB*0.8;   /* worth saying before pushes start dropping images */
+  const tight = mb > syncCapacityMB()*0.8;   /* worth saying before pushes start dropping images */
   showModal('<div class="m-h"><h2 id="m-title">'+esc(t('sync.doneTitle'))+'</h2></div>'
     + '<div class="m-b">'
       + '<div class="banner banner-ok">'+ico('check',18)+'<div>'+esc(t('sync.doneBody',{t:when, n:mb.toFixed(2)}))+'</div></div>'
       + (droppedImages ? '<div class="banner banner-warn" style="margin-top:10px">'+ico('alert',18)
           + '<div>'+esc(t('sync.doneNoImages',{m:SYNC_MAX_MB}))+'</div></div>' : '')
       + (!droppedImages && tight ? '<div class="banner banner-warn" style="margin-top:10px">'+ico('alert',18)
-          + '<div>'+esc(t('sync.doneTight',{n:mb.toFixed(1), m:SYNC_MAX_MB}))+'</div></div>' : '')
+          + '<div>'+esc(t('sync.doneTight',{n:mb.toFixed(1), m:syncCapacityMB()}))+'</div></div>' : '')
       + '<p class="help" style="margin-top:12px">'+esc(t('sync.doneHint'))+'</p>'
     + '</div>'
     + '<div class="m-f"><button class="btn btn-primary" onclick="closeModal()">'+esc(t('act.close'))+'</button></div>', 'small');
