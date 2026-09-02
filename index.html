@@ -331,14 +331,17 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .rel .r-b small{color:var(--ink-3);font-size:12.5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ---------- CARDS / OCR ---------- */
-.card-gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
-.bcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden;box-shadow:var(--shadow-s);text-align:left;display:block;width:100%}
+.card-gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:16px}
+.bcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden;box-shadow:var(--shadow-s);text-align:left;display:flex;flex-direction:column;width:100%}
 .bcard:hover{box-shadow:var(--shadow-m);border-color:var(--teal)}
 .bcard .thumb{aspect-ratio:16/10;background:var(--wash-2);display:grid;place-items:center;overflow:hidden}
 .bcard .thumb img{width:100%;height:100%;object-fit:cover}
-.bcard .bc-b{padding:12px 14px}
-.bcard .bc-b b{font-size:14.5px;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bcard .bc-b small{color:var(--ink-3);font-size:12.5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bcard .bc-b{padding:14px 16px 16px;display:flex;flex-direction:column;gap:7px;flex:1}
+.bcard .bc-b b{font-size:14.5px;font-weight:600;line-height:1.35;min-width:0;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.bcard .bc-b small{color:var(--ink-3);font-size:12.5px;line-height:1.45;min-height:2.9em;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.bcard .bc-foot{margin-top:auto;padding-top:2px}
 .drop{
   border:2px dashed var(--line);border-radius:var(--r-m);padding:30px 20px;text-align:center;
   background:var(--wash);transition:border-color .14s,background .14s;cursor:pointer;display:block;width:100%;
@@ -430,8 +433,8 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .ph.lg{width:104px;height:104px}
 .name-cell{display:flex;align-items:center;gap:10px}
 .name-cell .ph{width:34px;height:34px}
-.bc-top{display:flex;align-items:center;gap:9px}
-.bc-top .ph{width:30px;height:30px}
+.bc-top{display:flex;align-items:flex-start;gap:10px;min-width:0}
+.bc-top .ph{width:32px;height:32px;margin-top:1px}
 .ph-block{display:flex;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
 .ph-acts{display:flex;gap:8px;flex-wrap:wrap}
 .name-alt{color:var(--ink-3);font-size:15px;font-weight:400;margin-top:2px}
@@ -3162,7 +3165,7 @@ VIEWS.cards = function(el,id){
     + '<span class="thumb" data-blob="'+esc(c.blobId)+'">'+ico('cards',26)+'</span>'
     + '<span class="bc-b"><span class="bc-top">'+avatarHtml(c,'sm')+'<b>'+esc(personName(c)||t('b.st.new'))+'</b></span>'
     + '<small>'+esc([c.position,c.org].filter(Boolean).join(' · ')||fmtDate(c.received))+'</small>'
-    + '<span style="display:block;margin-top:8px">'+statusChip('bStatus',c.status)+'</span></span></button>').join('')+'</div>';
+    + '<span class="bc-foot">'+statusChip('bStatus',c.status)+'</span></span></button>').join('')+'</div>';
   el.innerHTML=h; bindDrop(); loadThumbs(); loadPhotos(); applyRefocus();
 };
 function bindDrop(){
