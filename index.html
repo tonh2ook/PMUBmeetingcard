@@ -656,7 +656,7 @@ th:{
  'dash.thisMonth':'เดือนนี้ {n} ครั้ง','dash.needReview':'รอตรวจข้อมูล','dash.dueSoon':'ครบกำหนดใน 7 วัน',
  'm.title':'การประชุม','m.sub':'บันทึกวาระ ผู้เข้าร่วม และผลการประชุม ในรายการเดียว',
  'm.f.title':'ชื่อการประชุม','m.f.date':'วันที่','m.f.multiDay':'ประชุมหลายวัน','m.f.endDate':'วันสิ้นสุด','m.f.endDateHint':'วันสุดท้ายของการประชุม','m.f.days':'{n} วัน','m.f.start':'เวลาเริ่ม','m.f.end':'เวลาสิ้นสุด',
- 'm.f.type':'รูปแบบ','m.f.status':'สถานะ','m.f.location':'สถานที่ / ลิงก์',
+ 'm.f.type':'รูปแบบ','m.f.status':'สถานะ','m.f.location':'สถานที่ / ห้องประชุม','m.f.meetingUrl':'ลิงก์ประชุมออนไลน์','m.f.meetingUrlHint':'เช่น Zoom, Teams หรือ Google Meet',
  'm.f.organizer':'ผู้จัดการประชุม','m.f.organizerHint':'เลือกจากรายชื่อ หรือพิมพ์ชื่อผู้จัดจากภายนอกได้','m.f.organizerOther':'เคยใช้มาก่อน','m.f.agenda':'วาระการประชุม','m.f.notes':'สรุปผล / บันทึกการประชุม',
  'm.f.participants':'ผู้เข้าร่วมภายใน','m.f.contacts':'ผู้ติดต่อภายนอก','m.f.tags':'แท็ก',
  'tag.title':'แท็ก','tag.sub':'รวมทุกรายการที่ใช้แท็กเดียวกัน','tag.seeAll':'ดูทุกรายการที่ใช้แท็ก {x}',
@@ -849,7 +849,7 @@ en:{
  'dash.thisMonth':'{n} this month','dash.needReview':'awaiting review','dash.dueSoon':'due within 7 days',
  'm.title':'Meetings','m.sub':'Agenda, attendees and outcomes in one record',
  'm.f.title':'Meeting title','m.f.date':'Date','m.f.multiDay':'Runs over several days','m.f.endDate':'Last day','m.f.endDateHint':'The final day of the meeting','m.f.days':'{n} days','m.f.start':'Start','m.f.end':'End',
- 'm.f.type':'Format','m.f.status':'Status','m.f.location':'Location or link',
+ 'm.f.type':'Format','m.f.status':'Status','m.f.location':'Place or meeting room','m.f.meetingUrl':'Online meeting link','m.f.meetingUrlHint':'Zoom, Teams, Google Meet and so on',
  'm.f.organizer':'Organiser','m.f.organizerHint':'Pick from the list, or type an outside organiser','m.f.organizerOther':'Used before','m.f.agenda':'Agenda','m.f.notes':'Minutes and outcomes',
  'm.f.participants':'Internal participants','m.f.contacts':'External contacts','m.f.tags':'Tags',
  'tag.title':'Tags','tag.sub':'Everything filed under the same tag','tag.seeAll':'See everything tagged {x}',
@@ -1280,6 +1280,25 @@ const DB = { meetings:[], participants:[], contacts:[], cards:[], followups:[],
 /* Until now "name" held the card's primary script and "nameEn" the Latin form.
    The heading is now the Latin name, so the two swap and "nameEn" retires.
    Runs once, guarded by a schema stamp, and leaves nothing behind. */
+async function migrateVenue(){
+  if((DB.settings.schema||1) >= 5) return;
+  HOUSEKEEPING = true;
+  try{
+    let moved = 0;
+    (DB.meetings||[]).forEach(m=>{
+      if(m.meetingUrl) return;
+      const v = String(m.location||'').trim();
+      /* Only move something that is unmistakably a web address. A room name that
+         merely contains a dot must stay where it is. */
+      if(/^https?:\/\/\S+$/i.test(v) || /^(www\.|meet\.|zoom\.|teams\.)\S+$/i.test(v)){
+        m.meetingUrl = v; m.location = ''; moved++;
+      }
+    });
+    DB.settings.schema = 5;
+    await save('meetings'); await saveSettings();
+    if(moved) console.info('moved '+moved+' links out of the venue field');
+  } finally { HOUSEKEEPING = false; }
+}
 async function migrateLinks(){
   if((DB.settings.schema||1) >= 4) return;
   HOUSEKEEPING = true;
@@ -1657,6 +1676,7 @@ async function unlock(){
   await migrateNames();
   await migrateCountries();
   await migrateLinks();
+  await migrateVenue();
   if(DB.settings.lang && DB.settings.lang!==LANG){ LANG = DB.settings.lang; }
   APP_READY = true;
   await touchSession(true);
@@ -2158,6 +2178,7 @@ function meetingDetail(el,id){
     + '<dl class="dl">'
     + dlRow('m.f.date', fmtMeetingDate(m)+(m.start?' · '+m.start+(m.end?'–'+m.end:''):''))
     + dlRow('m.f.location', m.location)
+    + linkRow('m.f.meetingUrl', m.meetingUrl)
     + dlRow('m.f.organizer', m.organizer)
     + dlRow('m.f.type', label('mType',m.type))
     + '<dt>'+esc(t('m.f.countries'))+'</dt><dd>'
@@ -3631,6 +3652,7 @@ const FORMS = {
     {k:'status',l:'m.f.status',ty:'select',opt:'mStatus',def:'planned'},
     {k:'organizer',l:'m.f.organizer',ty:'suggest',list:'people',hint:'m.f.organizerHint'},
     {k:'location',l:'m.f.location',ty:'text',full:true},
+    {k:'meetingUrl',l:'m.f.meetingUrl',ty:'url',full:true,hint:'m.f.meetingUrlHint'},
     {k:'countries',l:'m.f.countries',ty:'csv',hint:'m.f.countriesHint',full:true},
     {k:'region',l:'m.f.region',ty:'select',opt:'region',blank:true,hint:'m.f.regionAuto'},
     {k:'agenda',l:'m.f.agenda',ty:'textarea',full:true},
@@ -3977,7 +3999,8 @@ function sheetRows(coll){
     [L('m.f.title')]:m.title||'', [L('m.f.date')]:m.date||'', [L('m.f.start')]:m.start||'', [L('m.f.end')]:m.end||'',
     [L('m.f.type')]:label('mType',m.type), [L('m.f.status')]:label('mStatus',m.status),
     [L('m.f.endDate')]:m.multiDay?(m.endDate||''):'',
-    [L('m.f.location')]:m.location||'', [L('m.f.organizer')]:m.organizer||'',
+    [L('m.f.location')]:m.location||'', [L('m.f.meetingUrl')]:m.meetingUrl||'',
+    [L('m.f.organizer')]:m.organizer||'',
     [L('m.f.countries')]:(m.countries||[]).join('; '),
     [L('m.f.region')]:m.region?label('region',m.region):'',
     [L('m.f.participants')]:REL.mParticipants(m).map(personName).join('; '),
@@ -4433,6 +4456,7 @@ async function syncPull(){
     await migrateNames();
     await migrateCountries();
     await migrateLinks();
+    await migrateVenue();
     HOUSEKEEPING = false;
     SECRETS.lastPull = new Date().toISOString();
     await saveSecrets();
