@@ -747,6 +747,13 @@ th:{
  'sync.doneNoImages':'ครั้งนี้ไม่ได้รวมรูปภาพ เพราะรวมแล้วเกิน {m} MB · ข้อมูลตัวหนังสือขึ้นครบแล้ว',
  'sync.doneHint':'เปิดเครื่องอื่นแล้วกดดึงข้อมูลจากระบบ เพื่อให้ข้อมูลตรงกัน',
  'sync.lastPush':'อัปโหลดล่าสุด','sync.lastPull':'ดึงลงล่าสุด',
+ 'sync.autoPull':'ดึงข้อมูลจากระบบอัตโนมัติเมื่อเข้าสู่ระบบ',
+ 'sync.autoPullHelp':'ทำเฉพาะเมื่อเครื่องนี้ไม่มีการแก้ไขที่ยังไม่ได้อัปโหลด เพื่อไม่ให้ข้อมูลที่เพิ่งกรอกหายไป',
+ 'sync.autoChecking':'กำลังตรวจข้อมูลล่าสุดจากระบบ…',
+ 'sync.autoUpToDate':'ข้อมูลในเครื่องนี้ตรงกับระบบอยู่แล้ว',
+ 'sync.autoSkipped':'ยังไม่ได้ดึงข้อมูลอัตโนมัติ เพราะเครื่องนี้มีการแก้ไขที่ยังไม่ได้อัปโหลด · กดอัปโหลดลงระบบก่อน แล้วค่อยกดดึงข้อมูล',
+ 'sync.autoSkippedToast':'ข้ามการดึงอัตโนมัติ เครื่องนี้มีข้อมูลที่ยังไม่ได้อัปโหลด',
+ 'sync.autoFailed':'ตรวจข้อมูลจากระบบไม่สำเร็จ: {m} · ใช้งานต่อได้ตามปกติ',
  'sync.pullNow':'ดึงข้อมูลจากระบบ','sync.pushNow':'อัปโหลดลงระบบ',
  'sync.notSetUp':'ยังไม่ได้ตั้งค่าการซิงก์ข้ามอุปกรณ์','sync.notSetUpSub':'ตั้งค่าครั้งเดียว แล้วจะมีปุ่มดึงและอัปโหลดข้อมูลล่าสุดขึ้นตรงนี้',
  'sync.setUp':'ตั้งค่าการซิงก์',
@@ -929,6 +936,13 @@ en:{
  'sync.doneNoImages':'Images were left out this time — including them went past {m} MB. All the records went up.',
  'sync.doneHint':'On your other device, press download so both hold the same data.',
  'sync.lastPush':'Last push','sync.lastPull':'Last pull',
+ 'sync.autoPull':'Download from the store when I sign in',
+ 'sync.autoPullHelp':'Only runs when this device has nothing waiting to be uploaded, so recent work is never overwritten.',
+ 'sync.autoChecking':'Checking the store for newer data…',
+ 'sync.autoUpToDate':'This device already matches the store',
+ 'sync.autoSkipped':'Automatic download skipped — this device has changes that have not been uploaded. Upload first, then download.',
+ 'sync.autoSkippedToast':'Skipped the automatic download — unsaved changes here',
+ 'sync.autoFailed':'Could not check the store: {m}. You can carry on as normal.',
  'sync.pullNow':'Download from the store','sync.pushNow':'Upload to the store',
  'sync.notSetUp':'Sync across devices is not set up yet','sync.notSetUpSub':'Set it up once and the pull and upload buttons appear here.',
  'sync.setUp':'Set up sync',
@@ -1230,13 +1244,17 @@ function appState(){ return DB; }
 function appSecrets(){ return SECRETS; }
 
 const DB = { meetings:[], participants:[], contacts:[], cards:[], followups:[],
-             settings:{ lang:'th', owner:'', org:'PMU-B (บพค.)', remindDefault:3, autoOcr:true, autoShot:true, batchScan:true, keepSignedIn:'1h', syncImages:true } };
+             settings:{ lang:'th', owner:'', org:'PMU-B (บพค.)', remindDefault:3, autoOcr:true, autoShot:true, batchScan:true, keepSignedIn:'1h', syncImages:true, autoPull:true } };
 
 /* Until now "name" held the card's primary script and "nameEn" the Latin form.
    The heading is now the Latin name, so the two swap and "nameEn" retires.
    Runs once, guarded by a schema stamp, and leaves nothing behind. */
 async function migrateCountries(){
   if((DB.settings.schema||1) >= 3) return;
+  HOUSEKEEPING = true;
+  try{ await migrateCountriesInner(); } finally { HOUSEKEEPING = false; }
+}
+async function migrateCountriesInner(){
   let touched = 0;
   (DB.contacts||[]).forEach(c=>{ const n=canonCountry(c.country); if(n!==c.country){ c.country=n; touched++; } });
   (DB.cards||[]).forEach(c=>{ const n=canonCountry(c.country); if(n!==c.country){ c.country=n; touched++; } });
@@ -1252,6 +1270,10 @@ async function migrateCountries(){
 }
 async function migrateNames(){
   if((DB.settings.schema||1) >= 2) return;
+  HOUSEKEEPING = true;
+  try{ await migrateNamesInner(); } finally { HOUSEKEEPING = false; }
+}
+async function migrateNamesInner(){
   let touched = 0;
   ['participants','contacts','cards'].forEach(coll=>{
     (DB[coll]||[]).forEach(r=>{
@@ -1283,11 +1305,14 @@ async function loadAll(){
   DB.followups = Array.isArray(f)?f:[];
   if(s && typeof s==='object') DB.settings = Object.assign(DB.settings, s);
 }
+let HOUSEKEEPING = false;   /* set while migrations run, so they are not counted as edits */
 async function save(coll){
   /* Stamped so the app can tell the owner whether the gist is behind. Written
      straight to storage rather than through saveSettings() to avoid recursion. */
-  DB.settings.lastChange = Date.now();
-  sSet(KEYS.settings, DB.settings);
+  if(!HOUSEKEEPING){
+    DB.settings.lastChange = Date.now();
+    sSet(KEYS.settings, DB.settings);
+  }
   const ok = await sSet(KEYS[coll], DB[coll]);
   if(!ok && hasStore()) toast(t(QUOTA_HIT ? 'g.quotaFull' : 'g.offlineTitle'),'bad');
   return ok;
@@ -1572,6 +1597,7 @@ async function unlock(){
   applyLang();
   renderNav();
   if(!location.hash || location.hash==='#') location.hash = '#/dashboard';
+  setTimeout(autoPullAfterUnlock, 300);
   route();
   if(!STORAGE_OK) toast(t('g.memoryOnly'),'bad');
 }
@@ -3919,6 +3945,10 @@ VIEWS.settings = function(el){
 
   h += '<section class="card" style="margin-bottom:16px"><div class="card-h"><h3>'+esc(t('set.sync'))+'</h3></div><div class="card-pad">'
     + '<p style="color:var(--ink-2);font-size:14px;margin-bottom:14px">'+esc(t('set.syncHelp'))+'</p>'
+    + '<label class="lg-show" for="sync-auto" style="margin:0 0 10px">'
+    + '<input type="checkbox" id="sync-auto"'+(autoPullOn()?' checked':'')+' onchange="setAutoPull(this.checked)">'
+    + '<span>'+esc(t('sync.autoPull'))+'</span></label>'
+    + '<p class="help" style="margin:-4px 0 14px 27px">'+esc(t('sync.autoPullHelp'))+'</p>'
     + '<label class="lg-show" for="sync-images" style="margin:0 0 14px">'
     + '<input type="checkbox" id="sync-images"'+(DB.settings.syncImages!==false?' checked':'')+' onchange="setSyncImages(this.checked)">'
     + '<span>'+esc(t('sync.withImages'))+'</span></label>'
@@ -4158,6 +4188,7 @@ async function syncPull(){
     if(!f) throw new Error(t('sync.noFile'));
     const d = JSON.parse(await gistFileText(f));
     if(!d || !Array.isArray(d.meetings)) throw new Error(t('set.badBackup'));
+    HOUSEKEEPING = true;   /* restoring is not editing */
     ['meetings','participants','contacts','cards','followups'].forEach(k=>{ if(Array.isArray(d[k])) DB[k]=d[k]; });
     if(d.settings && typeof d.settings==='object') DB.settings = Object.assign(DB.settings, d.settings);
     for(const k of ['meetings','participants','contacts','cards','followups']) await save(k);
@@ -4175,6 +4206,7 @@ async function syncPull(){
     DB.settings.schema = Math.min(DB.settings.schema||1, (d.settings && d.settings.schema) || 1);
     await migrateNames();
     await migrateCountries();
+    HOUSEKEEPING = false;
     SECRETS.lastPull = new Date().toISOString();
     await saveSecrets();
     syncMsg('sync.pulled','ok',{n:DB.meetings.length, i:imgs});
@@ -4182,7 +4214,7 @@ async function syncPull(){
   }catch(e){
     console.error('pull failed', e);
     syncMsg('sync.failed','bad',{m:String(e.message||e)});
-  }finally{ SYNC_BUSY=false; }
+  }finally{ SYNC_BUSY=false; HOUSEKEEPING=false; }
 }
 /* Shown after every successful upload. The inline strip message alone was easy
    to miss, and "did that actually save?" is the whole reason this exists. */
@@ -4228,13 +4260,55 @@ async function clearSecrets(){
 }
 
 
+
+/* ---------------- AUTO PULL ON SIGN-IN ----------------
+   Pulling replaces everything on this device, so it only runs when there is
+   nothing here that has not been uploaded yet. Silently overwriting a meeting
+   someone typed on the train is the one failure this must never cause. */
+function autoPullOn(){ return DB.settings.autoPull !== false; }
+function hasLocalRecords(){
+  return ['meetings','participants','contacts','cards','followups']
+    .some(k=>(DB[k]||[]).length > 0);
+}
+async function autoPullAfterUnlock(){
+  if(!autoPullOn() || !canPull()) return;
+  try{
+    if(syncDirty() && hasLocalRecords()){
+      /* This device is ahead. Say so and leave the local copy alone. */
+      syncMsg('sync.autoSkipped','warn');
+      toast(t('sync.autoSkippedToast'),'bad');
+      route();
+      return;
+    }
+    toast(t('sync.autoChecking'));
+    const g = await gh('/gists/'+SECRETS.gistId);
+    const f = g.files && g.files[GIST_FILE];
+    if(!f) return;
+    const head = JSON.parse(await gistFileText(f));
+    const remote = Date.parse(head && head.exportedAt || 0) || 0;
+    const seen   = Date.parse(SECRETS.lastPull || 0) || 0;
+    if(remote && seen && remote <= seen){
+      syncMsg('sync.autoUpToDate','ok');    /* nothing new since the last pull */
+      route();
+      return;
+    }
+    await syncPull();
+  }catch(e){
+    /* A failed check must never block getting into the app. */
+    console.warn('auto pull skipped', e);
+    syncMsg('sync.autoFailed','warn',{m:String(e.message||e)});
+    route();
+  }
+}
+
 /* ---------------- SYNC SHORTCUTS ---------------- */
 function syncReady(){ return !!SECRETS.ghToken; }
 function canPull(){ return syncReady() && !!SECRETS.gistId; }
 function syncDirty(){
   const changed = DB.settings.lastChange || 0;
   const pushed  = SECRETS.lastPush ? Date.parse(SECRETS.lastPush) : 0;
-  return changed > pushed;
+  const pulled  = SECRETS.lastPull ? Date.parse(SECRETS.lastPull) : 0;
+  return changed > Math.max(pushed, pulled);
 }
 function agoText(iso){
   if(!iso) return t('g.none');
@@ -4276,6 +4350,10 @@ function syncStrip(){
 
 /* Push from wherever the owner happens to be, then land them back on the page
    they were on rather than dropping them into Settings. */
+async function setAutoPull(on){
+  DB.settings.autoPull = !!on;
+  await saveSettings();
+}
 async function setSyncImages(on){
   DB.settings.syncImages = !!on;
   await saveSettings();
