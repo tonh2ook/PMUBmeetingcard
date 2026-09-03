@@ -215,6 +215,13 @@ a:hover{text-decoration:underline}
 .chip-navy{background:#E6EDF7;color:var(--navy-2)}
 .chip button{margin-left:2px;opacity:.6;line-height:1;font-size:15px}
 .chip button:hover{opacity:1}
+.chip-link{cursor:pointer;border:0;font-family:inherit}
+.chip-link:hover{filter:brightness(.94)}
+.chip-n{opacity:.65;font-size:11px;margin-left:2px}
+.chip-add{cursor:pointer;border:1px dashed var(--line-2);background:transparent;color:var(--ink-3);font-family:inherit}
+.chip-add:hover{border-color:var(--teal);color:var(--teal)}
+.tag-pool{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:9px}
+.tag-pool-lbl{font-size:12px;color:var(--ink-3);margin-right:2px}
 .tag-row{display:flex;flex-wrap:wrap;gap:5px}
 
 .field{margin-bottom:16px}
@@ -652,6 +659,10 @@ th:{
  'm.f.type':'รูปแบบ','m.f.status':'สถานะ','m.f.location':'สถานที่ / ลิงก์',
  'm.f.organizer':'ผู้จัดการประชุม','m.f.organizerHint':'เลือกจากรายชื่อ หรือพิมพ์ชื่อผู้จัดจากภายนอกได้','m.f.organizerOther':'เคยใช้มาก่อน','m.f.agenda':'วาระการประชุม','m.f.notes':'สรุปผล / บันทึกการประชุม',
  'm.f.participants':'ผู้เข้าร่วมภายใน','m.f.contacts':'ผู้ติดต่อภายนอก','m.f.tags':'แท็ก',
+ 'tag.title':'แท็ก','tag.sub':'รวมทุกรายการที่ใช้แท็กเดียวกัน','tag.seeAll':'ดูทุกรายการที่ใช้แท็ก {x}',
+ 'tag.found':'พบ {n} รายการที่ใช้แท็กนี้','tag.reuse':'แท็กที่เคยใช้:','tag.others':'แท็กอื่น:',
+ 'tag.empty':'ยังไม่มีแท็ก','tag.emptySub':'เพิ่มแท็กในการประชุม ผู้เข้าร่วม ผู้ติดต่อ หรืองานติดตาม แล้วจะมารวมกันที่นี่',
+ 'tag.none':'ไม่พบรายการ','tag.noneSub':'ไม่มีรายการใดใช้แท็กนี้แล้ว',
  'm.photos':'ภาพบรรยากาศการประชุม','m.addPhoto':'เพิ่มรูป','m.noPhotos':'ยังไม่มีรูป เพิ่มได้สูงสุด {n} รูป',
  'm.photoFull':'ครบ {n} รูปแล้ว','m.photoTrimmed':'เพิ่มได้อีก {n} รูป ระบบจึงเลือกเท่าที่ใส่ได้',
  'm.photoAdded':'เพิ่มรูปแล้ว {n} รูป','m.photoRemoved':'ลบรูปแล้ว','m.removePhoto':'ลบรูปนี้',
@@ -841,6 +852,10 @@ en:{
  'm.f.type':'Format','m.f.status':'Status','m.f.location':'Location or link',
  'm.f.organizer':'Organiser','m.f.organizerHint':'Pick from the list, or type an outside organiser','m.f.organizerOther':'Used before','m.f.agenda':'Agenda','m.f.notes':'Minutes and outcomes',
  'm.f.participants':'Internal participants','m.f.contacts':'External contacts','m.f.tags':'Tags',
+ 'tag.title':'Tags','tag.sub':'Everything filed under the same tag','tag.seeAll':'See everything tagged {x}',
+ 'tag.found':'{n} records carry this tag','tag.reuse':'Already in use:','tag.others':'Other tags:',
+ 'tag.empty':'No tags yet','tag.emptySub':'Add a tag to a meeting, participant, contact or follow-up and it will gather here.',
+ 'tag.none':'Nothing found','tag.noneSub':'No record carries this tag any more.',
  'm.photos':'Photos from the meeting','m.addPhoto':'Add a photo','m.noPhotos':'No photos yet — up to {n} can be added.',
  'm.photoFull':'{n} photos, the maximum','m.photoTrimmed':'Only {n} more will fit, so the rest were skipped',
  'm.photoAdded':'{n} photo(s) added','m.photoRemoved':'Photo removed','m.removePhoto':'Remove this photo',
@@ -1736,7 +1751,10 @@ function emptyState(titleKey, subKey, ctaHtml){
 }
 function tagsHtml(tags){
   if(!tags || !tags.length) return '';
-  return '<div class="tag-row">'+tags.map(x=>'<span class="chip chip-teal">'+esc(x)+'</span>').join('')+'</div>';
+  return '<div class="tag-row">'+tags.map(x=>
+    '<button type="button" class="chip chip-teal chip-link" onclick="go(this.dataset.h)" '
+    + 'data-h="#/tags/'+esc(encodeURIComponent(x))+'" '
+    + 'title="'+esc(t('tag.seeAll',{x}))+'">'+esc(x)+'</button>').join('')+'</div>';
 }
 function crumb(backHash, backKey, current){
   return '<nav class="crumb" aria-label="Breadcrumb"><button type="button" onclick="go(\''+backHash+'\')">'+esc(t(backKey))+'</button>'
@@ -1822,6 +1840,19 @@ function sortRows(rows, key, dir){
     x=String(x==null?'':x); y=String(y==null?'':y);
     return x.localeCompare(y,LANG==='th'?'th':'en')*dir;
   });
+}
+const TAGGED = ['meetings','participants','contacts','followups'];
+/* Tags are shared across the whole workspace, so one typed on a meeting can be
+   reused on a contact without typing it again. */
+function everyTag(){
+  const s = new Set();
+  TAGGED.forEach(c=>(DB[c]||[]).forEach(r=>(r.tags||[]).forEach(x=>s.add(x))));
+  return Array.from(s).sort((a,b)=>a.localeCompare(b));
+}
+function tagCounts(tag){
+  const out = {};
+  TAGGED.forEach(c=>{ out[c] = (DB[c]||[]).filter(r=>(r.tags||[]).includes(tag)); });
+  return out;
 }
 function allTags(coll){
   const s=new Set(); DB[coll].forEach(r=>(r.tags||[]).forEach(x=>s.add(x)));
@@ -3655,8 +3686,22 @@ let TAGBUF = [];
 function renderTagBuf(){
   const box=$('#tag-chips'); if(!box) return;
   box.innerHTML = TAGBUF.map((x,i)=>'<span class="chip chip-teal">'+esc(x)+'<button type="button" aria-label="'+esc(t('act.delete'))+'" onclick="dropTag('+i+')">×</button></span>').join('');
+  renderTagPool();
 }
 function dropTag(i){ TAGBUF.splice(i,1); renderTagBuf(); }
+function addTag(x){ if(!TAGBUF.includes(x)) TAGBUF.push(x); renderTagBuf(); }
+/* Tags already in use, offered as one-tap chips rather than something to retype. */
+function renderTagPool(){
+  const pool = $('#tag-pool'); if(!pool) return;
+  const rest = everyTag().filter(x=>!TAGBUF.includes(x));
+  pool.innerHTML = rest.length
+    ? '<span class="tag-pool-lbl">'+esc(t('tag.reuse'))+'</span>'
+      + rest.map(x=>'<button type="button" class="chip chip-add" data-tag="'+esc(x)+'">+ '+esc(x)+'</button>').join('')
+    : '';
+  pool.querySelectorAll('.chip-add').forEach(b=>{
+    b.onclick = ()=>addTag(b.getAttribute('data-tag'));
+  });
+}
 function tagKey(ev){
   if(ev.key==='Enter' || ev.key===','){
     ev.preventDefault();
@@ -3720,7 +3765,10 @@ function fieldHtml(f, rec){
     case 'tags':
       TAGBUF = Array.isArray(v)?v.slice():[];
       ctl = '<div id="tag-chips" class="tag-row" style="margin-bottom:7px"></div>'
-          + '<input type="text" id="'+id+'" placeholder="'+esc(t('ph.tags'))+'" onkeydown="tagKey(event)">';
+          + '<input type="text" id="'+id+'" placeholder="'+esc(t('ph.tags'))+'" onkeydown="tagKey(event)"'
+          + ' list="dl-tags" autocomplete="off">'
+          + '<datalist id="dl-tags">'+everyTag().map(x=>'<option value="'+esc(x)+'"></option>').join('')+'</datalist>'
+          + '<div id="tag-pool" class="tag-pool"></div>';
       break;
     case 'email': ctl='<input type="email" id="'+id+'" value="'+esc(v||'')+'" autocomplete="off">'; break;
     case 'tel': ctl='<input type="tel" id="'+id+'" value="'+esc(v||'')+'" autocomplete="off">'; break;
@@ -4003,6 +4051,57 @@ function exportAll(){
 'use strict';
 
 /* ---------------- SETTINGS ---------------- */
+VIEWS.tags = function(el, raw){
+  const tag = raw ? decodeURIComponent(raw) : '';
+  const tags = everyTag();
+
+  if(!tag){
+    let h = pageHead('tag.title','tag.sub','');
+    h += tags.length
+      ? '<div class="card"><div class="card-pad"><div class="tag-row">'
+        + tags.map(x=>{
+            const c = tagCounts(x);
+            const n = TAGGED.reduce((a,k)=>a+c[k].length,0);
+            return '<button type="button" class="chip chip-teal chip-link" onclick="go(this.dataset.h)" '
+              + 'data-h="#/tags/'+esc(encodeURIComponent(x))+'">'+esc(x)+' <span class="chip-n">'+n+'</span></button>';
+          }).join('')
+        + '</div></div></div>'
+      : emptyState('tag.empty','tag.emptySub','');
+    el.innerHTML = h;
+    return;
+  }
+
+  const c = tagCounts(tag);
+  const total = TAGGED.reduce((a,k)=>a+c[k].length,0);
+  let h = crumb('#/tags','tag.title', tag);
+  h += '<div class="page-head"><div><h1>'+esc(tag)+'</h1><p>'+esc(t('tag.found',{n:total}))+'</p></div></div>';
+
+  if(!total){ el.innerHTML = h + emptyState('tag.none','tag.noneSub',''); return; }
+
+  if(c.meetings.length) h += relCard('nav.meetings', c.meetings.map(m=>
+    relRow('#/meetings/'+m.id, m.title, fmtMeetingDate(m)+' · '+label('mType',m.type), initials(m.title),
+      statusChip('mStatus',m.status))).join(''));
+  if(c.participants.length) h += relCard('nav.participants', c.participants.map(p=>
+    relRow('#/participants/'+p.id, personName(p), [p.position,p.division,p.org].filter(Boolean).join(' · '),
+      initials(personName(p)))).join(''));
+  if(c.contacts.length) h += relCard('nav.contacts', c.contacts.map(x=>
+    relRow('#/contacts/'+x.id, personName(x), [x.position,x.org].filter(Boolean).join(' · '),
+      initials(personName(x)))).join(''));
+  if(c.followups.length) h += relCard('nav.followups', c.followups.map(f=>
+    relRow('#/followups/'+f.id, f.title, f.due?fmtDate(f.due):t('g.none'), initials(f.title),
+      statusChip('fStatus',f.status))).join(''));
+
+  const others = tags.filter(x=>x!==tag);
+  if(others.length){
+    h += '<div class="card"><div class="card-pad"><div class="tag-row">'
+      + '<span class="tag-pool-lbl">'+esc(t('tag.others'))+'</span>'
+      + others.map(x=>'<button type="button" class="chip chip-link" onclick="go(this.dataset.h)" '
+        + 'data-h="#/tags/'+esc(encodeURIComponent(x))+'">'+esc(x)+'</button>').join('')
+      + '</div></div></div>';
+  }
+  el.innerHTML = h;
+};
+
 VIEWS.settings = function(el){
   const total = DB.meetings.length+DB.participants.length+DB.contacts.length+DB.cards.length+DB.followups.length;
   let h = pageHead('set.title','set.sub','');
