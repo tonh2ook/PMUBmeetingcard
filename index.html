@@ -254,6 +254,8 @@ td .lnk{font-weight:500;color:var(--navy);text-align:left}
 td .lnk:hover{color:var(--teal);text-decoration:underline}
 td small{color:var(--ink-3);display:block;font-size:12.5px}
 .row-acts{display:flex;gap:4px;justify-content:flex-end}
+.per-page{display:inline-flex;align-items:center;gap:7px;color:var(--ink-3);font-size:12.5px;margin-left:16px}
+.per-page select{padding:4px 8px;font-size:12.5px;height:auto;width:auto;min-width:64px}
 .tbl-foot{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line);color:var(--ink-2);font-size:13.5px;background:var(--paper);flex-wrap:wrap}
 
 /* ---------- EMPTY / ERROR ---------- */
@@ -780,7 +782,7 @@ th:{
  'v.required':'กรุณากรอกข้อมูลนี้','v.email':'รูปแบบอีเมลไม่ถูกต้อง หากมีหลายอีเมลให้คั่นด้วย ; หรือ ,','v.phone':'ใช้ได้เฉพาะตัวเลข เว้นวรรค เครื่องหมาย + - และวงเล็บ',
  'v.date':'รูปแบบวันที่ไม่ถูกต้อง','v.endBeforeStart':'เวลาสิ้นสุดต้องอยู่หลังเวลาเริ่ม','v.url':'รูปแบบเว็บไซต์ไม่ถูกต้อง','v.check':'ตรวจสอบข้อมูลที่มีเครื่องหมายอีกครั้ง',
  'g.confirmDelete':'ยืนยันการลบ','g.confirmDeleteBody':'ต้องการลบ “{n}” ใช่หรือไม่ การลบนี้ย้อนกลับไม่ได้ และการเชื่อมโยงกับรายการอื่นจะถูกตัดออก',
- 'g.results':'{n} รายการ','g.of':'จาก','g.page':'หน้า','g.prev':'ก่อนหน้า','g.next':'ถัดไป','g.none':'—','g.plusMore':'และอีก {n} รายการ',
+ 'g.results':'{n} รายการ','g.perPage':'แสดงต่อหน้า','g.of':'จาก','g.page':'หน้า','g.prev':'ก่อนหน้า','g.next':'ถัดไป','g.none':'—','g.plusMore':'และอีก {n} รายการ',
  'g.relatedMeetings':'การประชุมที่เกี่ยวข้อง','g.relatedContacts':'ผู้ติดต่อภายนอกที่เกี่ยวข้อง',
  'g.relatedParticipants':'ผู้เข้าร่วม - บพค.','col.internal':'ภายใน','col.external':'ภายนอก','g.relatedCards':'นามบัตร','g.relatedFollowups':'งานติดตาม',
  'g.timeline':'ประวัติความเคลื่อนไหว','g.noTimeline':'ยังไม่มีประวัติสำหรับรายการนี้',
@@ -969,7 +971,7 @@ en:{
  'v.required':'This field is required','v.email':'That is not a valid email address. Separate several with ; or ,','v.phone':'Digits, spaces, + - and brackets only',
  'v.date':'That is not a valid date','v.endBeforeStart':'The end time must come after the start','v.url':'That is not a valid web address','v.check':'Check the marked fields',
  'g.confirmDelete':'Delete this record','g.confirmDeleteBody':'Delete \u201c{n}\u201d? This cannot be undone and any links to it will be cut.',
- 'g.results':'{n} records','g.of':'of','g.page':'Page','g.prev':'Previous','g.next':'Next','g.none':'—','g.plusMore':'+{n} more',
+ 'g.results':'{n} records','g.perPage':'Per page','g.of':'of','g.page':'Page','g.prev':'Previous','g.next':'Next','g.none':'—','g.plusMore':'+{n} more',
  'g.relatedMeetings':'Related meetings','g.relatedContacts':'Related external contacts',
  'g.relatedParticipants':'Participants — PMU-B','col.internal':'Internal','col.external':'External','g.relatedCards':'Business cards','g.relatedFollowups':'Follow-ups',
  'g.timeline':'History','g.noTimeline':'No history for this record yet',
@@ -1244,7 +1246,7 @@ function appState(){ return DB; }
 function appSecrets(){ return SECRETS; }
 
 const DB = { meetings:[], participants:[], contacts:[], cards:[], followups:[],
-             settings:{ lang:'th', owner:'', org:'PMU-B (บพค.)', remindDefault:3, autoOcr:true, autoShot:true, batchScan:true, keepSignedIn:'1h', syncImages:true, autoPull:true } };
+             settings:{ lang:'th', owner:'', org:'PMU-B (บพค.)', remindDefault:3, autoOcr:true, autoShot:true, batchScan:true, keepSignedIn:'1h', syncImages:true, autoPull:true, pageSize:20 } };
 
 /* Until now "name" held the card's primary script and "nameEn" the Latin form.
    The heading is now the Latin name, so the two swap and "nameEn" retires.
@@ -1712,7 +1714,19 @@ function personAlt(r){
 'use strict';
 
 /* ---------------- list state ---------------- */
-const PAGE_SIZE = 12;
+/* How many rows a list shows at once. The choice is remembered, so it does not
+   have to be made again on every page or after a reload. */
+const PAGE_SIZES = [10, 20, 50, 100];
+function pageSize(){
+  const v = parseInt(DB.settings.pageSize, 10);
+  return PAGE_SIZES.indexOf(v) >= 0 ? v : 20;
+}
+async function setPageSize(mod, v){
+  DB.settings.pageSize = parseInt(v,10) || 20;
+  await saveSettings();
+  if(FILT[mod]) FILT[mod].page = 1;   /* the old page number may not exist any more */
+  route();
+}
 const FILT = {
   meetings:{q:'',status:'',type:'',region:'',tag:'',page:1,sk:'date',sd:-1},
   participants:{q:'',org:'',tag:'',page:1,sk:'name',sd:1},
@@ -1786,9 +1800,11 @@ function searchBox(mod){
 function tableFrame(mod, cols, rows, rowFn){
   const f=FILT[mod];
   const total=rows.length;
-  const pages=Math.max(1,Math.ceil(total/PAGE_SIZE));
+  const per=pageSize();
+  const pages=Math.max(1,Math.ceil(total/per));
   if(f.page>pages) f.page=pages;
-  const slice=rows.slice((f.page-1)*PAGE_SIZE, f.page*PAGE_SIZE);
+  if(f.page<1) f.page=1;
+  const slice=rows.slice((f.page-1)*per, f.page*per);
   let h='<div class="card"><div class="tbl-wrap"><table><thead><tr>';
   cols.forEach(c=>{
     const s=c.sort;
@@ -1798,7 +1814,12 @@ function tableFrame(mod, cols, rows, rowFn){
   h+='</tr></thead><tbody>';
   h += slice.map(rowFn).join('');
   h += '</tbody></table></div>';
-  h += '<div class="tbl-foot"><span>'+esc(t('g.results',{n:total}))+'</span><div class="spacer" style="flex:1"></div>';
+  h += '<div class="tbl-foot"><span>'+esc(t('g.results',{n:total}))+'</span>'
+    + '<label class="per-page">'+esc(t('g.perPage'))
+    + '<select onchange="setPageSize(\''+mod+'\',this.value)" aria-label="'+esc(t('g.perPage'))+'">'
+    + PAGE_SIZES.map(n=>'<option value="'+n+'"'+(n===per?' selected':'')+'>'+n+'</option>').join('')
+    + '</select></label>'
+    + '<div class="spacer" style="flex:1"></div>';
   if(pages>1){
     h += '<button class="btn btn-ghost btn-sm" '+(f.page<=1?'disabled':'')+' onclick="setFilt(\''+mod+'\',\'page\','+(f.page-1)+')">'+esc(t('g.prev'))+'</button>'
       +  '<span>'+esc(t('g.page'))+' '+f.page+' '+esc(t('g.of'))+' '+pages+'</span>'
