@@ -137,7 +137,7 @@ a:hover{text-decoration:underline}
 .nav a .cnt.alert{background:var(--orange);color:#fff}
 .rail-foot{padding:12px;border-top:1px solid rgba(255,255,255,.10);display:flex;gap:8px}
 
-.main{margin-left:var(--rail);min-height:100vh;display:flex;flex-direction:column}
+.main{margin-left:var(--rail);min-height:100vh;display:flex;flex-direction:column;min-width:0;overflow-x:hidden}
 .topbar{
   position:sticky;top:0;z-index:50;background:rgba(243,246,250,.92);backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line);padding:12px 26px;display:flex;align-items:center;gap:14px;
@@ -196,7 +196,7 @@ a:hover{text-decoration:underline}
 .seg button{padding:5px 12px;border-radius:6px;font-size:13px;color:var(--ink-2);font-weight:500}
 .seg button.on{background:var(--paper);color:var(--navy);box-shadow:var(--shadow-s)}
 
-.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--shadow-s)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--shadow-s);min-width:0}
 .card-pad{padding:20px 22px}
 .card-h{padding:15px 20px;border-bottom:1px solid var(--line-2);display:flex;align-items:center;gap:10px}
 .card-h h3{font-size:15px;font-weight:600}
@@ -303,7 +303,8 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .mini .m-body small{color:var(--ink-3);font-size:12.5px}
 
 /* ---------- DETAIL ---------- */
-.detail-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;align-items:start}
+.detail-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px;align-items:start}
+.detail-grid > *{min-width:0}
 @media(max-width:1000px){.detail-grid{grid-template-columns:1fr}}
 .dl{display:grid;grid-template-columns:auto 1fr;gap:9px 18px;font-size:14.5px}
 .dl dt{color:var(--ink-2);font-size:13.5px;white-space:nowrap}
@@ -326,12 +327,12 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .tnode button.t-what{color:var(--navy)}
 .tnode button.t-what:hover{color:var(--teal);text-decoration:underline}
 .tnode .t-note{font-size:13.5px;color:var(--ink-2);margin-top:2px}
-.rel-list{display:flex;flex-direction:column;gap:2px}
-.rel{display:flex;gap:10px;align-items:center;padding:9px 12px;border-radius:var(--r-s);text-align:left;width:100%;font-size:14px}
+.rel-list{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rel{display:flex;gap:10px;align-items:center;padding:9px 12px;border-radius:var(--r-s);text-align:left;width:100%;min-width:0;font-size:14px}
 .rel:hover{background:var(--wash-2)}
 .rel .av{width:32px;height:32px;border-radius:9px;background:var(--wash-2);color:var(--navy);display:grid;place-items:center;font-size:12.5px;font-weight:600;flex-shrink:0}
 .rel .r-b{flex:1;min-width:0}
-.rel .r-b b{font-weight:500;display:block;font-size:14px}
+.rel .r-b b{font-weight:500;display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rel .r-b small{color:var(--ink-3);font-size:12.5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ---------- CARDS / OCR ---------- */
@@ -649,7 +650,7 @@ th:{
  'm.title':'การประชุม','m.sub':'บันทึกวาระ ผู้เข้าร่วม และผลการประชุม ในรายการเดียว',
  'm.f.title':'ชื่อการประชุม','m.f.date':'วันที่','m.f.multiDay':'ประชุมหลายวัน','m.f.endDate':'วันสิ้นสุด','m.f.endDateHint':'วันสุดท้ายของการประชุม','m.f.days':'{n} วัน','m.f.start':'เวลาเริ่ม','m.f.end':'เวลาสิ้นสุด',
  'm.f.type':'รูปแบบ','m.f.status':'สถานะ','m.f.location':'สถานที่ / ลิงก์',
- 'm.f.organizer':'ผู้จัดการประชุม','m.f.agenda':'วาระการประชุม','m.f.notes':'สรุปผล / บันทึกการประชุม',
+ 'm.f.organizer':'ผู้จัดการประชุม','m.f.organizerHint':'เลือกจากรายชื่อ หรือพิมพ์ชื่อผู้จัดจากภายนอกได้','m.f.organizerOther':'เคยใช้มาก่อน','m.f.agenda':'วาระการประชุม','m.f.notes':'สรุปผล / บันทึกการประชุม',
  'm.f.participants':'ผู้เข้าร่วมภายใน','m.f.contacts':'ผู้ติดต่อภายนอก','m.f.tags':'แท็ก',
  'm.photos':'ภาพบรรยากาศการประชุม','m.addPhoto':'เพิ่มรูป','m.noPhotos':'ยังไม่มีรูป เพิ่มได้สูงสุด {n} รูป',
  'm.photoFull':'ครบ {n} รูปแล้ว','m.photoTrimmed':'เพิ่มได้อีก {n} รูป ระบบจึงเลือกเท่าที่ใส่ได้',
@@ -838,7 +839,7 @@ en:{
  'm.title':'Meetings','m.sub':'Agenda, attendees and outcomes in one record',
  'm.f.title':'Meeting title','m.f.date':'Date','m.f.multiDay':'Runs over several days','m.f.endDate':'Last day','m.f.endDateHint':'The final day of the meeting','m.f.days':'{n} days','m.f.start':'Start','m.f.end':'End',
  'm.f.type':'Format','m.f.status':'Status','m.f.location':'Location or link',
- 'm.f.organizer':'Organiser','m.f.agenda':'Agenda','m.f.notes':'Minutes and outcomes',
+ 'm.f.organizer':'Organiser','m.f.organizerHint':'Pick from the list, or type an outside organiser','m.f.organizerOther':'Used before','m.f.agenda':'Agenda','m.f.notes':'Minutes and outcomes',
  'm.f.participants':'Internal participants','m.f.contacts':'External contacts','m.f.tags':'Tags',
  'm.photos':'Photos from the meeting','m.addPhoto':'Add a photo','m.noPhotos':'No photos yet — up to {n} can be added.',
  'm.photoFull':'{n} photos, the maximum','m.photoTrimmed':'Only {n} more will fit, so the rest were skipped',
@@ -1510,6 +1511,21 @@ function regionOf(countries){
   if(hits.size>1) return 'multi';
   return Array.from(hits)[0];
 }
+/* Colleagues first, then people already recorded as outside contacts, then any
+   organiser typed before — so a name only has to be typed once. */
+function organizerChoices(){
+  const out = [], seen = {};
+  const add = (name, group)=>{
+    const s = String(name||'').trim();
+    if(!s || seen[s.toLowerCase()]) return;
+    seen[s.toLowerCase()] = 1;
+    out.push({ v:s, g:group });
+  };
+  (DB.participants||[]).forEach(p=>add(personName(p), t('p.title')));
+  (DB.contacts||[]).forEach(c=>add(personName(c), t('c.title')));
+  (DB.meetings||[]).forEach(m=>add(m.organizer, t('m.f.organizerOther')));
+  return out;
+}
 function countryList(){
   const seen=new Set();
   DB.meetings.forEach(m=>(m.countries||[]).forEach(c=>seen.add(c)));
@@ -2015,7 +2031,9 @@ const REL = {
   pMeetings:     id => DB.meetings.filter(m=>(m.participantIds||[]).includes(id)).sort((a,b)=>String(b.date).localeCompare(String(a.date)))
 };
 function relRow(hash, title, sub, av, right){
-  return '<button class="rel" onclick="go(\''+hash+'\')"><span class="av">'+esc(av)+'</span>'
+  /* Shortened on screen with the full text kept in the tooltip, so nothing is lost. */
+  const full = [title, sub].filter(Boolean).join(' · ');
+  return '<button class="rel" onclick="go(\''+hash+'\')" title="'+esc(full)+'"><span class="av">'+esc(av)+'</span>'
     + '<span class="r-b"><b>'+esc(title)+'</b><small>'+esc(sub||'')+'</small></span>'+(right||'')+'</button>';
 }
 function relCard(titleKey, rowsHtml, ctaHtml){
@@ -3580,7 +3598,7 @@ const FORMS = {
     {k:'start',l:'m.f.start',ty:'time'},
     {k:'end',l:'m.f.end',ty:'time'},
     {k:'status',l:'m.f.status',ty:'select',opt:'mStatus',def:'planned'},
-    {k:'organizer',l:'m.f.organizer',ty:'text'},
+    {k:'organizer',l:'m.f.organizer',ty:'suggest',list:'people',hint:'m.f.organizerHint'},
     {k:'location',l:'m.f.location',ty:'text',full:true},
     {k:'countries',l:'m.f.countries',ty:'csv',hint:'m.f.countriesHint',full:true},
     {k:'region',l:'m.f.region',ty:'select',opt:'region',blank:true,hint:'m.f.regionAuto'},
@@ -3661,6 +3679,14 @@ function fieldHtml(f, rec){
         + (f.blank ? '<option value="">'+esc(t('ph.select'))+'</option>' : '')
         + selOpts(f.opt, v||f.def)+'</select>';
       break;
+    case 'suggest': {
+      const list = (f.list==='people') ? organizerChoices() : [];
+      ctl='<input type="text" id="'+id+'" value="'+esc(v||'')+'" list="dl-'+f.k+'" autocomplete="off">'
+        + '<datalist id="dl-'+f.k+'">'
+        + list.map(o=>'<option value="'+esc(o.v)+'"'+(o.g?' label="'+esc(o.g)+'"':'')+'></option>').join('')
+        + '</datalist>';
+      break;
+    }
     case 'check': {
       const on = (v===true) || (v==='true');
       ctl='<label class="chk-row"><input type="checkbox" id="'+id+'"'+(on?' checked':'')
