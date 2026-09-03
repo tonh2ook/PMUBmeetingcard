@@ -682,7 +682,10 @@ th:{
  'ph.cropTitle':'จัดตำแหน่งใบหน้า','ph.cropHelp':'ลากรูปให้ใบหน้าอยู่กลางวงกลม แล้วเลื่อนแถบด้านล่างเพื่อขยายหรือย่อ',
  'ph.useThis':'ใช้รูปนี้','ph.zoom':'ระดับการขยาย','ph.zoomOut':'ย่อ','ph.zoomIn':'ขยาย',
  'ph.add':'เพิ่มรูปประจำตัว','ph.change':'เปลี่ยนรูป','ph.remove':'ลบรูป','ph.saved':'บันทึกรูปแล้ว','ph.removed':'ลบรูปแล้ว',
- 'b.f.image':'รูปนามบัตร','b.f.meeting':'ได้รับในการประชุม','b.f.note':'บันทึกเกี่ยวกับนามบัตร','b.f.received':'วันที่ได้รับ',
+ 'b.f.image':'รูปนามบัตร','b.f.imageBack':'รูปนามบัตร ด้านหลัง',
+ 'b.addBack':'เพิ่มรูปด้านหลัง','b.removeBack':'ลบรูปด้านหลัง','b.backAdded':'เพิ่มรูปด้านหลังแล้ว','b.backRemoved':'ลบรูปด้านหลังแล้ว',
+ 'b.twoSided':'สแกน 2 ด้าน','b.flipCard':'พลิกนามบัตร แล้ววางด้านหลังในกรอบ','b.gotFront':'ได้ด้านแรกแล้ว รอด้านหลัง',
+ 'b.awaitingBack':'รอถ่ายด้านหลัง','b.keptOneSide':'บันทึกเฉพาะด้านที่ถ่ายไว้แล้ว','b.f.meeting':'ได้รับในการประชุม','b.f.note':'บันทึกเกี่ยวกับนามบัตร','b.f.received':'วันที่ได้รับ',
  'b.tooBig':'ไฟล์ใหญ่เกิน 8 MB กรุณาเลือกไฟล์ที่เล็กลง','b.badType':'รองรับเฉพาะไฟล์รูปภาพ',
  'b.linked':'บันทึกเป็นผู้ติดต่อเรียบร้อยแล้ว','b.openContact':'เปิดข้อมูลผู้ติดต่อ',
  'b.scan':'สแกนด้วยกล้อง','b.scanTitle':'สแกนนามบัตร','b.scanSub':'วางนามบัตรให้เต็มกรอบ ระบบจะถ่ายและอ่านข้อมูลให้เอง',
@@ -767,10 +770,10 @@ th:{
  'priv.h5':'ข้อจำกัดที่ควรทราบ','priv.p5':'รหัสรับรองหน้าเข้าสู่ระบบทำหน้าที่ล็อกหน้าจอเท่านั้น ไม่ใช่การเข้ารหัสข้อมูล ใครที่เปิดเบราว์เซอร์เครื่องนี้ได้ย่อมเปิดดูข้อมูลใน IndexedDB ได้โดยตรง หากนำไปวางบนเว็บสาธารณะ ควรตั้ง repository เป็นแบบส่วนตัว และ Gist ที่ใช้ซิงก์เป็น secret gist ซึ่งไม่ปรากฏในการค้นหาแต่ไม่ได้เข้ารหัส จึงไม่ควรใช้ระบบนี้เก็บข้อมูลชั้นความลับของทางราชการ',
  'st.saved':'บันทึกแล้ว','st.deleted':'ลบแล้ว','st.updated':'แก้ไขแล้ว','st.copied':'คัดลอกแล้ว',
  'st.exported':'ส่งออกไฟล์แล้ว','st.loggedOut':'ออกจากระบบแล้ว','st.nothing':'ไม่มีข้อมูลให้ส่งออก',
- 'v.required':'กรุณากรอกข้อมูลนี้','v.email':'รูปแบบอีเมลไม่ถูกต้อง','v.phone':'ใช้ได้เฉพาะตัวเลข เว้นวรรค เครื่องหมาย + - และวงเล็บ',
+ 'v.required':'กรุณากรอกข้อมูลนี้','v.email':'รูปแบบอีเมลไม่ถูกต้อง หากมีหลายอีเมลให้คั่นด้วย ; หรือ ,','v.phone':'ใช้ได้เฉพาะตัวเลข เว้นวรรค เครื่องหมาย + - และวงเล็บ',
  'v.date':'รูปแบบวันที่ไม่ถูกต้อง','v.endBeforeStart':'เวลาสิ้นสุดต้องอยู่หลังเวลาเริ่ม','v.url':'รูปแบบเว็บไซต์ไม่ถูกต้อง','v.check':'ตรวจสอบข้อมูลที่มีเครื่องหมายอีกครั้ง',
  'g.confirmDelete':'ยืนยันการลบ','g.confirmDeleteBody':'ต้องการลบ “{n}” ใช่หรือไม่ การลบนี้ย้อนกลับไม่ได้ และการเชื่อมโยงกับรายการอื่นจะถูกตัดออก',
- 'g.results':'{n} รายการ','g.of':'จาก','g.page':'หน้า','g.prev':'ก่อนหน้า','g.next':'ถัดไป','g.none':'—',
+ 'g.results':'{n} รายการ','g.of':'จาก','g.page':'หน้า','g.prev':'ก่อนหน้า','g.next':'ถัดไป','g.none':'—','g.plusMore':'และอีก {n} รายการ',
  'g.relatedMeetings':'การประชุมที่เกี่ยวข้อง','g.relatedContacts':'ผู้ติดต่อภายนอกที่เกี่ยวข้อง',
  'g.relatedParticipants':'ผู้เข้าร่วม - บพค.','col.internal':'ภายใน','col.external':'ภายนอก','g.relatedCards':'นามบัตร','g.relatedFollowups':'งานติดตาม',
  'g.timeline':'ประวัติความเคลื่อนไหว','g.noTimeline':'ยังไม่มีประวัติสำหรับรายการนี้',
@@ -861,7 +864,10 @@ en:{
  'ph.cropTitle':'Position the face','ph.cropHelp':'Drag the photo so the face sits inside the circle, then use the slider to zoom.',
  'ph.useThis':'Use this photo','ph.zoom':'Zoom level','ph.zoomOut':'Out','ph.zoomIn':'In',
  'ph.add':'Add a photo','ph.change':'Change photo','ph.remove':'Remove photo','ph.saved':'Photo saved','ph.removed':'Photo removed',
- 'b.f.image':'Card image','b.f.meeting':'Received at','b.f.note':'Note about this card','b.f.received':'Date received',
+ 'b.f.image':'Card image','b.f.imageBack':'Card image, back',
+ 'b.addBack':'Add the back','b.removeBack':'Remove the back','b.backAdded':'Back image added','b.backRemoved':'Back image removed',
+ 'b.twoSided':'Two sides','b.flipCard':'Turn the card over and frame the back','b.gotFront':'First side captured — waiting for the back',
+ 'b.awaitingBack':'waiting for the back','b.keptOneSide':'Saved the side that was already photographed','b.f.meeting':'Received at','b.f.note':'Note about this card','b.f.received':'Date received',
  'b.tooBig':'That file is over 8 MB. Choose a smaller one.','b.badType':'Image files only',
  'b.linked':'Saved as a contact','b.openContact':'Open the contact',
  'b.scan':'Scan with camera','b.scanTitle':'Scan a card','b.scanSub':'Fill the frame with the card — it shoots and reads on its own',
@@ -946,10 +952,10 @@ en:{
  'priv.h5':'What this passphrase does not do','priv.p5':'The access code locks the screen; it does not encrypt the stored data. Anyone who can open this browser can read the IndexedDB directly. If you host this publicly, keep the repository private, and note that a secret gist is unlisted but not encrypted. Do not use this for classified government material.',
  'st.saved':'Saved','st.deleted':'Deleted','st.updated':'Updated','st.copied':'Copied',
  'st.exported':'File exported','st.loggedOut':'Signed out','st.nothing':'Nothing to export',
- 'v.required':'This field is required','v.email':'That is not a valid email address','v.phone':'Digits, spaces, + - and brackets only',
+ 'v.required':'This field is required','v.email':'That is not a valid email address. Separate several with ; or ,','v.phone':'Digits, spaces, + - and brackets only',
  'v.date':'That is not a valid date','v.endBeforeStart':'The end time must come after the start','v.url':'That is not a valid web address','v.check':'Check the marked fields',
  'g.confirmDelete':'Delete this record','g.confirmDeleteBody':'Delete \u201c{n}\u201d? This cannot be undone and any links to it will be cut.',
- 'g.results':'{n} records','g.of':'of','g.page':'Page','g.prev':'Previous','g.next':'Next','g.none':'—',
+ 'g.results':'{n} records','g.of':'of','g.page':'Page','g.prev':'Previous','g.next':'Next','g.none':'—','g.plusMore':'+{n} more',
  'g.relatedMeetings':'Related meetings','g.relatedContacts':'Related external contacts',
  'g.relatedParticipants':'Participants — PMU-B','col.internal':'Internal','col.external':'External','g.relatedCards':'Business cards','g.relatedFollowups':'Follow-ups',
  'g.timeline':'History','g.noTimeline':'No history for this record yet',
@@ -1229,6 +1235,21 @@ const DB = { meetings:[], participants:[], contacts:[], cards:[], followups:[],
 /* Until now "name" held the card's primary script and "nameEn" the Latin form.
    The heading is now the Latin name, so the two swap and "nameEn" retires.
    Runs once, guarded by a schema stamp, and leaves nothing behind. */
+async function migrateCountries(){
+  if((DB.settings.schema||1) >= 3) return;
+  let touched = 0;
+  (DB.contacts||[]).forEach(c=>{ const n=canonCountry(c.country); if(n!==c.country){ c.country=n; touched++; } });
+  (DB.cards||[]).forEach(c=>{ const n=canonCountry(c.country); if(n!==c.country){ c.country=n; touched++; } });
+  (DB.meetings||[]).forEach(m=>{
+    if(!Array.isArray(m.countries)) return;
+    const n = m.countries.map(canonCountry).filter((s,i,a)=>a.indexOf(s)===i);
+    if(n.join('|')!==m.countries.join('|')){ m.countries=n; touched++; }
+  });
+  DB.settings.schema = 3;
+  for(const coll of ['contacts','cards','meetings']) await save(coll);
+  await saveSettings();
+  if(touched) console.info('tidied '+touched+' country spellings');
+}
 async function migrateNames(){
   if((DB.settings.schema||1) >= 2) return;
   let touched = 0;
@@ -1344,7 +1365,7 @@ const COUNTRY_HINTS = ['Japan','China','Korea','Taiwan','Singapore','Malaysia','
   'Viet Nam','Lao PDR','Cambodia','Myanmar','Brunei','India','Bangladesh','Sri Lanka','Australia',
   'New Zealand','United Kingdom','France','Germany','Austria','Netherlands','Belgium','Switzerland',
   'Sweden','Norway','Denmark','Finland','Italy','Spain','Portugal','Poland','Czechia','Ireland',
-  'United States','Canada','Brazil','Chile','Argentina','Mexico','Israel','UAE','Saudi Arabia',
+  'United States','Canada','Brazil','Chile','Argentina','Mexico','Israel','UAE','Saudi Arabia','Thailand',
   'Qatar','Turkiye','South Africa','Kenya','Egypt','Nigeria','Ghana','Russia',
   'ASEAN','EU','Nordic','Mekong','APEC','BIMSTEC'];
 const REGION_OF = {
@@ -1384,6 +1405,40 @@ const REGION_TH = {
   'อิสราเอล':'mideast','สหรัฐอาหรับเอมิเรตส์':'mideast','ซาอุดีอาระเบีย':'mideast','กาตาร์':'mideast','ตุรกี':'mideast',
   'แอฟริกาใต้':'africa','เคนยา':'africa','อียิปต์':'africa','ไนจีเรีย':'africa','กานา':'africa'
 };
+/* Cards print country names however they like — THAILAND, thailand, Viet Nam.
+   Stored as typed, those become separate entries in the filter and in every
+   count, so an incoming name is matched against the known list and written in
+   one agreed spelling. Anything unrecognised is left alone apart from ALL-CAPS,
+   which is title-cased; short all-caps like USA and UAE are genuine and kept. */
+const COUNTRY_ALIASES = {
+  'usa':'USA','us':'USA','u.s.a.':'USA','united states':'United States',
+  'united states of america':'United States','uk':'UK','u.k.':'UK',
+  'great britain':'United Kingdom','england':'United Kingdom',
+  'uae':'UAE','south korea':'Korea','republic of korea':'Korea',
+  'vietnam':'Viet Nam','viet nam':'Viet Nam','laos':'Lao PDR','lao':'Lao PDR',
+  'czech republic':'Czechia','turkey':'Turkiye','deutschland':'Germany',
+  'nippon':'Japan','ประเทศไทย':'Thailand','ไทย':'Thailand'
+};
+let COUNTRY_CANON = null;
+function countryCanonMap(){
+  if(COUNTRY_CANON) return COUNTRY_CANON;
+  COUNTRY_CANON = {};
+  COUNTRY_HINTS.forEach(c=>{ COUNTRY_CANON[c.toLowerCase()] = c; });
+  for(const k in COUNTRY_ALIASES) COUNTRY_CANON[k] = COUNTRY_ALIASES[k];
+  return COUNTRY_CANON;
+}
+function titleCase(s){
+  return s.toLowerCase().replace(/(^|[\s\-'()])([a-z])/g, (m,a,b)=>a+b.toUpperCase());
+}
+function canonCountry(v){
+  const raw = String(v||'').trim().replace(/\s+/g,' ');
+  if(!raw) return '';
+  const hit = countryCanonMap()[raw.toLowerCase()];
+  if(hit) return hit;
+  /* an unknown name shouted in capitals is still worth calming down */
+  if(raw.length > 3 && raw === raw.toUpperCase() && /[A-Z]/.test(raw)) return titleCase(raw);
+  return raw;
+}
 function regionOf(countries){
   const list = countries||[];
   const hits = new Set();
@@ -1510,6 +1565,7 @@ async function unlock(){
   $('#app').classList.add('on');
   await loadAll();
   await migrateNames();
+  await migrateCountries();
   if(DB.settings.lang && DB.settings.lang!==LANG){ LANG = DB.settings.lang; }
   APP_READY = true;
   await touchSession(true);
@@ -2010,6 +2066,31 @@ function meetingDetail(el,id){
 }
 /* People paste LinkedIn addresses in every shape: with or without https://, with
    or without www. Stored as typed, opened as a working URL. */
+const ONE_EMAIL = /^[^@\s;,]+@[^@\s;,]+\.[^@\s;,]+$/;
+/* One or several addresses, separated by ; or , — stored in one tidy form. */
+function splitEmails(v){
+  return String(v||'').split(/[;,]/).map(s=>s.trim()).filter(Boolean);
+}
+function validEmails(v){
+  const list = splitEmails(v);
+  return list.length > 0 && list.every(e=>ONE_EMAIL.test(e));
+}
+function normalizeEmails(v){ return splitEmails(v).join('; '); }
+/* A table cell has room for one, so the rest are counted rather than crammed in. */
+function emailCell(v){
+  const list = splitEmails(v);
+  if(!list.length) return '—';
+  return '<a href="mailto:'+esc(list[0])+'">'+esc(list[0])+'</a>'
+    + (list.length>1 ? '<small>'+esc(t('g.plusMore',{n:list.length-1}))+'</small>' : '');
+}
+function emailRow(k, v){
+  const list = splitEmails(v);
+  return '<dt>'+esc(t(k))+'</dt><dd>'
+    + (list.length
+        ? list.map(e=>'<a href="mailto:'+esc(e)+'">'+esc(e)+'</a>').join('<br>')
+        : '<span style="color:var(--ink-3)">'+esc(t('g.none'))+'</span>')
+    + '</dd>';
+}
 function linkHref(v){
   const s = String(v||'').trim();
   if(!s) return '';
@@ -2077,7 +2158,7 @@ VIEWS.participants = function(el,id){
     + (p.tags&&p.tags.length?'<small>'+esc(p.tags.join(' · '))+'</small>':'')+'</span></span></td>'
     + '<td>'+esc(p.position||'—')+(p.division?'<small>'+esc(p.division)+'</small>':'')+'</td>'
     + '<td>'+esc(p.org||'—')+'</td>'
-    + '<td>'+(p.email?'<a href="mailto:'+esc(p.email)+'">'+esc(p.email)+'</a>':'—')+(p.phone?'<small>'+esc(p.phone)+'</small>':'')+'</td>'
+    + '<td>'+emailCell(p.email)+(p.phone?'<small>'+esc(p.phone)+'</small>':'')+'</td>'
     + '<td>'+REL.pMeetings(p.id).length+'</td>'
     + '<td><div class="row-acts">'
     + '<button class="btn btn-quiet btn-sm" aria-label="'+esc(t('act.edit'))+'" onclick="openForm(\'participants\',\''+p.id+'\')">'+ico('edit',15)+'</button>'
@@ -2100,7 +2181,7 @@ function participantDetail(el,id){
     + photoBlock('participants', p)
     + '<dl class="dl">'
     + dlRow('p.f.nameLocal',p.nameLocal) + dlRow('p.f.position',p.position) + dlRow('p.f.division',p.division)
-    + dlRow('p.f.org',p.org) + dlRow('p.f.email',p.email) + dlRow('p.f.phone',p.phone)
+    + dlRow('p.f.org',p.org) + emailRow('p.f.email',p.email) + dlRow('p.f.phone',p.phone)
     + linkRow('p.f.linkedin',p.linkedin)
     + '</dl>' + (p.tags&&p.tags.length?'<div style="margin-top:14px">'+tagsHtml(p.tags)+'</div>':'')
     + (p.notes?'<div style="margin-top:16px"><div class="lbl">'+esc(t('p.f.notes'))+'</div><div style="white-space:pre-wrap">'+esc(p.notes)+'</div></div>':'')
@@ -2154,7 +2235,7 @@ VIEWS.contacts = function(el,id){
     + (c.position?'<small>'+esc(c.position)+'</small>':'')+'</span></span></td>'
     + '<td>'+esc(c.org||'—')+(c.dept?'<small>'+esc(c.dept)+'</small>':'')+'</td>'
     + '<td>'+esc(c.country||'—')+'</td>'
-    + '<td>'+(c.email?'<a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a>':'—')+((c.mobile||c.phone)?'<small>'+esc(c.mobile||c.phone)+'</small>':'')+'</td>'
+    + '<td>'+emailCell(c.email)+((c.mobile||c.phone)?'<small>'+esc(c.mobile||c.phone)+'</small>':'')+'</td>'
     + '<td>'+REL.cMeetings(c.id).length+'</td>'
     + '<td><div class="row-acts">'
     + '<button class="btn btn-quiet btn-sm" aria-label="'+esc(t('act.edit'))+'" onclick="openForm(\'contacts\',\''+c.id+'\')">'+ico('edit',15)+'</button>'
@@ -2178,7 +2259,7 @@ function contactDetail(el,id){
     + photoBlock('contacts', c)
     + '<dl class="dl">'
     + dlRow('c.f.nameLocal',c.nameLocal) + dlRow('c.f.position',c.position) + dlRow('c.f.org',c.org) + dlRow('c.f.dept',c.dept)
-    + '<dt>'+esc(t('c.f.email'))+'</dt><dd>'+(c.email?'<a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a>':'<span style="color:var(--ink-3)">—</span>')+'</dd>'
+    + emailRow('c.f.email', c.email)
     + '<dt>'+esc(t('c.f.phone'))+'</dt><dd>'+(c.phone?'<a href="tel:'+esc(c.phone.replace(/\s/g,''))+'">'+esc(c.phone)+'</a>':'<span style="color:var(--ink-3)">—</span>')+'</dd>'
     + '<dt>'+esc(t('c.f.mobile'))+'</dt><dd>'+(c.mobile?'<a href="tel:'+esc(c.mobile.replace(/\s/g,''))+'">'+esc(c.mobile)+'</a>':'<span style="color:var(--ink-3)">—</span>')+'</dd>'
     + linkRow('c.f.website', c.website)
@@ -2379,12 +2460,21 @@ async function removeAttachment(coll,id,fid){
 let OCR_BUSY = false;
 let OCR_FATAL = false;   /* a key problem — retrying the rest of the batch is pointless */
 
-async function addCardImage(dataUrl, meetingId){
+async function addCardImage(dataUrl, meetingId, backUrl){
   const small = await downscale(dataUrl, 1600);
   const id = uid('bc'), bid = uid('img');
   const ok = await blobPut(bid, small);
   if(!ok && hasStore()){ toast(t('g.offlineBody'),'bad'); return null; }
-  DB.cards.unshift({ id, blobId:bid, status:'new', received: todayISO(),
+  /* Many cards print English on one side and the local language on the other.
+     Both sides belong to one person, so they live on one record. */
+  let backId = '';
+  if(backUrl){
+    const backSmall = await downscale(backUrl, 1600);
+    backId = uid('img');
+    const ok2 = await blobPut(backId, backSmall);
+    if(!ok2) backId = '';
+  }
+  DB.cards.unshift({ id, blobId:bid, backBlobId:backId, status:'new', received: todayISO(),
     meetingId: meetingId||'', name:'', nameLocal:'', position:'', org:'', dept:'',
     email:'', phone:'', mobile:'', website:'', linkedin:'', address:'', country:'', note:'',
     contactId:'', ocrRaw:'', createdAt:Date.now(), updatedAt:Date.now() });
@@ -2397,6 +2487,35 @@ async function ingestCardFile(file, meetingId){
   if(file.size > MAX_IMG){ toast(t('b.tooBig'),'bad'); return null; }
   const raw = await readAsDataURL(file);
   return addCardImage(raw, meetingId);
+}
+/* Adding the other side later, for cards already in the system. */
+function pickCardBack(id){
+  pickFile('image/*', async file=>{
+    const card = byId('cards', id);
+    if(!card) return;
+    if(!/^image\//.test(file.type||'')){ toast(t('b.badType'),'bad'); return; }
+    if(file.size > MAX_IMG){ toast(t('b.tooBig'),'bad'); return; }
+    const raw = await readAsDataURL(file);
+    const small = await downscale(raw, 1600);
+    const bid = card.backBlobId || uid('img');
+    const ok = await blobPut(bid, small);
+    if(!ok && hasStore()){ toast(t('g.offlineBody'),'bad'); return; }
+    card.backBlobId = bid;
+    card.updatedAt = Date.now();
+    await save('cards');
+    toast(t('b.backAdded'),'ok');
+    route();
+  });
+}
+async function removeCardBack(id){
+  const card = byId('cards', id);
+  if(!card || !card.backBlobId) return;
+  await blobDel(card.backBlobId);
+  card.backBlobId = '';
+  card.updatedAt = Date.now();
+  await save('cards');
+  toast(t('b.backRemoved'),'ok');
+  route();
 }
 function pickCard(meetingId){
   pickFile('image/*', async file=>{
@@ -2472,6 +2591,11 @@ async function runOCR(id){
   try{
     const pic = await prepImage(data);
     if(!pic) throw new Error(t('b.badImage'));
+    let picBack = null;
+    if(card.backBlobId){
+      const backData = await blobGet(card.backBlobId);
+      if(backData) picBack = await prepImage(backData);
+    }
     const prompt = 'Extract the contact details from this business card image. '
       + 'Reply with ONE JSON object and nothing else — no markdown fences, no commentary. Keys: '
       + 'name, nameLocal, position, org, dept, email, phone, mobile, website, linkedin, address, country. '
@@ -2480,7 +2604,17 @@ async function runOCR(id){
       + '"nameLocal" is the name in the other script shown on the card (Thai, Japanese, Chinese and so on), or "" if the card shows only one form. '
       + '"phone" is the office or landline number, "mobile" is the mobile number. '
       + '"linkedin" is the LinkedIn profile address if the card prints one, otherwise "". '
+      + 'If the card prints more than one email address, return them all in "email" separated by "; ". '
+      + 'Do the same for "phone" and "mobile" when several numbers of that kind are printed. '
+      + 'Write "country" as the plain English country name in normal capitalisation, e.g. Thailand, not THAILAND. '
       + 'Keep numbers formatted as printed. Use "" for anything not on the card. Do not invent values.';
+    /* When both sides are supplied they are one person's card, printed twice in
+       two languages — not two people. */
+    const t2sidePrompt = 'Two images are attached: they are the front and back of ONE business card '
+      + 'belonging to ONE person, usually the same details printed in two languages. '
+      + 'Merge them into a single record. Put the Latin-script name in "name" and the other-script '
+      + 'name in "nameLocal". For every other field prefer the Latin-script side, and fill in from '
+      + 'the other side anything the Latin side does not show. Never return two people.';
     /* Inside the Claude sandbox the request is authenticated for us. Hosted
        elsewhere it is not, so the owner's own key is attached when present. */
     const headers = {'Content-Type':'application/json'};
@@ -2499,9 +2633,11 @@ async function runOCR(id){
       method:'POST', headers:headers,
       body: JSON.stringify({ model: ocrModel(), max_tokens:1000,
         messages:[{ role:'user', content:[
-          { type:'image', source:{ type:'base64', media_type:pic.media_type, data:pic.data } },
-          { type:'text', text:prompt }
-        ]}]})
+          { type:'image', source:{ type:'base64', media_type:pic.media_type, data:pic.data } }
+        ].concat(picBack ? [{ type:'image', source:{ type:'base64', media_type:picBack.media_type, data:picBack.data } }] : [])
+        .concat([
+          { type:'text', text: prompt + (picBack ? ' ' + t2sidePrompt : '') }
+        ])}]})
     });
     if(!res.ok){
       /* The body carries the real reason. Without it a 400 is unreadable. */
@@ -2531,7 +2667,7 @@ async function runOCR(id){
     }
     ['name','nameLocal','position','org','dept','email','phone','mobile','website','linkedin','address','country'].forEach(k=>{
       const v = parsed[k];
-      if(typeof v === 'string' && v.trim()) card[k] = v.trim();
+      if(typeof v === 'string' && v.trim()) card[k] = (k==='country') ? canonCountry(v) : v.trim();
     });
     card.ocrRaw = clean.slice(0,4000);
     card.status = card.status==='linked' ? 'linked' : 'reviewed';
@@ -2848,6 +2984,7 @@ function camSupported(){ return !!(navigator.mediaDevices && navigator.mediaDevi
 function secureCtx(){ return location.protocol==='https:' || location.hostname==='localhost' || location.hostname==='127.0.0.1'; }
 function autoShotOn(){ return DB.settings.autoShot !== false; }
 function batchOn(){ return DB.settings.batchScan !== false; }
+function twoSidedOn(){ return DB.settings.twoSided === true; }
 
 function scanShell(){
   return '<div class="scan" id="scan" role="dialog" aria-modal="true" aria-label="'+esc(t('b.scanTitle'))+'">'
@@ -2874,6 +3011,7 @@ function scanShell(){
     + '<div class="scan-opts">'
       + '<button class="scan-chip" id="chip-auto" onclick="toggleScanOpt(\'autoShot\')">'+ico('check',14)+esc(t('b.autoShot'))+'</button>'
       + '<button class="scan-chip" id="chip-batch" onclick="toggleScanOpt(\'batchScan\')">'+ico('cards',14)+esc(t('b.batch'))+'</button>'
+      + '<button class="scan-chip" id="chip-two" onclick="toggleScanOpt(\'twoSided\')">'+ico('flip',14)+esc(t('b.twoSided'))+'</button>'
       + '<button class="scan-chip" onclick="scanToUpload()">'+ico('upload',14)+esc(t('act.upload'))+'</button>'
     + '</div></div>';
 }
@@ -2885,7 +3023,7 @@ async function openScanner(meetingId){
     return pickCard(meetingId);
   }
   SCAN.on=true; SCAN.meetingId=meetingId||''; SCAN.shots=[]; SCAN.queue=[];
-  SCAN.prev=null; SCAN.cur=null; SCAN.lastSig=null; SCAN.steady=0; SCAN.shooting=false; SCAN.devIdx=0;
+  SCAN.prev=null; SCAN.cur=null; SCAN.lastSig=null; SCAN.steady=0; SCAN.shooting=false; SCAN.devIdx=0; SCAN.pendingFront='';
   const holder=document.createElement('div');
   holder.innerHTML=scanShell();
   document.body.appendChild(holder.firstChild);
@@ -2991,6 +3129,7 @@ function scanSample(){
   return { bright:mean, sharp, motion, stdev, dup, focus: SCAN.peak ? sharp/SCAN.peak : 1 };
 }
 
+function waitHint(){ return SCAN.pendingFront ? 'b.flipCard' : 'b.hintNext'; }
 function setHint(key){
   const n=$('#scan-hint'); if(!n) return;
   const s=t(key);
@@ -3005,10 +3144,10 @@ function scanLoop(ts){
   const s=scanSample(); if(!s) return;
   const frame=$('#scan-frame');
   if(SCAN.cool && Date.now()<SCAN.cool){
-    setHint('b.hintNext'); if(frame) frame.classList.remove('lock'); return;
+    setHint(waitHint()); if(frame) frame.classList.remove('lock'); return;
   }
   if(s.dup < 6){                       /* still looking at the card we just took */
-    SCAN.steady=0; setHint('b.hintNext');
+    SCAN.steady=0; setHint(waitHint());
     if(frame) frame.classList.remove('lock');
     return;
   }
@@ -3049,10 +3188,23 @@ async function scanShoot(){
     }
   }catch(e){ console.error('capture failed',e); dataUrl=null; }
   if(!dataUrl){ SCAN.shooting=false; toast(t('b.shotFail'),'bad'); return; }
-  const rec=await addCardImage(dataUrl, SCAN.meetingId);
+
+  /* Two-sided mode holds the first shot back until the other side arrives. */
+  if(twoSidedOn() && !SCAN.pendingFront){
+    SCAN.pendingFront = dataUrl;
+    SCAN.shooting = false;
+    setHint('b.flipCard');
+    toast(t('b.gotFront'),'ok');
+    renderShots();
+    return;
+  }
+  const front = SCAN.pendingFront || dataUrl;
+  const back  = SCAN.pendingFront ? dataUrl : '';
+  SCAN.pendingFront = '';
+  const rec=await addCardImage(front, SCAN.meetingId, back);
   SCAN.shooting=false;
   if(!rec) return;
-  SCAN.shots.unshift({ id:rec.id, thumb:rec.thumb, done:false });
+  SCAN.shots.unshift({ id:rec.id, thumb:rec.thumb, done:false, sides: back ? 2 : 1 });
   renderShots();
   if(DB.settings.autoOcr !== false) queueOCR(rec.id);
   if(batchOn()) toast(t('b.savedShot'),'ok');
@@ -3086,19 +3238,24 @@ function renderShots(){
     '<span class="scan-shot'+(s.done?' ok':'')+'"><img src="'+s.thumb+'" alt=""><i>'
     + (s.done ? ico('check',13) : '<span class="spin"></span>') + '</i></span>').join('');
   const c=$('#scan-count');
-  if(c) c.textContent = SCAN.shots.length ? t('b.shotCount',{n:SCAN.shots.length}) : '';
+  if(c) c.textContent = SCAN.pendingFront ? t('b.awaitingBack')
+      : (SCAN.shots.length ? t('b.shotCount',{n:SCAN.shots.length}) : '');
   const d=$('#scan-done');
   if(d) d.textContent = SCAN.shots.length ? t('b.doneN',{n:SCAN.shots.length}) : t('b.done');
 }
 function paintScanOpts(){
   const a=$('#chip-auto'), b=$('#chip-batch'), tb=$('#scan-torch'), fl=$('#scan-flip');
+  const tw=$('#chip-two');
   if(a) a.classList.toggle('on', autoShotOn());
   if(b) b.classList.toggle('on', batchOn());
+  if(tw) tw.classList.toggle('on', twoSidedOn());
   if(tb){ tb.style.visibility = SCAN.canTorch ? 'visible' : 'hidden'; tb.classList.toggle('on', SCAN.torch); }
   if(fl) fl.style.visibility = SCAN.devices.length>1 ? 'visible' : 'hidden';
 }
 async function toggleScanOpt(k){
-  DB.settings[k] = DB.settings[k]===false ? true : false;
+  if(k==='twoSided') DB.settings[k] = !DB.settings[k];
+  else DB.settings[k] = DB.settings[k]===false ? true : false;
+  if(k==='twoSided' && !DB.settings[k]) SCAN.pendingFront='';
   await save('settings');
   SCAN.steady=0;
   paintScanOpts();
@@ -3122,9 +3279,19 @@ function scanToUpload(){
   closeScanner(true);
   pickCard(m);
 }
-function closeScanner(silent){
+async function closeScanner(silent){
   if(!SCAN.on) return;
   SCAN.on=false;
+  if(SCAN.pendingFront){
+    /* Keep the side already photographed rather than losing it. */
+    const only = SCAN.pendingFront; SCAN.pendingFront='';
+    const rec = await addCardImage(only, SCAN.meetingId);
+    if(rec){
+      SCAN.shots.unshift({ id:rec.id, thumb:rec.thumb, done:false, sides:1 });
+      if(DB.settings.autoOcr !== false) queueOCR(rec.id);
+      toast(t('b.keptOneSide'),'ok');
+    }
+  }
   stopCam();
   if(SCAN.esc){ document.removeEventListener('keydown',SCAN.esc); SCAN.esc=null; }
   const n=$('#scan'); if(n) n.remove();
@@ -3208,6 +3375,15 @@ function cardDetail(el,id){
   h += '<div class="card card-pad"><div class="ocr-grid"><div>';
   h += photoBlock('cards', c);
   h += '<div class="lbl">'+esc(t('b.f.image'))+'</div><div class="preview" id="card-img">'+ico('cards',26)+'</div>';
+  if(c.backBlobId){
+    h += '<div class="lbl" style="margin-top:12px">'+esc(t('b.f.imageBack'))+'</div>'
+      + '<div class="preview" id="card-img-back">'+ico('cards',26)+'</div>'
+      + '<button class="btn btn-quiet btn-sm" style="margin-top:8px" onclick="removeCardBack(\''+c.id+'\')">'
+      + ico('trash',14)+esc(t('b.removeBack'))+'</button>';
+  }else{
+    h += '<button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="pickCardBack(\''+c.id+'\')">'
+      + ico('upload',14)+esc(t('b.addBack'))+'</button>';
+  }
   h += '<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">'
     + '<button class="btn btn-teal" id="ocr-btn" onclick="runOCR(\''+c.id+'\')">'+ico('search',15)+esc(t(c.ocrRaw?'act.rescan':'act.scan'))+'</button>'
     + '<button class="btn btn-ghost" onclick="openScanner(\''+(c.meetingId||'')+'\')">'+ico('camera',15)+esc(t('b.scan'))+'</button>'
@@ -3240,16 +3416,18 @@ function cardDetail(el,id){
   }
   el.innerHTML=h;
   blobGet(c.blobId).then(d=>{ const n=$('#card-img'); if(n&&d) n.innerHTML='<img src="'+d+'" alt="'+esc(t('b.f.image'))+'">'; });
+  if(c.backBlobId) blobGet(c.backBlobId).then(d=>{ const n=$('#card-img-back'); if(n&&d) n.innerHTML='<img src="'+d+'" alt="'+esc(t('b.f.imageBack'))+'">'; });
   loadPhotos();
 }
 
 async function saveCard(id, alsoContact){
   const c=byId('cards',id); if(!c) return;
-  CARD_FIELDS.forEach(([k])=>{ const n=$('#cf-'+k); if(n) c[k]=n.value.trim(); });
+  CARD_FIELDS.forEach(([k])=>{ const n=$('#cf-'+k); if(n) c[k]= k==='country' ? canonCountry(n.value) : n.value.trim(); });
   c.received = $('#cf-received') ? $('#cf-received').value : c.received;
   c.meetingId = $('#cf-meeting') ? $('#cf-meeting').value : c.meetingId;
   c.note = $('#cf-note') ? $('#cf-note').value.trim() : c.note;
-  if(c.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(c.email)){ toast(t('v.email'),'bad'); return; }
+  if(c.email && !validEmails(c.email)){ toast(t('v.email'),'bad'); return; }
+  if(c.email) c.email = normalizeEmails(c.email);
   if(!c.name && !c.nameLocal && alsoContact){ toast(t('v.required')+': '+t('c.f.name'),'bad'); $('#cf-name') && $('#cf-name').focus(); return; }
   c.updatedAt=Date.now();
   if(c.status==='new' && (c.name||c.nameLocal)) c.status='reviewed';
@@ -3450,8 +3628,9 @@ async function submitForm(coll, id){
       return;
     }
     if(f.ty==='csv'){
-      data[f.k] = (el ? el.value : '').split(',').map(s=>s.trim()).filter(Boolean)
-                   .filter((s,i,a)=>a.indexOf(s)===i);
+      const list = (el ? el.value : '').split(',').map(s=>s.trim()).filter(Boolean);
+      const canon = (f.k==='countries') ? list.map(canonCountry) : list;
+      data[f.k] = canon.filter((s,i,a)=>a.indexOf(s)===i);
       return;
     }
     if(f.ty==='tags'){
@@ -3464,7 +3643,9 @@ async function submitForm(coll, id){
     v = (typeof v==='string') ? v.trim() : v;
     if(f.ty==='number') v = v===''?null:Math.max(0,Math.min(90,parseInt(v,10)||0));
     if(f.req && !v){ markErr(f.k, t('v.required')); bad++; }
-    if(f.ty==='email' && v && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ markErr(f.k, t('v.email')); bad++; }
+    if(f.ty==='email' && v && !validEmails(v)){ markErr(f.k, t('v.email')); bad++; }
+    if(f.ty==='email' && v && validEmails(v)) v = normalizeEmails(v);
+    if(f.k==='country') v = canonCountry(v);
     if(f.ty==='tel' && v && !/^[0-9+\-\s()./ext]*$/i.test(v)){ markErr(f.k, t('v.phone')); bad++; }
     if(f.ty==='url' && v && !/^(https?:\/\/)?[\w.-]+\.[a-z]{2,}([/?#].*)?$/i.test(v)){ markErr(f.k, t('v.url')); bad++; }
     data[f.k]=v;
@@ -3515,6 +3696,7 @@ async function doDelete(coll,id){
   const rec=byId(coll,id);
   if(rec && rec.files) for(const f of rec.files) await blobDel(f.id);
   if(coll==='cards' && rec && rec.blobId) await blobDel(rec.blobId);
+  if(coll==='cards' && rec && rec.backBlobId) await blobDel(rec.backBlobId);
   if(coll==='meetings' && rec && rec.photos) for(const ph of rec.photos) await blobDel(ph.id);
   /* The portrait may be shared with the linked contact, so only drop it when
      nothing else still points at it. */
@@ -3992,6 +4174,7 @@ async function syncPull(){
     }
     DB.settings.schema = Math.min(DB.settings.schema||1, (d.settings && d.settings.schema) || 1);
     await migrateNames();
+    await migrateCountries();
     SECRETS.lastPull = new Date().toISOString();
     await saveSecrets();
     syncMsg('sync.pulled','ok',{n:DB.meetings.length, i:imgs});
