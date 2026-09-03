@@ -254,6 +254,8 @@ td .lnk{font-weight:500;color:var(--navy);text-align:left}
 td .lnk:hover{color:var(--teal);text-decoration:underline}
 td small{color:var(--ink-3);display:block;font-size:12.5px}
 .row-acts{display:flex;gap:4px;justify-content:flex-end}
+.chk-row{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:14px;color:var(--ink)}
+.chk-row input{width:17px;height:17px;margin:0;accent-color:var(--teal);cursor:pointer;flex:none}
 .per-page{display:inline-flex;align-items:center;gap:7px;color:var(--ink-3);font-size:12.5px;margin-left:16px}
 .per-page select{padding:4px 8px;font-size:12.5px;height:auto;width:auto;min-width:64px}
 .tbl-foot{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line);color:var(--ink-2);font-size:13.5px;background:var(--paper);flex-wrap:wrap}
@@ -645,7 +647,7 @@ th:{
  'dash.noUpcoming':'ยังไม่มีการประชุมในอนาคต','dash.noOverdue':'ไม่มีงานค้าง เยี่ยมมาก','dash.noActivity':'ยังไม่มีความเคลื่อนไหว',
  'dash.thisMonth':'เดือนนี้ {n} ครั้ง','dash.needReview':'รอตรวจข้อมูล','dash.dueSoon':'ครบกำหนดใน 7 วัน',
  'm.title':'การประชุม','m.sub':'บันทึกวาระ ผู้เข้าร่วม และผลการประชุม ในรายการเดียว',
- 'm.f.title':'ชื่อการประชุม','m.f.date':'วันที่','m.f.start':'เวลาเริ่ม','m.f.end':'เวลาสิ้นสุด',
+ 'm.f.title':'ชื่อการประชุม','m.f.date':'วันที่','m.f.multiDay':'ประชุมหลายวัน','m.f.endDate':'วันสิ้นสุด','m.f.endDateHint':'วันสุดท้ายของการประชุม','m.f.days':'{n} วัน','m.f.start':'เวลาเริ่ม','m.f.end':'เวลาสิ้นสุด',
  'm.f.type':'รูปแบบ','m.f.status':'สถานะ','m.f.location':'สถานที่ / ลิงก์',
  'm.f.organizer':'ผู้จัดการประชุม','m.f.agenda':'วาระการประชุม','m.f.notes':'สรุปผล / บันทึกการประชุม',
  'm.f.participants':'ผู้เข้าร่วมภายใน','m.f.contacts':'ผู้ติดต่อภายนอก','m.f.tags':'แท็ก',
@@ -780,7 +782,7 @@ th:{
  'st.saved':'บันทึกแล้ว','st.deleted':'ลบแล้ว','st.updated':'แก้ไขแล้ว','st.copied':'คัดลอกแล้ว',
  'st.exported':'ส่งออกไฟล์แล้ว','st.loggedOut':'ออกจากระบบแล้ว','st.nothing':'ไม่มีข้อมูลให้ส่งออก',
  'v.required':'กรุณากรอกข้อมูลนี้','v.email':'รูปแบบอีเมลไม่ถูกต้อง หากมีหลายอีเมลให้คั่นด้วย ; หรือ ,','v.phone':'ใช้ได้เฉพาะตัวเลข เว้นวรรค เครื่องหมาย + - และวงเล็บ',
- 'v.date':'รูปแบบวันที่ไม่ถูกต้อง','v.endBeforeStart':'เวลาสิ้นสุดต้องอยู่หลังเวลาเริ่ม','v.url':'รูปแบบเว็บไซต์ไม่ถูกต้อง','v.check':'ตรวจสอบข้อมูลที่มีเครื่องหมายอีกครั้ง',
+ 'v.date':'รูปแบบวันที่ไม่ถูกต้อง','v.endBeforeStart':'เวลาสิ้นสุดต้องอยู่หลังเวลาเริ่ม','v.endDayBefore':'วันสิ้นสุดต้องไม่อยู่ก่อนวันเริ่ม','v.url':'รูปแบบเว็บไซต์ไม่ถูกต้อง','v.check':'ตรวจสอบข้อมูลที่มีเครื่องหมายอีกครั้ง',
  'g.confirmDelete':'ยืนยันการลบ','g.confirmDeleteBody':'ต้องการลบ “{n}” ใช่หรือไม่ การลบนี้ย้อนกลับไม่ได้ และการเชื่อมโยงกับรายการอื่นจะถูกตัดออก',
  'g.results':'{n} รายการ','g.perPage':'แสดงต่อหน้า','g.of':'จาก','g.page':'หน้า','g.prev':'ก่อนหน้า','g.next':'ถัดไป','g.none':'—','g.plusMore':'และอีก {n} รายการ',
  'g.relatedMeetings':'การประชุมที่เกี่ยวข้อง','g.relatedContacts':'ผู้ติดต่อภายนอกที่เกี่ยวข้อง',
@@ -834,7 +836,7 @@ en:{
  'dash.noUpcoming':'No meetings scheduled ahead','dash.noOverdue':'Nothing overdue','dash.noActivity':'No activity yet',
  'dash.thisMonth':'{n} this month','dash.needReview':'awaiting review','dash.dueSoon':'due within 7 days',
  'm.title':'Meetings','m.sub':'Agenda, attendees and outcomes in one record',
- 'm.f.title':'Meeting title','m.f.date':'Date','m.f.start':'Start','m.f.end':'End',
+ 'm.f.title':'Meeting title','m.f.date':'Date','m.f.multiDay':'Runs over several days','m.f.endDate':'Last day','m.f.endDateHint':'The final day of the meeting','m.f.days':'{n} days','m.f.start':'Start','m.f.end':'End',
  'm.f.type':'Format','m.f.status':'Status','m.f.location':'Location or link',
  'm.f.organizer':'Organiser','m.f.agenda':'Agenda','m.f.notes':'Minutes and outcomes',
  'm.f.participants':'Internal participants','m.f.contacts':'External contacts','m.f.tags':'Tags',
@@ -969,7 +971,7 @@ en:{
  'st.saved':'Saved','st.deleted':'Deleted','st.updated':'Updated','st.copied':'Copied',
  'st.exported':'File exported','st.loggedOut':'Signed out','st.nothing':'Nothing to export',
  'v.required':'This field is required','v.email':'That is not a valid email address. Separate several with ; or ,','v.phone':'Digits, spaces, + - and brackets only',
- 'v.date':'That is not a valid date','v.endBeforeStart':'The end time must come after the start','v.url':'That is not a valid web address','v.check':'Check the marked fields',
+ 'v.date':'That is not a valid date','v.endBeforeStart':'The end time must come after the start','v.endDayBefore':'The last day cannot be before the first','v.url':'That is not a valid web address','v.check':'Check the marked fields',
  'g.confirmDelete':'Delete this record','g.confirmDeleteBody':'Delete \u201c{n}\u201d? This cannot be undone and any links to it will be cut.',
  'g.results':'{n} records','g.perPage':'Per page','g.of':'of','g.page':'Page','g.prev':'Previous','g.next':'Next','g.none':'—','g.plusMore':'+{n} more',
  'g.relatedMeetings':'Related meetings','g.relatedContacts':'Related external contacts',
@@ -1003,6 +1005,17 @@ function fmtDate(iso){
   const y=+p[0], m=+p[1], d=+p[2];
   if(isNaN(y)||isNaN(m)||isNaN(d)) return iso;
   return LANG==='th' ? d+' '+TH_MON[m-1]+' '+beYear(y) : d+' '+EN_MON[m-1]+' '+y;
+}
+/* A meeting may run over several days; show the span when it does. */
+function fmtMeetingDate(m){
+  if(!m) return t('g.none');
+  const a = fmtDate(m.date);
+  if(m.multiDay && m.endDate && m.endDate !== m.date) return a + ' – ' + fmtDate(m.endDate);
+  return a;
+}
+function meetingDays(m){
+  if(!m || !m.multiDay || !m.endDate) return 1;
+  return Math.max(1, daysBetween(m.endDate, m.date) + 1);
 }
 function fmtDateTime(ms){
   if(!ms) return t('g.none');
@@ -1251,6 +1264,25 @@ const DB = { meetings:[], participants:[], contacts:[], cards:[], followups:[],
 /* Until now "name" held the card's primary script and "nameEn" the Latin form.
    The heading is now the Latin name, so the two swap and "nameEn" retires.
    Runs once, guarded by a schema stamp, and leaves nothing behind. */
+async function migrateLinks(){
+  if((DB.settings.schema||1) >= 4) return;
+  HOUSEKEEPING = true;
+  try{
+    let fixed = 0;
+    (DB.cards||[]).forEach(c=>{
+      if(!c.contactId) return;
+      const ct = byId('contacts', c.contactId);
+      if(!ct) return;
+      if(ct.cardId !== c.id){ ct.cardId = c.id; fixed++; }
+      /* one person, one face: whichever side has it wins */
+      if(!c.photoId && ct.photoId){ c.photoId = ct.photoId; fixed++; }
+      else if(c.photoId && !ct.photoId){ ct.photoId = c.photoId; fixed++; }
+    });
+    DB.settings.schema = 4;
+    await save('cards'); await save('contacts'); await saveSettings();
+    if(fixed) console.info('repaired '+fixed+' card/contact links');
+  } finally { HOUSEKEEPING = false; }
+}
 async function migrateCountries(){
   if((DB.settings.schema||1) >= 3) return;
   HOUSEKEEPING = true;
@@ -1593,6 +1625,7 @@ async function unlock(){
   await loadAll();
   await migrateNames();
   await migrateCountries();
+  await migrateLinks();
   if(DB.settings.lang && DB.settings.lang!==LANG){ LANG = DB.settings.lang; }
   APP_READY = true;
   await touchSession(true);
@@ -2041,7 +2074,9 @@ VIEWS.meetings = function(el,id){
     const nIn=(m.participantIds||[]).length, nOut=(m.contactIds||[]).length;
     return '<tr><td><button class="lnk" onclick="go(\'#/meetings/'+m.id+'\')">'+esc(m.title)+'</button>'
       + (m.tags&&m.tags.length?'<small>'+esc(m.tags.join(' · '))+'</small>':'')+'</td>'
-      + '<td>'+esc(fmtDate(m.date))+(m.start?'<small>'+esc(m.start+(m.end?'–'+m.end:''))+'</small>':'')+'</td>'
+      + '<td>'+esc(fmtMeetingDate(m))
+      + (m.multiDay && m.endDate ? '<small>'+esc(t('m.f.days',{n:meetingDays(m)}))+'</small>' : '')
+      + (m.start?'<small>'+esc(m.start+(m.end?'–'+m.end:''))+'</small>':'')+'</td>'
       + '<td>'+((m.countries||[]).length?esc(m.countries.join(', ')):'<span style="color:var(--ink-3)">—</span>')
       + (m.region?'<small>'+esc(label('region',m.region))+'</small>':'')+'</td>'
       + '<td>'+esc(label('mType',m.type))+(m.location?'<small>'+esc(m.location)+'</small>':'')+'</td>'
@@ -2062,7 +2097,9 @@ function meetingDetail(el,id){
   const ps=REL.mParticipants(m), cs=REL.mContacts(m), cards=REL.mCards(id), fus=REL.mFollowups(id);
 
   let h = crumb('#/meetings','nav.meetings',m.title);
-  h += '<div class="page-head"><div><h1>'+esc(m.title)+'</h1><p>'+esc(fmtDate(m.date))+(m.start?' · '+esc(m.start+(m.end?'–'+m.end:'')):'')+' · '+esc(label('mType',m.type))+'</p></div>'
+  h += '<div class="page-head"><div><h1>'+esc(m.title)+'</h1><p>'+esc(fmtMeetingDate(m))
+    + (m.multiDay && m.endDate ? ' · '+esc(t('m.f.days',{n:meetingDays(m)})) : '')
+    + (m.start?' · '+esc(m.start+(m.end?'–'+m.end:'')):'')+' · '+esc(label('mType',m.type))+'</p></div>'
     + '<div class="spacer"></div>'+statusChip('mStatus',m.status)
     + '<button class="btn btn-ghost" onclick="openForm(\'meetings\',\''+m.id+'\')">'+ico('edit',15)+esc(t('act.edit'))+'</button>'
     + '<button class="btn btn-danger" onclick="confirmDelete(\'meetings\',\''+m.id+'\')">'+ico('trash',15)+esc(t('act.delete'))+'</button></div>';
@@ -2070,7 +2107,7 @@ function meetingDetail(el,id){
   h += '<div class="detail-grid"><div>';
   h += '<section class="card" style="margin-bottom:16px"><div class="card-h"><h3>'+esc(t('g.info'))+'</h3></div><div class="card-pad">'
     + '<dl class="dl">'
-    + dlRow('m.f.date', fmtDate(m.date)+(m.start?' · '+m.start+(m.end?'–'+m.end:''):''))
+    + dlRow('m.f.date', fmtMeetingDate(m)+(m.start?' · '+m.start+(m.end?'–'+m.end:''):''))
     + dlRow('m.f.location', m.location)
     + dlRow('m.f.organizer', m.organizer)
     + dlRow('m.f.type', label('mType',m.type))
@@ -2149,6 +2186,13 @@ function linkRow(k, v){
          : '<span style="color:var(--ink-3)">'+esc(t('g.none'))+'</span>')
     + '</dd>';
 }
+function truthy(v){ return v===true || v==='true'; }
+/* Used by a tick box to show or hide the field it controls. */
+function revealField(k, on){
+  const el=$('#fw-'+k);
+  if(el) el.style.display = on ? '' : 'none';
+  if(!on){ const inp=$('#ff-'+k); if(inp) inp.value=''; const e=$('#fe-'+k); if(e) e.textContent=''; }
+}
 function dlRow(k,v){ return '<dt>'+esc(t(k))+'</dt><dd>'+(v?esc(v):'<span style="color:var(--ink-3)">'+esc(t('g.none'))+'</span>')+'</dd>'; }
 function notFound(hash,key){
   return '<div class="card"><div class="empty"><div class="ill">'+ico('alert',26)+'</div><h3>404</h3>'
@@ -2166,7 +2210,7 @@ function timelineCard(nodes){
 function meetingTimeline(m){
   const n=[];
   if(m.createdAt) n.push({when:fmtDateTime(m.createdAt), what:t('g.created'), c:'var(--ink-3)'});
-  if(m.date) n.push({when:fmtDate(m.date), what:m.title, note:label('mStatus',m.status), c:'var(--navy)'});
+  if(m.date) n.push({when:fmtMeetingDate(m), what:m.title, note:label('mStatus',m.status), c:'var(--navy)'});
   REL.mCards(m.id).forEach(c=> n.push({when:fmtDate(c.received)||fmtDateTime(c.createdAt), what:(c.name||t('b.title')), note:t('nav.cards'), hash:'#/cards/'+c.id, c:'var(--orange)'}));
   REL.mFollowups(m.id).forEach(f=> n.push({when:f.due?fmtDate(f.due):fmtDateTime(f.createdAt), what:f.title, note:t('nav.followups')+' · '+label('fStatus',f.status), hash:'#/followups/'+f.id, c:'var(--teal)'}));
   if(m.updatedAt && m.updatedAt!==m.createdAt) n.push({when:fmtDateTime(m.updatedAt), what:t('g.updated'), c:'var(--ink-3)'});
@@ -2235,9 +2279,9 @@ function participantDetail(el,id){
     + '</div></section>';
   h += attachSection('participants', p);
   h += relCard('g.relatedMeetings', ms.map(m=>
-      relRow('#/meetings/'+m.id, m.title, fmtDate(m.date)+' · '+label('mType',m.type), initials(m.title), statusChip('mStatus',m.status))).join(''));
+      relRow('#/meetings/'+m.id, m.title, fmtMeetingDate(m)+' · '+label('mType',m.type), initials(m.title), statusChip('mStatus',m.status))).join(''));
   h += '</div><div>';
-  h += timelineCard(ms.map(m=>({when:fmtDate(m.date), what:m.title, note:label('mStatus',m.status), hash:'#/meetings/'+m.id, c:'var(--navy)'}))
+  h += timelineCard(ms.map(m=>({when:fmtMeetingDate(m), what:m.title, note:label('mStatus',m.status), hash:'#/meetings/'+m.id, c:'var(--navy)'}))
         .concat(p.createdAt?[{when:fmtDateTime(p.createdAt), what:t('g.created'), c:'var(--ink-3)'}]:[]));
   h += '</div></div>';
   el.innerHTML=h; loadPhotos();
@@ -2317,7 +2361,7 @@ function contactDetail(el,id){
     + '</div></section>';
   h += attachSection('contacts', c);
   h += relCard('g.relatedMeetings', ms.map(m=>
-      relRow('#/meetings/'+m.id, m.title, fmtDate(m.date)+' · '+label('mType',m.type), initials(m.title), statusChip('mStatus',m.status))).join(''));
+      relRow('#/meetings/'+m.id, m.title, fmtMeetingDate(m)+' · '+label('mType',m.type), initials(m.title), statusChip('mStatus',m.status))).join(''));
   h += relCard('g.relatedFollowups', fus.map(f=>
       relRow('#/followups/'+f.id, f.title, label('fStatus',f.status), '✓', dueChip(f))).join(''),
       '<button class="btn btn-teal btn-sm" onclick="openForm(\'followups\',null,{contactId:\''+c.id+'\'})">'+ico('plus',14)+esc(t('act.add'))+'</button>');
@@ -2333,7 +2377,7 @@ function contactTimeline(c){
   const n=[];
   if(c.createdAt) n.push({when:fmtDateTime(c.createdAt), what:t('g.created'), note:c.cardId?t('c.fromCard'):t('c.manual'), c:'var(--ink-3)'});
   REL.cCards(c.id).forEach(b=> n.push({when:fmtDate(b.received)||fmtDateTime(b.createdAt), what:b.name||t('b.title'), note:t('nav.cards'), hash:'#/cards/'+b.id, c:'var(--orange)'}));
-  REL.cMeetings(c.id).forEach(m=> n.push({when:fmtDate(m.date), what:m.title, note:t('nav.meetings')+' · '+label('mStatus',m.status), hash:'#/meetings/'+m.id, c:'var(--navy)'}));
+  REL.cMeetings(c.id).forEach(m=> n.push({when:fmtMeetingDate(m), what:m.title, note:t('nav.meetings')+' · '+label('mStatus',m.status), hash:'#/meetings/'+m.id, c:'var(--navy)'}));
   REL.cFollowups(c.id).forEach(f=> n.push({when:f.due?fmtDate(f.due):fmtDateTime(f.createdAt), what:f.title, note:t('nav.followups')+' · '+label('fStatus',f.status), hash:'#/followups/'+f.id, c:'var(--teal)'}));
   return n;
 }
@@ -2411,11 +2455,11 @@ function followupDetail(el,id){
     + '</div></section>';
   h += attachSection('followups', f);
   h += '</div><div>';
-  h += relCard('g.relatedMeetings', mt?relRow('#/meetings/'+mt.id, mt.title, fmtDate(mt.date), initials(mt.title), statusChip('mStatus',mt.status)):'');
+  h += relCard('g.relatedMeetings', mt?relRow('#/meetings/'+mt.id, mt.title, fmtMeetingDate(mt), initials(mt.title), statusChip('mStatus',mt.status)):'');
   h += relCard('g.relatedContacts', ct?relRow('#/contacts/'+ct.id, personName(ct), [ct.position,ct.org].filter(Boolean).join(' · '), initials(personName(ct))):'');
   const n=[];
   if(f.createdAt) n.push({when:fmtDateTime(f.createdAt), what:t('g.created'), c:'var(--ink-3)'});
-  if(mt) n.push({when:fmtDate(mt.date), what:mt.title, note:t('nav.meetings'), hash:'#/meetings/'+mt.id, c:'var(--navy)'});
+  if(mt) n.push({when:fmtMeetingDate(mt), what:mt.title, note:t('nav.meetings'), hash:'#/meetings/'+mt.id, c:'var(--navy)'});
   if(f.due) n.push({when:fmtDate(f.due), what:t('f.f.due'), note:label('fStatus',f.status), c:isOverdue(f)?'var(--bad)':'var(--warn)'});
   if(f.completedAt) n.push({when:fmtDateTime(f.completedAt), what:t('f.st.done'), c:'var(--ok)'});
   h += timelineCard(n);
@@ -2939,7 +2983,7 @@ async function applyCrop(){
   const twin = twinOf(rec);
   if(twin && twin.photoId !== bid){
     twin.photoId = bid; twin.updatedAt = Date.now();
-    await save(CROP.coll==='cards' ? 'contacts' : 'cards');
+    await save(twinColl(rec, twin));
   }
   closeModal();
   toast(t('ph.saved'),'ok');
@@ -2962,9 +3006,23 @@ function avatarFallback(){
    and loadPhotos() fills it in once the read resolves. */
 function twinOf(rec){
   if(!rec) return null;
-  if(rec.contactId) return byId('contacts', rec.contactId);   /* card -> contact */
-  if(rec.cardId) return byId('cards', rec.cardId);            /* contact -> card */
+  if(rec.contactId){                                   /* card -> contact */
+    const ct = byId('contacts', rec.contactId);
+    if(ct) return ct;
+  }
+  if(rec.cardId){                                      /* contact -> card */
+    const cd = byId('cards', rec.cardId);
+    if(cd) return cd;
+  }
+  /* Fall back to searching from the other side, so a one-way link still pairs. */
+  const asContact = (DB.cards||[]).find(c=>c.contactId===rec.id);
+  if(asContact) return asContact;
+  const asCard = (DB.contacts||[]).find(c=>c.cardId===rec.id);
+  if(asCard) return asCard;
   return null;
+}
+function twinColl(rec, twin){
+  return (DB.cards||[]).indexOf(twin) >= 0 ? 'cards' : 'contacts';
 }
 function personPhotoId(rec){
   if(!rec) return '';
@@ -3002,7 +3060,7 @@ async function removePhoto(coll, id){
   const twin = twinOf(rec);
   if(twin && twin.photoId === shown){
     twin.photoId = ''; twin.updatedAt = Date.now();
-    await save(coll==='cards' ? 'contacts' : 'cards');
+    await save(twinColl(rec, twin));
   }
   await blobDel(shown);
   rec.photoId = '';
@@ -3459,7 +3517,7 @@ function cardDetail(el,id){
   h += '<div style="height:16px"></div>';
   if(c.meetingId){
     const mt=byId('meetings',c.meetingId);
-    if(mt) h += relCard('g.relatedMeetings', relRow('#/meetings/'+mt.id, mt.title, fmtDate(mt.date), initials(mt.title), statusChip('mStatus',mt.status)));
+    if(mt) h += relCard('g.relatedMeetings', relRow('#/meetings/'+mt.id, mt.title, fmtMeetingDate(mt), initials(mt.title), statusChip('mStatus',mt.status)));
   }
   el.innerHTML=h;
   blobGet(c.blobId).then(d=>{ const n=$('#card-img'); if(n&&d) n.innerHTML='<img src="'+d+'" alt="'+esc(t('b.f.image'))+'">'; });
@@ -3487,7 +3545,9 @@ async function saveCard(id, alsoContact){
       c.contactId = ct.id;
     }
     CARD_FIELDS.forEach(([k])=>{ ct[k] = c[k]; });
+    ct.cardId = c.id;                       /* both directions, always */
     if(c.photoId) ct.photoId = c.photoId;
+    else if(ct.photoId) c.photoId = ct.photoId;
     ct.notes = c.note || ct.notes || '';
     ct.updatedAt = Date.now();
     c.status='linked';
@@ -3515,6 +3575,8 @@ const FORMS = {
     {k:'title',l:'m.f.title',ty:'text',req:true,full:true},
     {k:'date',l:'m.f.date',ty:'date',req:true},
     {k:'type',l:'m.f.type',ty:'select',opt:'mType',def:'external'},
+    {k:'multiDay',l:'m.f.multiDay',ty:'check',reveals:'endDate',full:true},
+    {k:'endDate',l:'m.f.endDate',ty:'date',hiddenUnless:'multiDay',hint:'m.f.endDateHint'},
     {k:'start',l:'m.f.start',ty:'time'},
     {k:'end',l:'m.f.end',ty:'time'},
     {k:'status',l:'m.f.status',ty:'select',opt:'mStatus',def:'planned'},
@@ -3599,6 +3661,13 @@ function fieldHtml(f, rec){
         + (f.blank ? '<option value="">'+esc(t('ph.select'))+'</option>' : '')
         + selOpts(f.opt, v||f.def)+'</select>';
       break;
+    case 'check': {
+      const on = (v===true) || (v==='true');
+      ctl='<label class="chk-row"><input type="checkbox" id="'+id+'"'+(on?' checked':'')
+        + (f.reveals ? ' onchange="revealField(\''+f.reveals+'\',this.checked)"' : '')+'>'
+        + '<span>'+esc(t(f.cap||f.l))+'</span></label>';
+      break;
+    }
     case 'csv': {
       const arr = Array.isArray(v) ? v : (v ? String(v).split(',') : []);
       ctl='<input type="text" id="'+id+'" value="'+esc(arr.join(', '))+'" list="dl-'+f.k+'" autocomplete="off">'
@@ -3635,7 +3704,9 @@ function fieldHtml(f, rec){
     default: ctl='<input type="text" id="'+id+'" value="'+esc(v||'')+'"'+(f.req?' required':'')+' autocomplete="off">';
   }
   const hint = f.hint ? '<p class="help" style="margin-top:6px">'+esc(t(f.hint))+'</p>' : '';
-  return '<div class="field" id="fw-'+f.k+'"'+(f.full?' style="grid-column:1/-1"':'')+'>'+lbl+ctl+hint+'<p class="err-txt" id="fe-'+f.k+'"></p></div>';
+  const style = (f.full?'grid-column:1/-1;':'') + (f.hiddenUnless && !truthy(v) ? 'display:none;' : '');
+  return '<div class="field" id="fw-'+f.k+'"'+(style?' style="'+style+'"':'')+'>'
+    + (f.ty==='check' ? '' : lbl) + ctl + hint + '<p class="err-txt" id="fe-'+f.k+'"></p></div>';
 }
 function openForm(coll, id, presets){
   const def=FORMS[coll]; if(!def) return;
@@ -3674,6 +3745,7 @@ async function submitForm(coll, id){
       data[f.k]= box ? Array.from(box.querySelectorAll('input:checked')).map(i=>i.value) : [];
       return;
     }
+    if(f.ty==='check'){ data[f.k] = !!(el && el.checked); return; }
     if(f.ty==='csv'){
       const list = (el ? el.value : '').split(',').map(s=>s.trim()).filter(Boolean);
       const canon = (f.k==='countries') ? list.map(canonCountry) : list;
@@ -3705,6 +3777,13 @@ async function submitForm(coll, id){
     const wasDerived = prev && prev.region && prev.region === regionOf(prev.countries);
     if(!data.region) data.region = regionOf(data.countries);
     else if(wasDerived && data.region === prev.region) data.region = regionOf(data.countries) || data.region;
+  }
+  if(coll==='meetings'){
+    if(!data.multiDay) data.endDate = '';
+    if(data.multiDay && !data.endDate){ markErr('endDate', t('v.required')); bad++; }
+    if(data.multiDay && data.endDate && data.date && data.endDate < data.date){
+      markErr('endDate', t('v.endDayBefore')); bad++;
+    }
   }
   if(coll==='meetings' && data.start && data.end && data.end <= data.start){ markErr('end', t('v.endBeforeStart')); bad++; }
   if(bad){
@@ -3823,6 +3902,7 @@ function sheetRows(coll){
   if(coll==='meetings') return DB.meetings.map(m=>({
     [L('m.f.title')]:m.title||'', [L('m.f.date')]:m.date||'', [L('m.f.start')]:m.start||'', [L('m.f.end')]:m.end||'',
     [L('m.f.type')]:label('mType',m.type), [L('m.f.status')]:label('mStatus',m.status),
+    [L('m.f.endDate')]:m.multiDay?(m.endDate||''):'',
     [L('m.f.location')]:m.location||'', [L('m.f.organizer')]:m.organizer||'',
     [L('m.f.countries')]:(m.countries||[]).join('; '),
     [L('m.f.region')]:m.region?label('region',m.region):'',
@@ -4227,6 +4307,7 @@ async function syncPull(){
     DB.settings.schema = Math.min(DB.settings.schema||1, (d.settings && d.settings.schema) || 1);
     await migrateNames();
     await migrateCountries();
+    await migrateLinks();
     HOUSEKEEPING = false;
     SECRETS.lastPull = new Date().toISOString();
     await saveSecrets();
