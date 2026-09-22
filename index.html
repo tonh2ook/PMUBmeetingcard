@@ -135,7 +135,8 @@ a:hover{text-decoration:underline}
 .nav a .cnt{margin-left:auto;font-size:12px;background:rgba(255,255,255,.14);padding:1px 7px;border-radius:20px;font-weight:500}
 .nav a.on .cnt{background:rgba(0,0,0,.22)}
 .nav a .cnt.alert{background:var(--orange);color:#fff}
-.rail-foot{padding:12px;border-top:1px solid rgba(255,255,255,.10);display:flex;gap:8px}
+.rail-foot{padding:12px;border-top:1px solid rgba(255,255,255,.10);display:flex;flex-direction:column;gap:8px}
+.app-ver{font-size:11.5px;color:rgba(255,255,255,.55);text-align:center;letter-spacing:.02em;font-variant-numeric:tabular-nums}
 
 .main{margin-left:var(--rail);min-height:100vh;display:flex;flex-direction:column;min-width:0;overflow-x:hidden}
 .topbar{
@@ -460,6 +461,29 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .sync-strip .ss-txt small{display:block;color:var(--ink-3);font-size:12.5px;margin-top:2px}
 .sync-strip .ss-acts{display:flex;gap:8px;flex-wrap:wrap}
 .sync-strip #sync-msg{flex-basis:100%}
+.sync-strip.slim{padding:9px 14px;margin-bottom:16px;gap:8px 16px}
+.sync-strip.slim .ss-txt{align-items:center;gap:8px;flex-wrap:wrap}
+.sync-strip.slim .ss-txt b{display:inline;font-size:13.5px}
+.sync-strip.slim .ss-txt small{display:inline;margin:0}
+.sync-strip.slim #sync-msg:empty{display:none}
+.sync-strip.slim #sync-msg .banner{margin-top:6px!important}
+
+/* progress ring shown while a sync is running */
+.sp-scrim{position:fixed;inset:0;z-index:140;background:rgba(8,20,36,.42);display:grid;place-items:center;
+  animation:pop .15s ease}
+.sp-box{background:var(--paper);border-radius:18px;box-shadow:var(--shadow-l);padding:26px 30px 22px;
+  width:min(300px,calc(100% - 32px));text-align:center}
+.sp-ring{position:relative;width:132px;height:132px;margin:0 auto 14px}
+.sp-ring svg{width:132px;height:132px;transform:rotate(-90deg);display:block}
+.sp-ring .sp-track{fill:none;stroke:var(--wash-2);stroke-width:10}
+.sp-ring .sp-bar{fill:none;stroke:var(--teal);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .25s ease}
+.sp-ring.done .sp-bar{stroke:var(--ok)}
+.sp-pct{position:absolute;inset:0;display:grid;place-items:center;font-size:30px;font-weight:600;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.sp-pct small{font-size:15px;font-weight:500;margin-left:1px;color:var(--ink-3)}
+.sp-title{font-weight:600;font-size:15.5px;color:var(--ink)}
+.sp-step{font-size:13px;color:var(--ink-3);margin-top:4px;min-height:1.4em}
+@media (prefers-reduced-motion:reduce){ .sp-ring .sp-bar{transition:none} }
 .toast.act{display:flex;align-items:center;gap:10px;padding-right:8px;pointer-events:auto}
 .toast.act .t-x{background:none;border:0;color:inherit;opacity:.7;cursor:pointer;display:grid;place-items:center;padding:4px}
 .toast.act .t-x:hover{opacity:1}
@@ -577,6 +601,7 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
     </div>
     <div class="nav" id="nav"></div>
     <div class="rail-foot">
+      <div class="app-ver" id="app-ver"></div>
       <button class="btn btn-ghost btn-sm" id="btn-logout"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg><span data-i="nav.logout">ออกจากระบบ</span></button>
     </div>
   </nav>
@@ -639,7 +664,7 @@ th:{
  'nav.main':'ภาพรวม','nav.records':'ข้อมูลหลัก','nav.system':'ระบบ',
  'nav.dashboard':'แดชบอร์ด','nav.meetings':'การประชุม','nav.participants':'ผู้เข้าร่วม - บพค.',
  'nav.contacts':'ผู้ติดต่อภายนอก','nav.cards':'นามบัตร','nav.followups':'งานติดตาม',
- 'nav.settings':'ตั้งค่า','nav.privacy':'ความเป็นส่วนตัว','nav.logout':'ออกจากระบบ',
+ 'nav.settings':'ตั้งค่า','nav.privacy':'ความเป็นส่วนตัว','nav.logout':'ออกจากระบบ','app.version':'เวอร์ชัน {v} · อัปเดต {d}',
  'act.new':'สร้างใหม่','act.add':'เพิ่ม','act.edit':'แก้ไข','act.delete':'ลบ','act.save':'บันทึก',
  'act.cancel':'ยกเลิก','act.close':'ปิด','act.back':'ย้อนกลับ','act.export':'ส่งออก Excel',
  'act.view':'ดูรายละเอียด','act.confirm':'ยืนยัน','act.done':'ทำเสร็จแล้ว','act.reopen':'เปิดงานอีกครั้ง',
@@ -752,6 +777,11 @@ th:{
  'set.sync':'ซิงก์ข้ามอุปกรณ์','set.syncHelp':'ข้อมูลเก็บแยกตามเบราว์เซอร์ กดอัปโหลดจากเครื่องที่ข้อมูลใหม่กว่า แล้วกดดึงลงในอีกเครื่อง',
  'sync.push':'อัปโหลดขึ้น Gist','sync.pull':'ดึงข้อมูลลงมา','sync.withImages':'รวมรูปนามบัตรและไฟล์แนบ (ไฟล์ใหญ่ขึ้นมาก)',
  'sync.pushing':'กำลังอัปโหลด…','sync.pulling':'กำลังดึงข้อมูล…',
+ 'sync.progUpTitle':'กำลังอัปโหลดลงระบบ','sync.progDownTitle':'กำลังดึงข้อมูลจากระบบ',
+ 'sync.stepPrepare':'เตรียมข้อมูล','sync.stepImages':'รวบรวมรูปภาพ','sync.stepCheck':'ตรวจข้อมูลบนระบบ',
+ 'sync.stepSending':'ส่งข้อมูล {a} / {b}','sync.stepRecords':'รับข้อมูลรายการ',
+ 'sync.stepImagesIn':'รับรูปภาพ ชุดที่ {i} จาก {n}','sync.stepFinish':'บันทึกลงเครื่อง','sync.stepDone':'เสร็จเรียบร้อย',
+ 'sync.netFail':'เชื่อมต่อไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่',
  'sync.pushed':'อัปโหลดสำเร็จ ({n} MB)','sync.pulled':'ดึงข้อมูลสำเร็จ · {n} การประชุม · {i} รูป',
  'sync.failed':'ไม่สำเร็จ: {m}','sync.needToken':'ยังไม่ได้กรอก GitHub token ในหน้าตั้งค่า',
  'sync.badToken':'GitHub token ไม่ถูกต้องหรือหมดอายุ','sync.noGist':'ไม่พบ Gist ตาม ID ที่กรอก','sync.noFile':'ไม่พบไฟล์ข้อมูลใน Gist นี้',
@@ -832,7 +862,7 @@ en:{
  'nav.main':'Overview','nav.records':'Records','nav.system':'System',
  'nav.dashboard':'Dashboard','nav.meetings':'Meetings','nav.participants':'Participants — PMU-B',
  'nav.contacts':'External contacts','nav.cards':'Business cards','nav.followups':'Follow-up',
- 'nav.settings':'Settings','nav.privacy':'Privacy','nav.logout':'Sign out',
+ 'nav.settings':'Settings','nav.privacy':'Privacy','nav.logout':'Sign out','app.version':'Version {v} · updated {d}',
  'act.new':'New','act.add':'Add','act.edit':'Edit','act.delete':'Delete','act.save':'Save',
  'act.cancel':'Cancel','act.close':'Close','act.back':'Back','act.export':'Export to Excel',
  'act.view':'Open','act.confirm':'Confirm','act.done':'Mark done','act.reopen':'Reopen',
@@ -945,6 +975,11 @@ en:{
  'set.sync':'Sync across devices','set.syncHelp':'Data is stored per browser. Push from whichever device is more current, then pull on the other.',
  'sync.push':'Push to gist','sync.pull':'Pull from gist','sync.withImages':'Include card images and attachments (much larger)',
  'sync.pushing':'Pushing…','sync.pulling':'Pulling…',
+ 'sync.progUpTitle':'Uploading to the store','sync.progDownTitle':'Downloading from the store',
+ 'sync.stepPrepare':'Preparing','sync.stepImages':'Gathering images','sync.stepCheck':'Checking the store',
+ 'sync.stepSending':'Sending {a} / {b}','sync.stepRecords':'Receiving records',
+ 'sync.stepImagesIn':'Receiving images, part {i} of {n}','sync.stepFinish':'Saving on this device','sync.stepDone':'Done',
+ 'sync.netFail':'Could not connect. Check the internet connection and try again.',
  'sync.pushed':'Pushed ({n} MB)','sync.pulled':'Pulled · {n} meetings · {i} images',
  'sync.failed':'Failed: {m}','sync.needToken':'No GitHub token set in Settings',
  'sync.badToken':'That GitHub token was rejected','sync.noGist':'No gist found with that ID','sync.noFile':'No data file inside that gist',
@@ -1429,6 +1464,7 @@ const IC = {
  phone:'<path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/>',
  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
  upload:'<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>',
+ download:'<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
  link:'<path d="M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7l1.7-1.7"/>',
  file:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/>',
  alert:'<path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
@@ -1582,10 +1618,22 @@ function selOpts(set,val,withAll){
 }
 
 /* ---------------- language ---------------- */
+/* Bump both on every release, so it is obvious which copy a device is running. */
+const APP_VERSION = '6.1';
+const APP_BUILD   = '2026-09-22';
+function renderVersion(){
+  const el = document.getElementById('app-ver'); if(!el) return;
+  const [y,m,d] = APP_BUILD.split('-').map(Number);
+  const when = LANG==='th'
+    ? d+' '+['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][m-1]+' '+(y+543)
+    : d+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1]+' '+y;
+  el.textContent = t('app.version',{v:APP_VERSION, d:when});
+}
 function applyLang(){
   document.documentElement.lang = LANG;
   document.body.setAttribute('data-lang', LANG);
   $$('[data-i]').forEach(el=>{ el.textContent = t(el.getAttribute('data-i')); });
+  renderVersion();
   $$('[data-ip]').forEach(el=>{ const s=t(el.getAttribute('data-ip')); el.setAttribute('placeholder', s); el.setAttribute('aria-label', s); });
   $$('[data-setlang]').forEach(b=> b.classList.toggle('on', b.getAttribute('data-setlang')===LANG));
   document.title = LANG==='th'
@@ -1984,8 +2032,8 @@ VIEWS.dashboard = function(el){
   const kpi=(kc,lbl,val,sub,hash)=>'<button class="kpi" style="--kc:'+kc+'" onclick="go(\''+hash+'\')">'
     +'<span class="k-l">'+esc(lbl)+'</span><span class="k-v">'+val+'</span><span class="k-s">'+esc(sub)+'</span></button>';
 
-  let h = pageHead('dash.title','dash.sub',
-      '<button class="btn btn-ghost" onclick="exportAll()">'+ico('xls',15)+esc(t('act.export'))+'</button>');
+  let h = pageHead('dash.title','dash.sub', '<div class="ph-acts">'+syncHeadButtons()
+      + '<button class="btn btn-ghost" onclick="exportAll()">'+ico('xls',15)+esc(t('act.export'))+'</button>'+'</div>');
 
   const attention = DB.followups.filter(needsAttention);
   if(attention.length){
@@ -4203,7 +4251,7 @@ VIEWS.settings = function(el){
     + '<span>'+esc(t('sync.withImages'))+'</span></label>'
     + '<div style="display:flex;gap:8px;flex-wrap:wrap">'
     + '<button class="btn btn-primary" onclick="syncPush()">'+ico('upload',15)+esc(t('sync.push'))+'</button>'
-    + '<button class="btn btn-ghost" onclick="confirmPull()">'+ico('file',15)+esc(t('sync.pull'))+'</button></div>'
+    + '<button class="btn btn-ghost" onclick="confirmPull()">'+ico('download',15)+esc(t('sync.pull'))+'</button></div>'
     + '<div id="sync-msg">'+syncMsgHtml()+'</div>'
     + '<dl class="dl" style="margin-top:16px">'
     + dlRow('sync.lastPush', SECRETS.lastPush ? fmtDateTime(SECRETS.lastPush) : '')
@@ -4375,10 +4423,96 @@ async function restoreBlobs(blobs){
   }
   return n;
 }
+
+/* ---------------- SYNC PROGRESS RING ----------------
+   Upload progress comes from the browser's own byte count for the request, so
+   the percentage is real, not a timer. Preparation and finishing get small fixed
+   slices either side of the transfer. */
+const SP_C = 2*Math.PI*54;
+let SP_SHOWN = 0;
+function progOpen(titleKey){
+  progClose();
+  SP_SHOWN = 0;
+  const el = document.createElement('div');
+  el.className = 'sp-scrim'; el.id = 'sync-prog';
+  el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true');
+  el.setAttribute('aria-label', t(titleKey));
+  el.innerHTML = '<div class="sp-box">'
+    + '<div class="sp-ring" id="sp-ring" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">'
+      + '<svg viewBox="0 0 132 132" aria-hidden="true">'
+        + '<circle class="sp-track" cx="66" cy="66" r="54"></circle>'
+        + '<circle class="sp-bar" id="sp-bar" cx="66" cy="66" r="54" stroke-dasharray="'+SP_C.toFixed(2)+'" stroke-dashoffset="'+SP_C.toFixed(2)+'"></circle>'
+      + '</svg>'
+      + '<div class="sp-pct"><span id="sp-num">0</span><small>%</small></div>'
+    + '</div>'
+    + '<div class="sp-title">'+esc(t(titleKey))+'</div>'
+    + '<div class="sp-step" id="sp-step"></div>'
+    + '</div>';
+  document.body.appendChild(el);
+}
+function progSet(pct, stepKey, vars){
+  const bar = $('#sp-bar'); if(!bar) return;
+  /* never run backwards — a later stage may start below an earlier estimate */
+  const p = Math.max(SP_SHOWN, Math.min(100, Math.round(pct)));
+  SP_SHOWN = p;
+  bar.setAttribute('stroke-dashoffset', (SP_C*(1-p/100)).toFixed(2));
+  $('#sp-num').textContent = p;
+  const ring = $('#sp-ring');
+  ring.setAttribute('aria-valuenow', p);
+  ring.classList.toggle('done', p>=100);
+  if(stepKey){ const s=$('#sp-step'); if(s) s.textContent = t(stepKey, vars||{}); }
+}
+function progClose(){ const el=$('#sync-prog'); if(el) el.remove(); }
+/* both sides of "a / b" use the unit of the total, so the pair reads cleanly */
+function fmtBytes(n, ref){
+  return (ref||n) >= 1048576 ? (n/1048576).toFixed(1)+' MB' : Math.max(0,Math.round(n/1024))+' KB';
+}
+const pause = ms => new Promise(r=>setTimeout(r,ms));
+
+/* A GitHub call that reports transfer progress. fetch() cannot report upload
+   progress, so this uses XMLHttpRequest, falling back to fetch where XHR is
+   missing. Status handling matches gh(). */
+function ghXhr(path, opts){
+  opts = opts || {};
+  const url = /^https?:/.test(path) ? path : 'https://api.github.com'+path;
+  const raw = /^https?:/.test(path);
+  if(typeof XMLHttpRequest === 'undefined'){
+    return raw ? fetch(url).then(r=>{ if(!r.ok) throw new Error('raw HTTP '+r.status); return r.text(); })
+               : gh(path, opts.method ? {method:opts.method, body:opts.body} : undefined);
+  }
+  return new Promise((resolve, reject)=>{
+    const x = new XMLHttpRequest();
+    x.open(opts.method || 'GET', url, true);
+    if(!raw){
+      x.setRequestHeader('Authorization', 'Bearer '+SECRETS.ghToken);
+      x.setRequestHeader('Accept', 'application/vnd.github+json');
+      x.setRequestHeader('X-GitHub-Api-Version', '2022-11-28');
+    }
+    if(opts.onUp && x.upload) x.upload.onprogress = e=>{ if(e.lengthComputable) opts.onUp(e.loaded, e.total); };
+    if(opts.onDown) x.onprogress = e=>{ if(e.lengthComputable) opts.onDown(e.loaded, e.total); };
+    x.onerror = ()=>reject(new Error(t('sync.netFail')));
+    x.ontimeout = ()=>reject(new Error(t('sync.netFail')));
+    x.onload = ()=>{
+      if(x.status===401) return reject(new Error(t('sync.badToken')));
+      if(x.status===404) return reject(new Error(t('sync.noGist')));
+      if(x.status<200 || x.status>=300) return reject(new Error((raw?'raw ':'GitHub ')+'HTTP '+x.status));
+      if(raw) return resolve(x.responseText);
+      try{ resolve(JSON.parse(x.responseText)); }catch(e){ reject(e); }
+    };
+    x.send(opts.body || null);
+  });
+}
+async function gistFileTextP(f, onDown){
+  if(f && f.truncated && f.raw_url) return ghXhr(f.raw_url, { onDown });
+  return (f && f.content) || '';
+}
+
 async function syncPush(){
   if(SYNC_BUSY) return;
   if(!SECRETS.ghToken){ syncMsg('sync.needToken','bad'); return; }
   SYNC_BUSY = true; syncMsg('sync.pushing');
+  progOpen('sync.progUpTitle');
+  progSet(2, 'sync.stepPrepare');
   try{
     const withImages = DB.settings.syncImages !== false;
     const body = JSON.stringify(await snapshot(false), null, 1);   /* records only */
@@ -4386,7 +4520,9 @@ async function syncPush(){
     if(mb > SYNC_MAX_MB) throw new Error(t('sync.tooBig',{n:mb.toFixed(1), m:SYNC_MAX_MB}));
 
     const files = {}; files[GIST_FILE] = { content: body };
+    progSet(6, withImages ? 'sync.stepImages' : 'sync.stepPrepare');
     let parts = withImages ? await imageParts() : [];
+    progSet(14, 'sync.stepPrepare');
     let droppedImages = false;
     if(parts.length > MAX_CHUNKS){ parts = []; droppedImages = true; }
     parts.forEach((blobs,i)=>{
@@ -4398,6 +4534,7 @@ async function syncPush(){
     /* Parts left over from a larger previous push have to be removed, or a pull
        would restore images that were deleted here. */
     if(SECRETS.gistId){
+      progSet(17, 'sync.stepCheck');
       try{
         const cur = await gh('/gists/'+SECRETS.gistId);
         Object.keys(cur.files||{}).forEach(name=>{
@@ -4407,35 +4544,51 @@ async function syncPush(){
       }catch(e){ console.warn('could not list existing parts', e); }
     }
 
+    /* the transfer itself fills 20% -> 96% of the ring */
+    const payload = SECRETS.gistId
+      ? JSON.stringify({files})
+      : JSON.stringify({ description:'PMU-B MeetingCard data (private)', public:false, files });
+    progSet(20, 'sync.stepSending', {a:fmtBytes(0, payload.length), b:fmtBytes(payload.length, payload.length)});
+    const onUp = (loaded,total)=>progSet(20 + 76*(loaded/total), 'sync.stepSending',
+      {a:fmtBytes(loaded,total), b:fmtBytes(total,total)});
     let g;
     if(SECRETS.gistId){
-      g = await gh('/gists/'+SECRETS.gistId, {method:'PATCH', body:JSON.stringify({files})});
+      g = await ghXhr('/gists/'+SECRETS.gistId, {method:'PATCH', body:payload, onUp});
     }else{
-      g = await gh('/gists', {method:'POST', body:JSON.stringify({
-        description:'PMU-B MeetingCard data (private)', public:false, files})});
+      g = await ghXhr('/gists', {method:'POST', body:payload, onUp});
       SECRETS.gistId = g.id;
     }
+    progSet(98, 'sync.stepFinish');
     SECRETS.lastPush = new Date().toISOString();
     await saveSecrets();
+    progSet(100, 'sync.stepDone');
+    await pause(450);
+    progClose();
     if(droppedImages) syncMsg('sync.pushedNoImages','warn',{n:mb.toFixed(2), m:syncCapacityMB()});
     else syncMsg('sync.pushed','ok',{n:mb.toFixed(2)});
     uploadedDialog(mb, droppedImages);
     route();
   }catch(e){
     console.error('push failed', e);
+    progClose();
     syncMsg('sync.failed','bad',{m:String(e.message||e)});
-  }finally{ SYNC_BUSY=false; }
+    toast(t('sync.failed',{m:String(e.message||e)}),'bad');
+    route();
+  }finally{ SYNC_BUSY=false; progClose(); }
 }
 async function syncPull(){
   if(SYNC_BUSY) return;
   if(!SECRETS.ghToken){ syncMsg('sync.needToken','bad'); return; }
   if(!SECRETS.gistId){ syncMsg('sync.noGist','bad'); return; }
   SYNC_BUSY = true; syncMsg('sync.pulling');
+  progOpen('sync.progDownTitle');
+  progSet(2, 'sync.stepCheck');
   try{
-    const g = await gh('/gists/'+SECRETS.gistId);
+    const g = await ghXhr('/gists/'+SECRETS.gistId, { onDown:(l,tot)=>progSet(2+13*(l/tot),'sync.stepCheck') });
     const f = g.files && g.files[GIST_FILE];
     if(!f) throw new Error(t('sync.noFile'));
-    const d = JSON.parse(await gistFileText(f));
+    progSet(16, 'sync.stepRecords');
+    const d = JSON.parse(await gistFileTextP(f, (l,tot)=>progSet(16+14*(l/tot),'sync.stepRecords')));
     if(!d || !Array.isArray(d.meetings)) throw new Error(t('set.badBackup'));
     HOUSEKEEPING = true;   /* restoring is not editing */
     ['meetings','participants','contacts','cards','followups'].forEach(k=>{ if(Array.isArray(d[k])) DB[k]=d[k]; });
@@ -4446,12 +4599,20 @@ async function syncPull(){
     /* Images now arrive in numbered parts alongside the records. */
     const partNames = Object.keys(g.files||{}).filter(n=>IMG_FILE_RE.test(n))
       .sort((a,b)=>parseInt(IMG_FILE_RE.exec(a)[1],10)-parseInt(IMG_FILE_RE.exec(b)[1],10));
-    for(const name of partNames){
+    progSet(32, 'sync.stepImagesIn', {i:0, n:partNames.length});
+    /* image parts share 32% -> 94% equally, each part's own bytes moving it along */
+    const slice = partNames.length ? 62/partNames.length : 0;
+    for(let pi=0; pi<partNames.length; pi++){
+      const name = partNames[pi];
+      const base = 32 + slice*pi;
       try{
-        const part = JSON.parse(await gistFileText(g.files[name]));
+        const part = JSON.parse(await gistFileTextP(g.files[name],
+          (l,tot)=>progSet(base + slice*0.9*(l/tot), 'sync.stepImagesIn', {i:pi+1, n:partNames.length})));
         imgs += await restoreBlobs(part && part.blobs);
       }catch(e){ console.error('part failed: '+name, e); }
+      progSet(base + slice, 'sync.stepImagesIn', {i:pi+1, n:partNames.length});
     }
+    progSet(95, 'sync.stepFinish');
     DB.settings.schema = Math.min(DB.settings.schema||1, (d.settings && d.settings.schema) || 1);
     await migrateNames();
     await migrateCountries();
@@ -4460,12 +4621,19 @@ async function syncPull(){
     HOUSEKEEPING = false;
     SECRETS.lastPull = new Date().toISOString();
     await saveSecrets();
+    progSet(100, 'sync.stepDone');
+    await pause(450);
+    progClose();
     syncMsg('sync.pulled','ok',{n:DB.meetings.length, i:imgs});
+    toast(t('sync.pulled',{n:DB.meetings.length, i:imgs}),'ok');
     route();
   }catch(e){
     console.error('pull failed', e);
+    progClose();
     syncMsg('sync.failed','bad',{m:String(e.message||e)});
-  }finally{ SYNC_BUSY=false; HOUSEKEEPING=false; }
+    toast(t('sync.failed',{m:String(e.message||e)}),'bad');
+    route();
+  }finally{ SYNC_BUSY=false; HOUSEKEEPING=false; progClose(); }
 }
 /* Shown after every successful upload. The inline strip message alone was easy
    to miss, and "did that actually save?" is the whole reason this exists. */
@@ -4583,20 +4751,28 @@ function syncStrip(){
       + '<div class="ss-acts"><button class="btn btn-ghost btn-sm" onclick="go(\'#/settings\')">'
       + ico('settings',15)+esc(t('sync.setUp'))+'</button></div></section>';
   }
+  /* The buttons live in the page header now; this line only reports state.
+     A success is confirmed by the progress ring and its dialog, so only a
+     problem is worth keeping on screen here. */
   const dirty = syncDirty();
-  return '<section class="sync-strip'+(dirty?' dirty':'')+'" id="sync-strip">'
+  const problem = SYNC_STATE && (SYNC_STATE.kind==='bad' || SYNC_STATE.kind==='warn');
+  return '<section class="sync-strip slim'+(dirty?' dirty':'')+'" id="sync-strip">'
     + '<div class="ss-txt">'
-      + ico(dirty?'alert':'check',18)
-      + '<div><b>'+esc(t(dirty?'sync.pending':'sync.upToDate'))+'</b>'
+      + ico(dirty?'alert':'check',16)
+      + '<b>'+esc(t(dirty?'sync.pending':'sync.upToDate'))+'</b>'
       + '<small>'+esc(t('sync.lastPull'))+' '+esc(agoText(SECRETS.lastPull))
-      + ' · '+esc(t('sync.lastPush'))+' '+esc(agoText(SECRETS.lastPush))+'</small></div>'
+      + ' · '+esc(t('sync.lastPush'))+' '+esc(agoText(SECRETS.lastPush))+'</small>'
     + '</div>'
-    + '<div class="ss-acts">'
-      + (canPull() ? '<button class="btn btn-ghost btn-sm" onclick="confirmPull()">'+ico('file',15)+esc(t('sync.pullNow'))+'</button>' : '')
-      + '<button class="btn '+(dirty?'btn-primary':'btn-ghost')+' btn-sm" onclick="syncPushQuick()">'+ico('upload',15)+esc(t('sync.pushNow'))+'</button>'
-    + '</div>'
-    + '<div id="sync-msg">'+syncMsgHtml()+'</div>'
+    + '<div id="sync-msg">'+(problem ? syncMsgHtml() : '')+'</div>'
     + '</section>';
+}
+/* Download and upload, placed beside Export in the dashboard header. The upload
+   button turns solid when there is something here the store has not got yet. */
+function syncHeadButtons(){
+  if(!syncReady()) return '';
+  const dirty = syncDirty();
+  return (canPull() ? '<button class="btn btn-ghost" onclick="confirmPull()">'+ico('download',15)+esc(t('sync.pullNow'))+'</button>' : '')
+    + '<button class="btn '+(dirty?'btn-primary':'btn-ghost')+'" onclick="syncPushQuick()">'+ico('upload',15)+esc(t('sync.pushNow'))+'</button>';
 }
 
 /* Push from wherever the owner happens to be, then land them back on the page
@@ -4611,7 +4787,6 @@ async function setSyncImages(on){
 }
 async function syncPushQuick(){
   if(!syncReady()){ toast(t('sync.needToken'),'bad'); go('#/settings'); return; }
-  toast(t('sync.pushing'));
   await syncPush();
 }
 
