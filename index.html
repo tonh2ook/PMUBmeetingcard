@@ -475,12 +475,16 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
   width:min(300px,calc(100% - 32px));text-align:center}
 .sp-ring{position:relative;width:132px;height:132px;margin:0 auto 14px}
 .sp-ring svg{width:132px;height:132px;transform:rotate(-90deg);display:block}
-.sp-ring .sp-track{fill:none;stroke:var(--wash-2);stroke-width:10}
-.sp-ring .sp-bar{fill:none;stroke:var(--teal);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .25s ease}
+.sp-ring .sp-track{fill:none;stroke:var(--wash-2);stroke-width:9}
+.sp-ring .sp-bar{fill:none;stroke:var(--teal);stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset .25s ease}
 .sp-ring.done .sp-bar{stroke:var(--ok)}
-.sp-pct{position:absolute;inset:0;display:grid;place-items:center;font-size:30px;font-weight:600;color:var(--ink);
-  font-variant-numeric:tabular-nums}
-.sp-pct small{font-size:15px;font-weight:500;margin-left:1px;color:var(--ink-3)}
+.sp-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink);
+  font-variant-numeric:tabular-nums;line-height:1}
+/* number and sign sit together on one line; the sign rides a little high, like a superscript */
+.sp-pct span{font-size:34px;font-weight:700;letter-spacing:-.02em}
+.sp-pct small{font-size:16px;font-weight:600;margin-left:2px;color:var(--teal);align-self:flex-start;margin-top:calc(50% - 17px)}
+.sp-ring.done .sp-pct small{color:var(--ok)}
+.sp-ring.done .sp-pct span{font-size:30px}   /* three digits need a little more room */
 .sp-title{font-weight:600;font-size:15.5px;color:var(--ink)}
 .sp-step{font-size:13px;color:var(--ink-3);margin-top:4px;min-height:1.4em}
 @media (prefers-reduced-motion:reduce){ .sp-ring .sp-bar{transition:none} }
@@ -1619,7 +1623,7 @@ function selOpts(set,val,withAll){
 
 /* ---------------- language ---------------- */
 /* Bump both on every release, so it is obvious which copy a device is running. */
-const APP_VERSION = '6.1';
+const APP_VERSION = '6.2';
 const APP_BUILD   = '2026-09-22';
 function renderVersion(){
   const el = document.getElementById('app-ver'); if(!el) return;
