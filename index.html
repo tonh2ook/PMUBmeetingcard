@@ -732,7 +732,7 @@ th:{
  'b.twoSided':'สแกน 2 ด้าน','b.flipCard':'พลิกนามบัตร แล้ววางด้านหลังในกรอบ','b.gotFront':'ได้ด้านแรกแล้ว รอด้านหลัง',
  'b.awaitingBack':'รอถ่ายด้านหลัง','b.keptOneSide':'บันทึกเฉพาะด้านที่ถ่ายไว้แล้ว','b.f.meeting':'ได้รับในการประชุม','b.f.note':'บันทึกเกี่ยวกับนามบัตร','b.f.received':'วันที่ได้รับ',
  'b.tooBig':'ไฟล์ใหญ่เกิน 8 MB กรุณาเลือกไฟล์ที่เล็กลง','b.badType':'รองรับเฉพาะไฟล์รูปภาพ',
- 'b.linked':'บันทึกเป็นผู้ติดต่อเรียบร้อยแล้ว','b.openContact':'เปิดข้อมูลผู้ติดต่อ',
+ 'b.linked':'บันทึกเป็นผู้ติดต่อเรียบร้อยแล้ว','b.joined':'พบ {n} ในผู้ติดต่ออยู่แล้ว จึงผูกนามบัตรนี้เข้ากับรายการเดิม','c.openCard':'เปิดนามบัตร','b.openContact':'เปิดข้อมูลผู้ติดต่อ',
  'b.scan':'สแกนด้วยกล้อง','b.scanTitle':'สแกนนามบัตร','b.scanSub':'วางนามบัตรให้เต็มกรอบ ระบบจะถ่ายและอ่านข้อมูลให้เอง',
  'b.scanCta':'เปิดกล้อง วางนามบัตรในกรอบ ระบบถ่ายเองเมื่อภาพนิ่งและชัด แล้วอ่านข้อมูลต่อทันที',
  'b.hintHold':'ถือกล้องนิ่ง ๆ','b.hintBlur':'ภาพยังไม่ชัด รอโฟกัสสักครู่','b.hintDark':'แสงน้อยเกินไป ลองเปิดไฟฉาย',
@@ -930,7 +930,7 @@ en:{
  'b.twoSided':'Two sides','b.flipCard':'Turn the card over and frame the back','b.gotFront':'First side captured — waiting for the back',
  'b.awaitingBack':'waiting for the back','b.keptOneSide':'Saved the side that was already photographed','b.f.meeting':'Received at','b.f.note':'Note about this card','b.f.received':'Date received',
  'b.tooBig':'That file is over 8 MB. Choose a smaller one.','b.badType':'Image files only',
- 'b.linked':'Saved as a contact','b.openContact':'Open the contact',
+ 'b.linked':'Saved as a contact','b.joined':'{n} is already in contacts, so this card was tied to that record','c.openCard':'Open card','b.openContact':'Open the contact',
  'b.scan':'Scan with camera','b.scanTitle':'Scan a card','b.scanSub':'Fill the frame with the card — it shoots and reads on its own',
  'b.scanCta':'Open the camera, hold a card in the frame. It takes the shot once the image is still and sharp, then reads it.',
  'b.hintHold':'Hold steady','b.hintBlur':'Not sharp yet — let it focus','b.hintDark':'Too dark — try the light',
@@ -1357,6 +1357,44 @@ async function migrateLinks(){
     if(fixed) console.info('repaired '+fixed+' card/contact links');
   } finally { HOUSEKEEPING = false; }
 }
+/* A card and the contact made from it are one person, so they must show one
+   face. Pairs can drift apart — a photo added on each side on different devices,
+   or data from before the two were tied together — so this runs after every
+   unlock and pull. The more recently set photo wins; the other image is removed
+   once nothing else points at it. */
+async function reconcilePhotos(){
+  const prev = HOUSEKEEPING; HOUSEKEEPING = true;
+  try{
+    let changed = 0; const losers = [];
+    (DB.cards||[]).forEach(c=>{
+      const ct = twinOf(c);
+      if(!ct || (DB.contacts||[]).indexOf(ct) < 0) return;
+      if(c.contactId !== ct.id){ c.contactId = ct.id; changed++; }
+      if(ct.cardId !== c.id){ ct.cardId = c.id; changed++; }
+      if((c.photoId||'') === (ct.photoId||'')) return;
+      let win;
+      if(!c.photoId) win = ct;
+      else if(!ct.photoId) win = c;
+      else {
+        const tc = c.photoAt || c.updatedAt || 0, tt = ct.photoAt || ct.updatedAt || 0;
+        win = tc >= tt ? c : ct;
+        losers.push(win===c ? ct.photoId : c.photoId);
+      }
+      const lose = win===c ? ct : c;
+      lose.photoId = win.photoId; lose.photoAt = win.photoAt || Date.now();
+      changed++;
+    });
+    if(changed){ await save('cards'); await save('contacts'); }
+    for(const id of losers) await dropBlobIfUnused(id);
+    return changed;
+  } finally { HOUSEKEEPING = prev; }
+}
+async function dropBlobIfUnused(id){
+  if(!id) return;
+  const used = ['participants','contacts','cards'].some(k=>(DB[k]||[]).some(r=>r.photoId===id || r.blobId===id || r.backBlobId===id))
+    || (DB.meetings||[]).some(m=>(m.photos||[]).some(p=>p.id===id));
+  if(!used) await blobDel(id);
+}
 async function migrateCountries(){
   if((DB.settings.schema||1) >= 3) return;
   HOUSEKEEPING = true;
@@ -1623,7 +1661,7 @@ function selOpts(set,val,withAll){
 
 /* ---------------- language ---------------- */
 /* Bump both on every release, so it is obvious which copy a device is running. */
-const APP_VERSION = '6.2';
+const APP_VERSION = '6.3';
 const APP_BUILD   = '2026-09-22';
 function renderVersion(){
   const el = document.getElementById('app-ver'); if(!el) return;
@@ -1729,6 +1767,7 @@ async function unlock(){
   await migrateCountries();
   await migrateLinks();
   await migrateVenue();
+  await reconcilePhotos();
   if(DB.settings.lang && DB.settings.lang!==LANG){ LANG = DB.settings.lang; }
   APP_READY = true;
   await touchSession(true);
@@ -2129,7 +2168,7 @@ const REL = {
   mCards:        id => DB.cards.filter(c=>c.meetingId===id),
   mFollowups:    id => DB.followups.filter(f=>f.meetingId===id),
   cMeetings:     id => DB.meetings.filter(m=>(m.contactIds||[]).includes(id)).sort((a,b)=>String(b.date).localeCompare(String(a.date))),
-  cCards:        id => DB.cards.filter(c=>c.contactId===id),
+  cCards:        id => { const ct=byId('contacts',id); return DB.cards.filter(c=>c.contactId===id || (ct && ct.cardId===c.id)); },
   cFollowups:    id => DB.followups.filter(f=>f.contactId===id),
   pMeetings:     id => DB.meetings.filter(m=>(m.participantIds||[]).includes(id)).sort((a,b)=>String(b.date).localeCompare(String(a.date)))
 };
@@ -2488,12 +2527,24 @@ function contactDetail(el,id){
       relRow('#/followups/'+f.id, f.title, label('fStatus',f.status), '✓', dueChip(f))).join(''),
       '<button class="btn btn-teal btn-sm" onclick="openForm(\'followups\',null,{contactId:\''+c.id+'\'})">'+ico('plus',14)+esc(t('act.add'))+'</button>');
   h += '</div><div>';
+  const card = cards.find(b=>b.blobId);
+  if(card){
+    h += '<section class="card" style="margin-bottom:16px"><div class="card-h"><h3>'+esc(t('b.f.image'))+'</h3>'
+      + '<a class="btn btn-quiet btn-sm" href="#/cards/'+card.id+'">'+esc(t('c.openCard'))+'</a></div><div class="card-pad">'
+      + '<div class="preview" id="ct-card-img">'+ico('cards',26)+'</div>'
+      + (card.backBlobId ? '<div class="lbl" style="margin-top:12px">'+esc(t('b.f.imageBack'))+'</div><div class="preview" id="ct-card-back">'+ico('cards',26)+'</div>' : '')
+      + '</div></section>';
+  }
   h += relCard('g.relatedCards', cards.map(b=>
       relRow('#/cards/'+b.id, b.name||t('b.title'), fmtDate(b.received), '▤', statusChip('bStatus',b.status))).join(''));
   h += timelineCard(contactTimeline(c));
   h += '</div></div>';
   el.innerHTML=h;
   loadPhotos();
+  if(card){
+    blobGet(card.blobId).then(d=>{ const n=$('#ct-card-img'); if(n&&d) n.innerHTML='<img src="'+d+'" alt="'+esc(t('b.f.image'))+'">'; });
+    if(card.backBlobId) blobGet(card.backBlobId).then(d=>{ const n=$('#ct-card-back'); if(n&&d) n.innerHTML='<img src="'+d+'" alt="'+esc(t('b.f.imageBack'))+'">'; });
+  }
 }
 function contactTimeline(c){
   const n=[];
@@ -3096,16 +3147,20 @@ async function applyCrop(){
     }
   }catch(e){ console.error('crop failed', e); }
   if(!out){ toast(t('b.badImage'),'bad'); closeModal(); return; }
-  const bid = rec.photoId || uid('ph');
+  /* One image for the pair: reuse whichever id either side already has. */
+  const twin = twinOf(rec);
+  const bid = rec.photoId || (twin && twin.photoId) || uid('ph');
   const ok = await blobPut(bid, out);
   if(!ok && hasStore()){ toast(t('g.offlineBody'),'bad'); closeModal(); return; }
-  rec.photoId = bid;
-  rec.updatedAt = Date.now();
+  const now = Date.now();
+  rec.photoId = bid; rec.photoAt = now;
+  rec.updatedAt = now;
   await save(CROP.coll);
-  const twin = twinOf(rec);
-  if(twin && twin.photoId !== bid){
-    twin.photoId = bid; twin.updatedAt = Date.now();
+  if(twin){
+    const old = twin.photoId;
+    twin.photoId = bid; twin.photoAt = now; twin.updatedAt = now;
     await save(twinColl(rec, twin));
+    if(old && old !== bid) await dropBlobIfUnused(old);
   }
   closeModal();
   toast(t('ph.saved'),'ok');
@@ -3180,12 +3235,13 @@ async function removePhoto(coll, id){
   const shown = personPhotoId(rec);
   if(!rec || !shown) return;
   const twin = twinOf(rec);
-  if(twin && twin.photoId === shown){
-    twin.photoId = ''; twin.updatedAt = Date.now();
+  const ids = [shown, rec.photoId, twin && twin.photoId].filter((x,i,a)=>x && a.indexOf(x)===i);
+  if(twin && twin.photoId){
+    twin.photoId = ''; twin.photoAt = Date.now(); twin.updatedAt = Date.now();
     await save(twinColl(rec, twin));
   }
-  await blobDel(shown);
-  rec.photoId = '';
+  rec.photoId = ''; rec.photoAt = Date.now();
+  for(const id of ids) await dropBlobIfUnused(id);
   rec.updatedAt = Date.now();
   await save(coll);
   toast(t('ph.removed'),'ok');
@@ -3647,6 +3703,19 @@ function cardDetail(el,id){
   loadPhotos();
 }
 
+/* Same email, or the same name at the same organisation, and not already tied
+   to another card. */
+function findSamePerson(card){
+  const low = s=>String(s||'').trim().toLowerCase();
+  const mails = String(card.email||'').split(/[;,]/).map(low).filter(Boolean);
+  const nm = low(card.name), org = low(card.org);
+  return (DB.contacts||[]).find(x=>{
+    if(x.cardId && x.cardId!==card.id && byId('cards', x.cardId)) return false;
+    const xm = String(x.email||'').split(/[;,]/).map(low).filter(Boolean);
+    if(mails.length && xm.some(m=>mails.includes(m))) return true;
+    return !!nm && low(x.name)===nm && (!org || !low(x.org) || low(x.org)===org);
+  }) || null;
+}
 async function saveCard(id, alsoContact){
   const c=byId('cards',id); if(!c) return;
   CARD_FIELDS.forEach(([k])=>{ const n=$('#cf-'+k); if(n) c[k]= k==='country' ? canonCountry(n.value) : n.value.trim(); });
@@ -3661,15 +3730,23 @@ async function saveCard(id, alsoContact){
 
   if(alsoContact){
     let ct = c.contactId ? byId('contacts',c.contactId) : null;
+    if(!ct) ct = (DB.contacts||[]).find(x=>x.cardId===c.id) || null;
+    let joined = false;
+    if(!ct){
+      /* Someone already in the contacts: tie the card to them rather than
+         making a second copy of the same person. */
+      ct = findSamePerson(c);
+      if(ct) joined = true;
+    }
     if(!ct){
       ct = { id:uid('ct'), tags:[], createdAt:Date.now(), cardId:c.id, files:[] };
       DB.contacts.unshift(ct);
-      c.contactId = ct.id;
     }
-    CARD_FIELDS.forEach(([k])=>{ ct[k] = c[k]; });
+    c.contactId = ct.id;
+    /* an existing contact keeps what the card leaves blank */
+    CARD_FIELDS.forEach(([k])=>{ ct[k] = joined ? (c[k] || ct[k] || '') : c[k]; });
     ct.cardId = c.id;                       /* both directions, always */
-    if(c.photoId) ct.photoId = c.photoId;
-    else if(ct.photoId) c.photoId = ct.photoId;
+    if(joined) toast(t('b.joined',{n:personName(ct)}),'ok');
     ct.notes = c.note || ct.notes || '';
     ct.updatedAt = Date.now();
     c.status='linked';
@@ -3682,6 +3759,7 @@ async function saveCard(id, alsoContact){
     }
   }
   await save('cards');
+  if(alsoContact) await reconcilePhotos();
   toast(t(alsoContact?'b.linked':'st.saved'),'ok');
   nudgeSync();
   route();
@@ -4622,6 +4700,7 @@ async function syncPull(){
     await migrateCountries();
     await migrateLinks();
     await migrateVenue();
+    await reconcilePhotos();
     HOUSEKEEPING = false;
     SECRETS.lastPull = new Date().toISOString();
     await saveSecrets();
