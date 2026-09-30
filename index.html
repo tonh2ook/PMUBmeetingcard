@@ -289,6 +289,17 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .kpi .k-v{display:block;font-size:29px;font-weight:600;line-height:1;color:var(--kc,var(--navy));font-feature-settings:"tnum"}
 .kpi .k-s{display:block;font-size:12.5px;color:var(--ink-3);margin-top:5px}
 /* ---- month calendar on the dashboard ---- */
+/* dashboard top row: the six numbers on the left, the month on the right */
+/* one third for the numbers, two thirds for the month */
+.dash-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:16px;align-items:start;margin-bottom:16px}
+.dash-top .kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:0}
+/* smaller tiles, since they now share the row with a full calendar */
+.dash-top .kpi{padding:12px 13px}
+.dash-top .kpi .k-l{font-size:12px;margin-bottom:4px}
+.dash-top .kpi .k-v{font-size:23px}
+.dash-top .kpi .k-s{font-size:11.5px;margin-top:4px}
+.dash-top .cal-card{margin-bottom:0}
+.dash-col{display:flex;flex-direction:column;gap:16px;min-width:0}
 .cal-card{margin-bottom:16px;overflow:hidden}
 .cal-head{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .cal-head h3{font-size:16px;font-weight:600}
@@ -300,7 +311,7 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--line-2)}
 .cal-dow{background:var(--wash);color:var(--ink-3);font-size:11.5px;font-weight:600;text-align:center;padding:7px 0;letter-spacing:.02em}
 .cal-dow.wknd{color:var(--ink-3);background:var(--wash-2)}
-.cal-cell{background:var(--paper);min-height:92px;padding:6px 6px 7px;display:flex;flex-direction:column;gap:3px;
+.cal-cell{background:var(--paper);min-height:84px;padding:6px 6px 7px;display:flex;flex-direction:column;gap:3px;
   align-items:stretch;text-align:left;border:0;font:inherit;color:inherit;cursor:pointer;position:relative;min-width:0}
 .cal-cell:hover{background:var(--wash)}
 .cal-cell:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
@@ -311,25 +322,54 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .cal-num{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:600;
   color:var(--ink-2);font-variant-numeric:tabular-nums;flex-shrink:0}
 .cal-cell.today .cal-num{background:var(--navy);color:#fff}
-.cal-ev{display:block;width:100%;text-align:left;font-size:11.5px;line-height:1.4;padding:2px 6px;border-radius:6px;
-  border:0;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  background:var(--teal-soft);color:#0A6E6E;font-weight:500}
+.cal-ev{display:block;width:100%;text-align:left;font-size:11.5px;line-height:1.4;padding:2px 6px 2px 8px;border-radius:6px;
+  border:0;border-left:3px solid transparent;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  background:var(--wash-2);color:var(--ink-2);font-weight:500}
 .cal-ev:hover{filter:brightness(.96)}
-.cal-ev.done{background:var(--ok-soft);color:var(--ok)}
-.cal-ev.cancelled{background:var(--bad-soft);color:var(--bad);text-decoration:line-through}
+/* one colour per state: held, still to come, past its day with no result recorded, cancelled */
+.cal-ev.t-done{background:var(--ok-soft);color:#116946;border-left-color:var(--ok)}
+.cal-ev.t-soon{background:var(--teal-soft);color:#0A6E6E;border-left-color:var(--teal)}
+.cal-ev.t-late{background:var(--warn-soft);color:#8A5B12;border-left-color:var(--warn)}
+.cal-ev.t-cancelled{background:var(--bad-soft);color:var(--bad);border-left-color:var(--bad);text-decoration:line-through}
 .cal-more{font-size:11px;color:var(--ink-3);padding-left:6px}
 .cal-dots{display:none;gap:3px;flex-wrap:wrap;padding-left:2px}
 .cal-dots i{width:5px;height:5px;border-radius:50%;background:var(--teal);display:block}
-.cal-dots i.done{background:var(--ok)} .cal-dots i.cancelled{background:var(--bad)}
+.cal-dots i.t-done{background:var(--ok)} .cal-dots i.t-soon{background:var(--teal)}
+.cal-dots i.t-late{background:var(--warn)} .cal-dots i.t-cancelled{background:var(--bad)}
+/* days already gone are shaded back, so the eye lands on what is still ahead */
+.cal-cell.past{background:#F1F4F9}
+.cal-cell.past .cal-num{color:var(--ink-3)}
+.cal-cell.past.wknd{background:#EDF1F7}
+.cal-cell.past:hover{background:var(--wash-2)}
+.cal-cell.out.past{background:#F6F8FB}
+.cal-legend{display:flex;flex-wrap:wrap;gap:6px 16px;padding:10px 16px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--ink-2)}
+.cal-legend span{display:inline-flex;align-items:center;gap:6px}
+.cal-legend i{width:9px;height:9px;border-radius:3px;display:block}
 .cal-day{border-top:1px solid var(--line);padding:12px 16px;background:var(--wash)}
 .cal-day .lbl{margin-bottom:8px}
 .cal-day .mini{background:var(--paper)}
 .cal-empty{color:var(--ink-3);font-size:13.5px}
+/* beside the numbers there is no room for titles, so the days carry dots and the
+   list under the grid does the reading */
+.cal-card.compact .cal-cell{min-height:50px;align-items:center;gap:3px;padding:5px 2px}
+.cal-card.compact .cal-ev,.cal-card.compact .cal-more{display:none}
+.cal-card.compact .cal-dots{display:flex;justify-content:center}
+.cal-card.compact .cal-legend{gap:5px 12px;font-size:11.5px;padding:9px 14px}
+.cal-card.compact .cal-head{padding:12px 14px;gap:8px}
+.cal-card.compact .cal-day{padding:11px 14px}
+@media(max-width:1080px){
+  /* stacked again, so the titles fit back in */
+  .dash-top{grid-template-columns:minmax(0,1fr)}
+  .cal-card.compact .cal-cell{min-height:92px;align-items:stretch;padding:6px 6px 7px}
+  .cal-card.compact .cal-ev,.cal-card.compact .cal-more{display:block}
+  .cal-card.compact .cal-dots{display:none}
+}
 @media(max-width:520px){ .cal-head h3{display:none} .cal-head .spacer{display:none} }
 @media(max-width:820px){
-  .cal-cell{min-height:54px;align-items:center;gap:4px}
-  .cal-ev,.cal-more{display:none}
-  .cal-dots{display:flex;justify-content:center}
+  .cal-card .cal-cell,.cal-card.compact .cal-cell{min-height:54px;align-items:center;gap:4px}
+  .cal-card .cal-ev,.cal-card .cal-more,.cal-card.compact .cal-ev,.cal-card.compact .cal-more{display:none}
+  .cal-card .cal-dots,.cal-card.compact .cal-dots{display:flex;justify-content:center}
 }
 .dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px;align-items:start}
 @media(max-width:1080px){.kpis{grid-template-columns:repeat(2,1fr)}.dash-grid{grid-template-columns:1fr}}
@@ -722,7 +762,7 @@ th:{
  'dash.title':'แดชบอร์ด','dash.sub':'ภาพรวมการประชุมและงานติดตามของคุณ',
  'dash.kMeetings':'การประชุมทั้งหมด','dash.kUpcoming':'ที่กำลังจะถึง','dash.kContacts':'ผู้ติดต่อภายนอก',
  'dash.kCards':'นามบัตรรอตรวจ','dash.kOpen':'งานติดตามค้าง','dash.kOverdue':'เกินกำหนด',
- 'dash.calendar':'ปฏิทินการประชุม','cal.prev':'เดือนก่อนหน้า','cal.next':'เดือนถัดไป','cal.today':'วันนี้','cal.none':'ไม่มีการประชุมในวันนี้','cal.more':'+ อีก {n} รายการ','cal.count':'{n} การประชุม','dash.byMonth':'การประชุมย้อนหลัง 6 เดือน','dash.fuStatus':'สถานะงานติดตาม',
+ 'dash.calendar':'ปฏิทินการประชุม','cal.prev':'เดือนก่อนหน้า','cal.next':'เดือนถัดไป','cal.today':'วันนี้','cal.none':'ไม่มีการประชุมในวันนี้','cal.more':'+ อีก {n} รายการ','cal.count':'{n} การประชุม','cal.legDone':'ประชุมแล้ว','cal.legSoon':'ยังไม่ถึงวันประชุม','cal.legLate':'เลยวันแล้ว ยังไม่บันทึกผล','cal.legCancelled':'ยกเลิก','dash.byMonth':'การประชุมย้อนหลัง 6 เดือน','dash.fuStatus':'สถานะงานติดตาม',
  'dash.upcoming':'การประชุมที่กำลังจะถึง','dash.overdue':'งานที่ต้องจัดการ','dash.recent':'ความเคลื่อนไหวล่าสุด',
  'dash.noUpcoming':'ยังไม่มีการประชุมในอนาคต','dash.noOverdue':'ไม่มีงานค้าง เยี่ยมมาก','dash.noActivity':'ยังไม่มีความเคลื่อนไหว',
  'dash.thisMonth':'เดือนนี้ {n} ครั้ง','dash.needReview':'รอตรวจข้อมูล','dash.dueSoon':'ครบกำหนดใน 7 วัน',
@@ -920,7 +960,7 @@ en:{
  'dash.title':'Dashboard','dash.sub':'Where your meetings and follow-ups stand today',
  'dash.kMeetings':'Meetings','dash.kUpcoming':'Upcoming','dash.kContacts':'External contacts',
  'dash.kCards':'Cards to review','dash.kOpen':'Open follow-ups','dash.kOverdue':'Overdue',
- 'dash.calendar':'Meeting calendar','cal.prev':'Previous month','cal.next':'Next month','cal.today':'Today','cal.none':'No meetings on this day','cal.more':'+{n} more','cal.count':'{n} meetings','dash.byMonth':'Meetings, last 6 months','dash.fuStatus':'Follow-up status',
+ 'dash.calendar':'Meeting calendar','cal.prev':'Previous month','cal.next':'Next month','cal.today':'Today','cal.none':'No meetings on this day','cal.more':'+{n} more','cal.count':'{n} meetings','cal.legDone':'Held','cal.legSoon':'Still to come','cal.legLate':'Day passed, no result recorded','cal.legCancelled':'Cancelled','dash.byMonth':'Meetings, last 6 months','dash.fuStatus':'Follow-up status',
  'dash.upcoming':'Coming up','dash.overdue':'Needs attention','dash.recent':'Recent activity',
  'dash.noUpcoming':'No meetings scheduled ahead','dash.noOverdue':'Nothing overdue','dash.noActivity':'No activity yet',
  'dash.thisMonth':'{n} this month','dash.needReview':'awaiting review','dash.dueSoon':'due within 7 days',
@@ -1734,7 +1774,7 @@ function selOpts(set,val,withAll){
 
 /* ---------------- language ---------------- */
 /* Bump both on every release, so it is obvious which copy a device is running. */
-const APP_VERSION = '6.5';
+const APP_VERSION = '6.8';
 const APP_BUILD   = '2026-09-30';
 function renderVersion(){
   const el = document.getElementById('app-ver'); if(!el) return;
@@ -2168,6 +2208,14 @@ function calMap(){
     (a.start?0:1)-(b.start?0:1) || String(a.start||'').localeCompare(String(b.start||'')));
   return map;
 }
+/* What a meeting looks like on the grid: held, still ahead, gone by without a
+   result recorded, or called off. */
+function calTone(mt){
+  if(mt.status==='cancelled') return 't-cancelled';
+  if(mt.status==='done') return 't-done';
+  const last = (mt.multiDay && mt.endDate) ? mt.endDate : mt.date;
+  return (last && last < todayISO()) ? 't-late' : 't-soon';
+}
 function calShift(n){
   calInit();
   const d = new Date(CAL.y, CAL.m + n, 1);
@@ -2186,7 +2234,10 @@ function calSelect(iso){
   calPaint();
 }
 function calPaint(){ const n = $('#cal-card'); if(n) n.innerHTML = calInner(); }
-function calendarCard(){ calInit(); return '<section class="card cal-card" id="cal-card">'+calInner()+'</section>'; }
+function calendarCard(compact){
+  calInit();
+  return '<section class="card cal-card'+(compact?' compact':'')+'" id="cal-card">'+calInner()+'</section>';
+}
 function calInner(){
   calInit();
   const map = calMap(), today = todayISO();
@@ -2214,16 +2265,16 @@ function calInner(){
     const list = map[iso] || [];
     const wd = new Date(y,m,d).getDay();
     let c = '<button class="cal-cell'+(out?' out':'')+((wd===0||wd===6)?' wknd':'')
-      + (iso===today?' today':'')+(iso===CAL.sel?' sel':'')+'" role="gridcell"'
+      + (iso<today?' past':'')+(iso===today?' today':'')+(iso===CAL.sel?' sel':'')+'" role="gridcell"'
       + ' onclick="calSelect(\''+iso+'\')"'
       + ' aria-label="'+esc(fmtDate(iso)+(list.length?' · '+t('cal.count',{n:list.length}):''))+'">'
       + '<span class="cal-num">'+d+'</span>';
-    c += list.slice(0,2).map(mt=>'<span class="cal-ev '+esc(mt.status||'')+'" role="button" tabindex="0"'
+    c += list.slice(0,2).map(mt=>'<span class="cal-ev '+calTone(mt)+'" role="button" tabindex="0"'
       + ' onclick="event.stopPropagation();go(\'#/meetings/'+mt.id+'\')"'
       + ' onkeydown="if(event.key===\'Enter\'){event.stopPropagation();go(\'#/meetings/'+mt.id+'\')}"'
       + ' title="'+esc(mt.title||'')+'">'+esc(mt.title||t('m.title'))+'</span>').join('');
     if(list.length>2) c += '<span class="cal-more">'+esc(t('cal.more',{n:list.length-2}))+'</span>';
-    if(list.length) c += '<span class="cal-dots">'+list.slice(0,4).map(mt=>'<i class="'+esc(mt.status||'')+'"></i>').join('')+'</span>';
+    if(list.length) c += '<span class="cal-dots">'+list.slice(0,4).map(mt=>'<i class="'+calTone(mt)+'"></i>').join('')+'</span>';
     return c + '</button>';
   };
 
@@ -2238,6 +2289,12 @@ function calInner(){
     h += cell(d.getFullYear(), d.getMonth(), d.getDate(), true);
   }
   h += '</div>';
+
+  h += '<div class="cal-legend">'
+    + [['t-done','var(--ok)','cal.legDone'],['t-soon','var(--teal)','cal.legSoon'],
+       ['t-late','var(--warn)','cal.legLate'],['t-cancelled','var(--bad)','cal.legCancelled']]
+      .map(g=>'<span><i style="background:'+g[1]+'"></i>'+esc(t(g[2]))+'</span>').join('')
+    + '</div>';
 
   /* the day the owner picked, spelled out under the grid */
   if(CAL.sel){
@@ -2284,16 +2341,34 @@ VIEWS.dashboard = function(el){
 
   h += strip;
 
-  h += '<div class="kpis">'
+  /* the next meetings, shown under the numbers */
+  let upNext = '<section class="card"><div class="card-h"><h3>'+esc(t('dash.upcoming'))+'</h3><div class="spacer"></div>'
+    + '<button class="btn btn-quiet btn-sm" onclick="go(\'#/meetings\')">'+esc(t('act.view'))+'</button></div>';
+  if(!upcoming.length){
+    upNext += '<div class="empty" style="padding:30px 20px"><p>'+esc(t('dash.noUpcoming'))+'</p>'
+      +  '<button class="btn btn-teal btn-sm" onclick="openForm(\'meetings\')">'+ico('plus',14)+esc(t('m.new'))+'</button></div>';
+  }else{
+    upNext += '<div class="mini-list">'+upcoming.slice(0,5).map(m=>{
+      const p=m.date.split('-');
+      return '<button class="mini" onclick="go(\'#/meetings/'+m.id+'\')">'
+        + '<span class="date-blk"><b>'+(+p[2])+'</b><small>'+(LANG==='th'?TH_MON[+p[1]-1]:EN_MON[+p[1]-1])+'</small></span>'
+        + '<span class="m-body"><b>'+esc(m.title)+'</b><small>'+esc([m.start,m.location].filter(Boolean).join(' · ')||label('mType',m.type))+'</small></span>'
+        + statusChip('mStatus',m.status)+'</button>';
+    }).join('')+'</div>';
+  }
+  upNext += '</section>';
+
+  /* numbers and what is coming on the left, the month beside them on the right */
+  h += '<div class="dash-top"><div class="dash-col"><div class="kpis">'
     + kpi('#0B2E58', t('dash.kMeetings'), DB.meetings.length, t('dash.thisMonth',{n:thisMonth}), '#/meetings')
     + kpi('#0F9E9E', t('dash.kUpcoming'), upcoming.length, t('dash.upcoming'), '#/meetings')
     + kpi('#123E75', t('dash.kContacts'), DB.contacts.length, t('nav.contacts'), '#/contacts')
     + kpi('#EF6C1F', t('dash.kCards'), toReview.length, t('dash.needReview'), '#/cards')
     + kpi('#B7791F', t('dash.kOpen'), openFu.length, t('dash.dueSoon')+': '+dueSoon, '#/followups')
     + kpi('#C0392B', t('dash.kOverdue'), overdue.length, t('f.overdue'), '#/followups')
+    + '</div>' + upNext + '</div>'
+    + calendarCard()
     + '</div>';
-
-  h += calendarCard();
 
   const st=['open','doing','hold','done'];
   const cols={open:'#B7791F',doing:'#0F9E9E',hold:'#75859C',done:'#16875A'};
@@ -2307,22 +2382,6 @@ VIEWS.dashboard = function(el){
     + '</div></div></section></div>';
 
   h += '<div class="dash-grid">';
-  h += '<section class="card"><div class="card-h"><h3>'+esc(t('dash.upcoming'))+'</h3><div class="spacer"></div>'
-    + '<button class="btn btn-quiet btn-sm" onclick="go(\'#/meetings\')">'+esc(t('act.view'))+'</button></div>';
-  if(!upcoming.length){
-    h += '<div class="empty" style="padding:30px 20px"><p>'+esc(t('dash.noUpcoming'))+'</p>'
-      +  '<button class="btn btn-teal btn-sm" onclick="openForm(\'meetings\')">'+ico('plus',14)+esc(t('m.new'))+'</button></div>';
-  }else{
-    h += '<div class="mini-list">'+upcoming.slice(0,5).map(m=>{
-      const p=m.date.split('-');
-      return '<button class="mini" onclick="go(\'#/meetings/'+m.id+'\')">'
-        + '<span class="date-blk"><b>'+(+p[2])+'</b><small>'+(LANG==='th'?TH_MON[+p[1]-1]:EN_MON[+p[1]-1])+'</small></span>'
-        + '<span class="m-body"><b>'+esc(m.title)+'</b><small>'+esc([m.start,m.location].filter(Boolean).join(' · ')||label('mType',m.type))+'</small></span>'
-        + statusChip('mStatus',m.status)+'</button>';
-    }).join('')+'</div>';
-  }
-  h += '</section>';
-
   h += '<section class="card"><div class="card-h"><h3>'+esc(t('dash.overdue'))+'</h3><div class="spacer"></div>'
     + '<button class="btn btn-quiet btn-sm" onclick="go(\'#/followups\')">'+esc(t('act.view'))+'</button></div>';
   if(!overdue.length){
@@ -2336,7 +2395,7 @@ VIEWS.dashboard = function(el){
         + '<span class="chip chip-bad">'+esc(t('f.overdue'))+'</span></button>';
     }).join('')+'</div>';
   }
-  h += '</section></div>';
+  h += '</section>';
 
   const recent = [].concat(
     DB.meetings.map(r=>({ts:r.updatedAt||r.createdAt, k:'meetings', id:r.id, n:r.title, ic:'meetings'})),
@@ -2345,14 +2404,14 @@ VIEWS.dashboard = function(el){
     DB.followups.map(r=>({ts:r.updatedAt||r.createdAt, k:'followups', id:r.id, n:r.title, ic:'followups'}))
   ).filter(x=>x.ts).sort((a,b)=>b.ts-a.ts).slice(0,8);
 
-  h += '<section class="card" style="margin-top:16px"><div class="card-h"><h3>'+esc(t('dash.recent'))+'</h3></div>';
+  h += '<section class="card"><div class="card-h"><h3>'+esc(t('dash.recent'))+'</h3></div>';
   h += recent.length
     ? '<div class="card-pad"><div class="thread">'+recent.map(r=>
         '<div class="tnode"><div class="t-when">'+esc(fmtDateTime(r.ts))+'</div>'
         +'<button class="t-what" onclick="go(\'#/'+r.k+'/'+r.id+'\')">'+esc(r.n)+'</button>'
         +'<div class="t-note">'+esc(t('nav.'+r.k))+'</div></div>').join('')+'</div></div>'
     : '<div class="empty" style="padding:30px 20px"><p>'+esc(t('dash.noActivity'))+'</p></div>';
-  h += '</section>';
+  h += '</section></div>';
 
   el.innerHTML = h;
 };
