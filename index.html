@@ -291,6 +291,10 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 /* ---- month calendar on the dashboard ---- */
 /* dashboard top row: the six numbers on the left, the month on the right */
 /* one third for the numbers, two thirds for the month */
+.tbl-grp td{background:var(--wash);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:7px 14px;white-space:nowrap}
+.tbl-grp span{font-weight:600;font-size:12.5px;color:var(--navy);letter-spacing:.01em}
+.tbl-grp small{color:var(--ink-3);font-size:11.5px;margin-left:10px;display:inline}
 .dash-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:16px;align-items:start;margin-bottom:16px}
 .dash-top .kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:0}
 /* smaller tiles, since they now share the row with a full calendar */
@@ -767,7 +771,7 @@ th:{
  'dash.noUpcoming':'ยังไม่มีการประชุมในอนาคต','dash.noOverdue':'ไม่มีงานค้าง เยี่ยมมาก','dash.noActivity':'ยังไม่มีความเคลื่อนไหว',
  'dash.thisMonth':'เดือนนี้ {n} ครั้ง','dash.needReview':'รอตรวจข้อมูล','dash.dueSoon':'ครบกำหนดใน 7 วัน',
  'm.title':'การประชุม','m.sub':'บันทึกวาระ ผู้เข้าร่วม และผลการประชุม ในรายการเดียว',
- 'm.f.title':'ชื่อการประชุม','m.f.date':'วันที่','m.f.multiDay':'ประชุมหลายวัน','m.f.endDate':'วันสิ้นสุด','m.f.endDateHint':'วันสุดท้ายของการประชุม','m.f.days':'{n} วัน','m.f.start':'เวลาเริ่ม','m.f.end':'เวลาสิ้นสุด',
+ 'm.f.title':'ชื่อการประชุม','m.f.date':'วันที่','m.f.multiDay':'ประชุมหลายวัน','m.f.endDate':'วันสิ้นสุด','m.f.endDateHint':'วันสุดท้ายของการประชุม','m.f.days':'{n} วัน','m.noDate':'ไม่ระบุวันที่','m.f.start':'เวลาเริ่ม','m.f.end':'เวลาสิ้นสุด',
  'm.f.type':'รูปแบบ','m.f.status':'สถานะ','m.f.location':'สถานที่ / ห้องประชุม','m.f.meetingUrl':'ลิงก์ประชุมออนไลน์','m.f.meetingUrlHint':'เช่น Zoom, Teams หรือ Google Meet',
  'm.f.organizer':'ผู้จัดการประชุม','m.f.organizerHint':'เลือกจากรายชื่อ หรือพิมพ์ชื่อผู้จัดจากภายนอกได้','m.f.organizerOther':'เคยใช้มาก่อน','m.f.agenda':'วาระการประชุม','m.f.notes':'สรุปผล / บันทึกการประชุม',
  'm.f.participants':'ผู้เข้าร่วมภายใน','m.f.contacts':'ผู้ติดต่อภายนอก','m.f.tags':'แท็ก',
@@ -965,7 +969,7 @@ en:{
  'dash.noUpcoming':'No meetings scheduled ahead','dash.noOverdue':'Nothing overdue','dash.noActivity':'No activity yet',
  'dash.thisMonth':'{n} this month','dash.needReview':'awaiting review','dash.dueSoon':'due within 7 days',
  'm.title':'Meetings','m.sub':'Agenda, attendees and outcomes in one record',
- 'm.f.title':'Meeting title','m.f.date':'Date','m.f.multiDay':'Runs over several days','m.f.endDate':'Last day','m.f.endDateHint':'The final day of the meeting','m.f.days':'{n} days','m.f.start':'Start','m.f.end':'End',
+ 'm.f.title':'Meeting title','m.f.date':'Date','m.f.multiDay':'Runs over several days','m.f.endDate':'Last day','m.f.endDateHint':'The final day of the meeting','m.f.days':'{n} days','m.noDate':'No date','m.f.start':'Start','m.f.end':'End',
  'm.f.type':'Format','m.f.status':'Status','m.f.location':'Place or meeting room','m.f.meetingUrl':'Online meeting link','m.f.meetingUrlHint':'Zoom, Teams, Google Meet and so on',
  'm.f.organizer':'Organiser','m.f.organizerHint':'Pick from the list, or type an outside organiser','m.f.organizerOther':'Used before','m.f.agenda':'Agenda','m.f.notes':'Minutes and outcomes',
  'm.f.participants':'Internal participants','m.f.contacts':'External contacts','m.f.tags':'Tags',
@@ -1774,7 +1778,7 @@ function selOpts(set,val,withAll){
 
 /* ---------------- language ---------------- */
 /* Bump both on every release, so it is obvious which copy a device is running. */
-const APP_VERSION = '6.8';
+const APP_VERSION = '6.9';
 const APP_BUILD   = '2026-09-30';
 function renderVersion(){
   const el = document.getElementById('app-ver'); if(!el) return;
@@ -2101,7 +2105,9 @@ function searchBox(mod){
   return '<input type="text" id="flt-q" value="'+esc(FILT[mod].q)+'" placeholder="'+esc(t('ph.search'))+'" '
        + 'aria-label="'+esc(t('ph.search'))+'" oninput="setFilt(\''+mod+'\',\'q\',this.value,\'#flt-q\')">';
 }
-function tableFrame(mod, cols, rows, rowFn){
+/* groupFn, when given, returns {k,l} for a row: a new k opens a labelled band
+   across the table, so a long list reads month by month. */
+function tableFrame(mod, cols, rows, rowFn, groupFn){
   const f=FILT[mod];
   const total=rows.length;
   const per=pageSize();
@@ -2116,7 +2122,15 @@ function tableFrame(mod, cols, rows, rowFn){
       + (c.w?' style="width:'+c.w+'"':'')+'>'+esc(c.label)+(s&&f.sk===s?(f.sd>0?' ▲':' ▼'):'')+'</th>';
   });
   h+='</tr></thead><tbody>';
-  h += slice.map(rowFn).join('');
+  h += slice.map((r,i)=>{
+    if(!groupFn) return rowFn(r);
+    const g = groupFn(r);
+    const prev = i ? groupFn(slice[i-1]) : null;
+    if(!g || !g.k || (prev && prev.k===g.k)) return rowFn(r);
+    const n = slice.filter(x=>{ const y=groupFn(x); return y && y.k===g.k; }).length;
+    return '<tr class="tbl-grp"><td colspan="'+cols.length+'"><span>'+esc(g.l)+'</span>'
+      + '<small>'+esc(t('g.results',{n:n}))+'</small></td></tr>' + rowFn(r);
+  }).join('');
   h += '</tbody></table></div>';
   h += '<div class="tbl-foot"><span>'+esc(t('g.results',{n:total}))+'</span>'
     + '<label class="per-page">'+esc(t('g.perPage'))
@@ -2489,6 +2503,13 @@ VIEWS.meetings = function(el,id){
               {label:t('m.f.type'),w:'140px'},{label:t('m.f.status'),w:'110px'},
               {label:t('col.internal'),w:'95px'},{label:t('col.external'),w:'95px'},
               {label:'',w:'92px'}];
+  /* month bands only make sense while the list is in date order */
+  const byMonth = (f.sk==='date') ? (m=>{
+    const k = String(m.date||'').slice(0,7);
+    if(!/^\d{4}-\d{2}$/.test(k)) return {k:'none', l:t('m.noDate')};
+    const y = +k.slice(0,4), mo = +k.slice(5,7);
+    return {k, l: LANG==='th' ? TH_MON_FULL[mo-1]+' '+beYear(y) : EN_MON_FULL[mo-1]+' '+y};
+  }) : null;
   h += tableFrame('meetings',cols,rows,m=>{
     const nIn=(m.participantIds||[]).length, nOut=(m.contactIds||[]).length;
     return '<tr><td><button class="lnk" onclick="go(\'#/meetings/'+m.id+'\')">'+esc(m.title)+'</button>'
@@ -2506,7 +2527,7 @@ VIEWS.meetings = function(el,id){
       + '<button class="btn btn-quiet btn-sm" aria-label="'+esc(t('act.edit'))+'" onclick="openForm(\'meetings\',\''+m.id+'\')">'+ico('edit',15)+'</button>'
       + '<button class="btn btn-quiet btn-sm" aria-label="'+esc(t('act.delete'))+'" onclick="confirmDelete(\'meetings\',\''+m.id+'\')">'+ico('trash',15)+'</button>'
       + '</div></td></tr>';
-  });
+  }, byMonth);
   el.innerHTML=h; applyRefocus();
 };
 
