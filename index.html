@@ -291,6 +291,17 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 /* ---- month calendar on the dashboard ---- */
 /* dashboard top row: the six numbers on the left, the month on the right */
 /* one third for the numbers, two thirds for the month */
+/* the week's new contacts */
+.new-strip{margin-bottom:16px}
+.face-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.face .ph{width:34px;height:34px}
+.face{display:flex;align-items:center;gap:9px;padding:6px 12px 6px 6px;border:1px solid var(--line);border-radius:999px;
+  background:var(--paper);cursor:pointer;text-align:left;max-width:100%;min-width:0;font:inherit;color:inherit}
+.face:hover{border-color:var(--teal);background:var(--teal-soft)}
+.face .f-b{display:flex;flex-direction:column;min-width:0}
+.face .f-b b{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
+.face .f-b small{font-size:11.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
+.face-more{font-size:12.5px;color:var(--ink-3);padding-left:4px}
 .tbl-grp td{background:var(--wash);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
   padding:7px 14px;white-space:nowrap}
 .tbl-grp span{font-weight:600;font-size:12.5px;color:var(--navy);letter-spacing:.01em}
@@ -861,6 +872,11 @@ th:{
  'set.workspace':'Workspace ID (เฉพาะบางคีย์)','set.workspaceHelp':'เว้นว่างไว้ก่อน กรอกเมื่อ API แจ้งว่าต้องระบุ workspace · หาได้จาก URL ในหน้า Console ขึ้นต้นด้วย wrkspc_',
  'set.model':'ชื่อโมเดลที่ใช้อ่าน','set.modelHelp':'เว้นว่างไว้จะใช้ {m} · เปลี่ยนได้หากคีย์ของท่านเข้าถึงโมเดลอื่น',
  'set.apiKey':'Anthropic API key (สำหรับอ่านนามบัตร)','set.apiKeyHelp':'จำเป็นเมื่อเปิดใช้งานนอกแอป Claude เช่นบน GitHub Pages · สร้างที่ console.anthropic.com',
+ 'set.keyExp':'คีย์หมดอายุวันที่','set.keyExpHelp':'ใส่วันหมดอายุที่ตั้งไว้ตอนสร้างคีย์ แล้วระบบจะเตือนล่วงหน้า 14 วัน เว้นว่างได้ถ้าคีย์ไม่มีวันหมดอายุ',
+ 'set.keyExpOk':'เหลืออีก {n} วัน หมดอายุ {t}','set.keyExpSoon':'คีย์อ่านนามบัตรจะหมดอายุในอีก {n} วัน ({t})',
+ 'set.keyExpiresToday':'คีย์อ่านนามบัตรหมดอายุวันนี้','set.keyExpired':'คีย์อ่านนามบัตรหมดอายุแล้วเมื่อ {t} ({n} วันก่อน) สแกนนามบัตรจะใช้ไม่ได้',
+ 'set.keyExpFix':'ไปที่หน้าตั้งค่า',
+ 'dash.newContacts':'ผู้ติดต่อภายนอกที่เพิ่มใน {d} วันล่าสุด','dash.newCount':'{n} ท่าน',
  'set.ghToken':'GitHub token (สำหรับซิงก์)','set.ghTokenHelp':'ใช้ token แบบ classic ที่ติ๊กสิทธิ์ gist เพียงข้อเดียว (fine-grained token ยังใช้กับ Gist ไม่ได้)',
  'set.gistId':'Gist ID','set.gistIdHelp':'เว้นว่างไว้ ระบบจะสร้าง secret gist ให้เองเมื่อกดอัปโหลดครั้งแรก แล้วนำ ID นี้ไปกรอกในอุปกรณ์เครื่องอื่น',
  'set.clearKeys':'ล้างคีย์ทั้งหมด','set.keysCleared':'ล้างคีย์เรียบร้อยแล้ว',
@@ -1059,6 +1075,11 @@ en:{
  'set.workspace':'Workspace ID (only some keys)','set.workspaceHelp':'Leave blank unless the API asks for it. Find it in the Console URL — it starts with wrkspc_.',
  'set.model':'Model used for reading','set.modelHelp':'Leave blank to use {m}. Change it if your key reaches a different model.',
  'set.apiKey':'Anthropic API key (for card reading)','set.apiKeyHelp':'Needed when running outside the Claude app, such as on GitHub Pages. Create one at console.anthropic.com',
+ 'set.keyExp':'Key expires on','set.keyExpHelp':'The expiry date set when the key was created. A warning appears 14 days ahead. Leave blank if the key never expires.',
+ 'set.keyExpOk':'{n} days left, expires {t}','set.keyExpSoon':'The card-reading key expires in {n} days ({t})',
+ 'set.keyExpiresToday':'The card-reading key expires today','set.keyExpired':'The card-reading key expired on {t} ({n} days ago). Card scanning will not work.',
+ 'set.keyExpFix':'Open settings',
+ 'dash.newContacts':'External contacts added in the last {d} days','dash.newCount':'{n} people',
  'set.ghToken':'GitHub token (for sync)','set.ghTokenHelp':'Use a classic token with only the gist scope ticked (fine-grained tokens do not cover gists).',
  'set.gistId':'Gist ID','set.gistIdHelp':'Leave blank and a secret gist is created on your first push. Copy the ID onto your other devices.',
  'set.clearKeys':'Clear all keys','set.keysCleared':'Keys cleared',
@@ -1555,7 +1576,7 @@ async function saveSettings(){ return sSet(KEYS.settings, DB.settings); }
 /* Credentials live in their own key. They are deliberately NOT part of DB.settings,
    so they never ride along in a JSON backup or a Gist snapshot. */
 const SECRET_KEY = 'mc:secrets';
-let SECRETS = { apiKey:'', workspaceId:'', ghToken:'', gistId:'' };
+let SECRETS = { apiKey:'', workspaceId:'', ghToken:'', gistId:'', keyExp:'' };
 async function loadSecrets(){
   const s = await sGet(SECRET_KEY, null);
   if(s && typeof s==='object') SECRETS = Object.assign(SECRETS, s);
@@ -1778,8 +1799,8 @@ function selOpts(set,val,withAll){
 
 /* ---------------- language ---------------- */
 /* Bump both on every release, so it is obvious which copy a device is running. */
-const APP_VERSION = '6.9';
-const APP_BUILD   = '2026-09-30';
+const APP_VERSION = '7.0';
+const APP_BUILD   = '2026-10-05';
 function renderVersion(){
   const el = document.getElementById('app-ver'); if(!el) return;
   const [y,m,d] = APP_BUILD.split('-').map(Number);
@@ -2355,6 +2376,17 @@ VIEWS.dashboard = function(el){
 
   h += strip;
 
+  /* the API key behind card scanning runs out on a date nobody remembers */
+  const keyState = keyExpState();
+  if(keyState && keyState.kind!=='ok'){
+    h += '<div class="banner banner-'+keyState.kind+'">'+ico('alert',18)
+      + '<div><b>'+esc(keyState.msg)+'</b> '
+      + '<button class="lnk" style="font-weight:500" onclick="go(\'#/settings\')">'+esc(t('set.keyExpFix'))+'</button></div></div>';
+  }
+
+  /* who was added this week, with their faces */
+  h += newContactsStrip();
+
   /* the next meetings, shown under the numbers */
   let upNext = '<section class="card"><div class="card-h"><h3>'+esc(t('dash.upcoming'))+'</h3><div class="spacer"></div>'
     + '<button class="btn btn-quiet btn-sm" onclick="go(\'#/meetings\')">'+esc(t('act.view'))+'</button></div>';
@@ -2428,7 +2460,36 @@ VIEWS.dashboard = function(el){
   h += '</section></div>';
 
   el.innerHTML = h;
+  loadPhotos();
 };
+
+/* A week of new external contacts, as a row of faces. Hidden when nobody was
+   added, so the dashboard does not carry an empty box around. */
+const NEW_DAYS = 7;
+function newContactsStrip(){
+  const since = Date.now() - NEW_DAYS*86400000;
+  const fresh = (DB.contacts||[]).filter(c=>(c.createdAt||0) >= since)
+                                 .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  if(!fresh.length) return '';
+  const shown = fresh.slice(0,12);
+  return '<section class="card new-strip"><div class="card-h">'
+    + '<h3>'+esc(t('dash.newContacts',{d:NEW_DAYS}))+'</h3>'
+    + '<span class="chip chip-teal">'+esc(t('dash.newCount',{n:fresh.length}))+'</span>'
+    + '<div class="spacer"></div>'
+    + '<button class="btn btn-quiet btn-sm" onclick="go(\'#/contacts\')">'+esc(t('act.view'))+'</button></div>'
+    + '<div class="card-pad"><div class="face-row">'
+    + shown.map(c=>'<button class="face" onclick="go(\'#/contacts/'+c.id+'\')" title="'+esc([personName(c),c.org,c.country].filter(Boolean).join(' · '))+'">'
+        + avatarHtml(c,'md')
+        + '<span class="f-b"><b>'+esc(personName(c))+'</b><small>'+esc(c.org||c.country||fmtDate(isoFromMs(c.createdAt)))+'</small></span>'
+        + '</button>').join('')
+    + (fresh.length>shown.length ? '<span class="face-more">'+esc(t('g.plusMore',{n:fresh.length-shown.length}))+'</span>' : '')
+    + '</div></div></section>';
+}
+function isoFromMs(ms){
+  const d = new Date(ms||0);
+  if(isNaN(d)) return '';
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
 </script>
 
 <script>
@@ -4587,6 +4648,9 @@ VIEWS.settings = function(el){
     + '<div class="field"><label for="s-apikey">'+esc(t('set.apiKey'))+'</label>'
     + '<input type="password" id="s-apikey" value="'+esc(SECRETS.apiKey||'')+'" autocomplete="off" spellcheck="false" placeholder="sk-ant-...">'
     + '<p class="help">'+esc(t('set.apiKeyHelp'))+'</p></div>'
+    + '<div class="field"><label for="s-keyexp">'+esc(t('set.keyExp'))+'</label>'
+    + '<input type="date" id="s-keyexp" value="'+esc(SECRETS.keyExp||'')+'">'
+    + '<p class="help">'+esc(keyExpHelp())+'</p></div>'
     + '<div class="field"><label for="s-workspace">'+esc(t('set.workspace'))+'</label>'
     + '<input type="text" id="s-workspace" value="'+esc(SECRETS.workspaceId||'')+'" autocomplete="off" spellcheck="false" placeholder="wrkspc_...">'
     + '<p class="help">'+esc(t('set.workspaceHelp'))+'</p></div>'
@@ -5029,6 +5093,7 @@ function confirmPull(){
 async function saveSecretForm(){
   SECRETS.apiKey  = ($('#s-apikey')  ? $('#s-apikey').value  : '').trim();
   SECRETS.workspaceId = ($('#s-workspace') ? $('#s-workspace').value : '').trim();
+  SECRETS.keyExp = ($('#s-keyexp') ? $('#s-keyexp').value : '').trim();
   DB.settings.ocrModel = ($('#s-model') ? $('#s-model').value : '').trim();
   await saveSettings();
   SECRETS.ghToken = ($('#s-ghtoken') ? $('#s-ghtoken').value : '').trim();
@@ -5039,7 +5104,7 @@ async function saveSecretForm(){
   route();
 }
 async function clearSecrets(){
-  SECRETS = { apiKey:'', workspaceId:'', ghToken:'', gistId:'' };
+  SECRETS = { apiKey:'', workspaceId:'', ghToken:'', gistId:'', keyExp:'' };
   await saveSecrets();
   toast(t('set.keysCleared'),'ok'); route();
 }
@@ -5084,6 +5149,26 @@ async function autoPullAfterUnlock(){
     syncMsg('sync.autoFailed','warn',{m:String(e.message||e)});
     route();
   }
+}
+
+/* ---------------- API KEY EXPIRY ----------------
+   A key that quietly expires looks exactly like a broken scanner, so the date is
+   kept here and the dashboard says something before the day arrives. */
+function keyExpDays(){
+  if(!SECRETS.keyExp || !/^\d{4}-\d{2}-\d{2}$/.test(SECRETS.keyExp)) return null;
+  return daysBetween(SECRETS.keyExp, todayISO());
+}
+function keyExpState(){
+  const d = keyExpDays();
+  if(d===null || !SECRETS.apiKey) return null;
+  if(d < 0)  return {kind:'bad',  d, msg:t('set.keyExpired',{t:fmtDate(SECRETS.keyExp), n:-d})};
+  if(d === 0) return {kind:'bad',  d, msg:t('set.keyExpiresToday')};
+  if(d <= 14) return {kind:'warn', d, msg:t('set.keyExpSoon',{n:d, t:fmtDate(SECRETS.keyExp)})};
+  return {kind:'ok', d, msg:t('set.keyExpOk',{n:d, t:fmtDate(SECRETS.keyExp)})};
+}
+function keyExpHelp(){
+  const st = keyExpState();
+  return st ? st.msg : t('set.keyExpHelp');
 }
 
 /* ---------------- SYNC SHORTCUTS ---------------- */
