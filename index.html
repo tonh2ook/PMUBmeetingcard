@@ -1800,7 +1800,7 @@ function selOpts(set,val,withAll){
 
 /* ---------------- language ---------------- */
 /* Bump both on every release, so it is obvious which copy a device is running. */
-const APP_VERSION = '7.1';
+const APP_VERSION = '7.2';
 const APP_BUILD   = '2026-10-05';
 function renderVersion(){
   const el = document.getElementById('app-ver'); if(!el) return;
@@ -1835,7 +1835,7 @@ function d3oneAuth(){try{var s=JSON.parse(localStorage.getItem('d3one:auth')||'n
 function d3oneToken(){try{return localStorage.getItem('d3one:tok')||''}catch(e){return ''}}
 function d3oneLang(){try{return localStorage.getItem('d3one:lang')||''}catch(e){return ''}}
 function d3oneSignOut(){try{localStorage.removeItem('d3one:auth');localStorage.removeItem('d3one:tok')}catch(e){}location.href=D3ONE_URL}
-var MC_DEFAULT_GIST='';   /* ใส่ Gist ID ของ MeetingCard เพื่อให้เครื่องใหม่ดึงข้อมูลได้ทันที */
+var MC_DEFAULT_GIST='b7890f3cd09e8c6d3fd881990d81c301';   /* ใส่ Gist ID ของ MeetingCard เพื่อให้เครื่องใหม่ดึงข้อมูลได้ทันที */
 
 let APP_READY = false;
 let ATTEMPTS = 0, LOCK_UNTIL = 0;
