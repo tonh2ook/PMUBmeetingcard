@@ -7,7 +7,7 @@
 <meta name="description" content="PMU-B MeetingCard — International Network Contact Database. ระบบเก็บข้อมูลการติดต่อเครือข่ายต่างประเทศ สำหรับบันทึกการประชุม ผู้เข้าร่วม ผู้ติดต่อภายนอก นามบัตร และงานติดตาม">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0B2E58">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://api.anthropic.com https://api.github.com https://gist.githubusercontent.com; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob: https://flagcdn.com; connect-src 'self' https://api.anthropic.com https://api.github.com https://gist.githubusercontent.com; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png?v=2">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -633,6 +633,9 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
   .scan-bar{padding:14px 22px 8px}
   .scan-frame{width:92%}
 }
+.flag{display:inline-block;width:18px;height:13px;border-radius:2px;object-fit:cover;vertical-align:-2px;margin-right:6px;box-shadow:0 0 0 1px rgba(15,30,60,.14);flex:none}
+.chip .flag{width:16px;height:12px;margin-right:5px;vertical-align:-1px}
+.ctry{display:inline-flex;align-items:center;white-space:nowrap}
 </style>
 </head>
 <body data-lang="th">
@@ -1711,6 +1714,23 @@ function countryCanonMap(){
 function titleCase(s){
   return s.toLowerCase().replace(/(^|[\s\-'()])([a-z])/g, (m,a,b)=>a+b.toUpperCase());
 }
+/* ธงชาติเล็ก ๆ หน้าชื่อประเทศ (รูปจาก flagcdn.com — ถ้าโหลดไม่ได้จะซ่อนไปเอง) */
+const FLAG_CODE = {
+  'japan':'jp','china':'cn','korea':'kr','south korea':'kr','taiwan':'tw','hong kong':'hk','mongolia':'mn',
+  'singapore':'sg','malaysia':'my','indonesia':'id','philippines':'ph','viet nam':'vn','vietnam':'vn','lao pdr':'la','laos':'la',
+  'cambodia':'kh','myanmar':'mm','brunei':'bn','thailand':'th','india':'in','bangladesh':'bd','sri lanka':'lk','nepal':'np',
+  'pakistan':'pk','bhutan':'bt','australia':'au','new zealand':'nz','fiji':'fj','united kingdom':'gb','uk':'gb','france':'fr',
+  'germany':'de','austria':'at','netherlands':'nl','belgium':'be','switzerland':'ch','sweden':'se','norway':'no','denmark':'dk',
+  'finland':'fi','iceland':'is','italy':'it','spain':'es','portugal':'pt','poland':'pl','czechia':'cz','hungary':'hu','greece':'gr',
+  'ireland':'ie','estonia':'ee','luxembourg':'lu','united states':'us','usa':'us','canada':'ca','brazil':'br','chile':'cl',
+  'argentina':'ar','mexico':'mx','colombia':'co','peru':'pe','israel':'il','uae':'ae','saudi arabia':'sa','qatar':'qa',
+  'turkiye':'tr','turkey':'tr','south africa':'za','kenya':'ke','egypt':'eg','nigeria':'ng','ghana':'gh','russia':'ru',
+  'kazakhstan':'kz','uzbekistan':'uz','eu':'eu','european union':'eu'
+};
+function flagTag(country){
+  const c = FLAG_CODE[String(country||'').trim().toLowerCase()];
+  return c ? '<img class="flag" src="https://flagcdn.com/w40/'+c+'.png" alt="" loading="lazy" onerror="this.remove()">' : '';
+}
 function canonCountry(v){
   const raw = String(v||'').trim().replace(/\s+/g,' ');
   if(!raw) return '';
@@ -1800,7 +1820,7 @@ function selOpts(set,val,withAll){
 
 /* ---------------- language ---------------- */
 /* Bump both on every release, so it is obvious which copy a device is running. */
-const APP_VERSION = '7.3';
+const APP_VERSION = '7.4';
 const APP_BUILD   = '2026-10-05';
 function renderVersion(){
   const el = document.getElementById('app-ver'); if(!el) return;
@@ -2596,7 +2616,7 @@ VIEWS.meetings = function(el,id){
       + '<td>'+esc(fmtMeetingDate(m))
       + (m.multiDay && m.endDate ? '<small>'+esc(t('m.f.days',{n:meetingDays(m)}))+'</small>' : '')
       + (m.start?'<small>'+esc(m.start+(m.end?'–'+m.end:''))+'</small>':'')+'</td>'
-      + '<td>'+((m.countries||[]).length?esc(m.countries.join(', ')):'<span style="color:var(--ink-3)">—</span>')
+      + '<td>'+((m.countries||[]).length?m.countries.map(c=>'<span class="ctry">'+flagTag(c)+esc(c)+'</span>').join(', '):'<span style="color:var(--ink-3)">—</span>')
       + (m.region?'<small>'+esc(label('region',m.region))+'</small>':'')+'</td>'
       + '<td>'+esc(label('mType',m.type))+(m.location?'<small>'+esc(m.location)+'</small>':'')+'</td>'
       + '<td>'+statusChip('mStatus',m.status)+'</td>'
@@ -2633,7 +2653,7 @@ function meetingDetail(el,id){
     + dlRow('m.f.type', label('mType',m.type))
     + '<dt>'+esc(t('m.f.countries'))+'</dt><dd>'
       + ((m.countries||[]).length
-          ? m.countries.map(c=>'<span class="chip chip-teal">'+esc(c)+'</span>').join(' ')
+          ? m.countries.map(c=>'<span class="chip chip-teal">'+flagTag(c)+esc(c)+'</span>').join(' ')
           : '<span style="color:var(--ink-3)">'+esc(t('g.none'))+'</span>')
       + '</dd>'
     + dlRow('m.f.region', m.region ? label('region',m.region) : '')
@@ -2845,7 +2865,7 @@ VIEWS.contacts = function(el,id){
     + (personAlt(c)?'<small>'+esc(personAlt(c))+'</small>':'')
     + (c.position?'<small>'+esc(c.position)+'</small>':'')+'</span></span></td>'
     + '<td>'+esc(c.org||'—')+(c.dept?'<small>'+esc(c.dept)+'</small>':'')+'</td>'
-    + '<td>'+esc(c.country||'—')+'</td>'
+    + '<td>'+(c.country?'<span class="ctry">'+flagTag(c.country)+esc(c.country)+'</span>':'—')+'</td>'
     + '<td>'+emailCell(c.email)+((c.mobile||c.phone)?'<small>'+esc(c.mobile||c.phone)+'</small>':'')+'</td>'
     + '<td>'+REL.cMeetings(c.id).length+'</td>'
     + '<td><div class="row-acts">'
