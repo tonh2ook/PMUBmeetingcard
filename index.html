@@ -1800,7 +1800,7 @@ function selOpts(set,val,withAll){
 
 /* ---------------- language ---------------- */
 /* Bump both on every release, so it is obvious which copy a device is running. */
-const APP_VERSION = '7.2';
+const APP_VERSION = '7.3';
 const APP_BUILD   = '2026-10-05';
 function renderVersion(){
   const el = document.getElementById('app-ver'); if(!el) return;
@@ -5365,7 +5365,7 @@ function boot(){
     .then(initAuth)
     .then(async ()=>{
       const sso = d3oneAuth();
-      if(sso && sso.role==='edit'){ localStorage.setItem('mc:sso','1'); await unlock(); return; }
+      if(sso && sso.apps && sso.apps.indexOf('meeting')>-1){ localStorage.setItem('mc:sso','1'); await unlock(); return; }
       if(localStorage.getItem('mc:sso')==='1'){ localStorage.removeItem('mc:sso'); await endSession(); }
       else if(await sessionAlive()){ await unlock(); return; }
       $('#lg-pass').focus();
