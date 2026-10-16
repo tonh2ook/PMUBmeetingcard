@@ -60,6 +60,7 @@ a:hover{text-decoration:underline}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 /* ---------- LOGIN ---------- */
+#login{display:none!important}  /* 7.6: เข้าผ่าน D3-One เท่านั้น */
 #login{
   position:fixed;inset:0;z-index:120;display:grid;
   grid-template-columns:1.05fr .95fr;background:var(--navy);
@@ -576,6 +577,16 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .rail-sync .rs-bar b{display:block;height:100%;width:0;background:#7fb0ff;transition:width .25s}
 @keyframes rsPulse{50%{opacity:.3}}
 /* 7.5: ไม่แสดงวงล้อเต็มจอ — ความคืบหน้าย้ายไปที่แถบสถานะในเมนูซ้าย (ยังกันการคลิกระหว่างซิงค์เหมือนเดิม) */
+/* ---- D3-One: ส่วนท้ายเมนูซ้ายแบบเดียวกันทุกระบบ ---- */
+.d3f{margin-top:auto;padding:14px 16px 18px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:10px;font-size:12px}
+.d3f-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 10px;border-radius:9px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:rgba(255,255,255,.85)!important;text-decoration:none!important;font-size:13px;font-weight:500}
+.d3f-btn:hover{background:rgba(255,255,255,.12);color:#fff!important}
+.d3f .rail-sync{cursor:pointer}
+.d3f .rail-sync:hover{background:rgba(255,255,255,.11)}
+.d3f-meta{color:rgba(255,255,255,.5);line-height:1.55;font-size:12px}
+.d3f-meta b{color:rgba(255,255,255,.82);font-weight:600}
+.d3f-out{border:0;background:transparent;color:rgba(255,255,255,.5);display:flex;gap:8px;align-items:center;padding:4px 2px;font-size:12.5px;cursor:pointer;text-align:left;font-family:inherit}
+.d3f-out:hover{color:#ff9a94}
 .sp-scrim{background:transparent!important;backdrop-filter:none!important;cursor:progress}
 .sp-scrim .sp-box{display:none!important}
 .sp-scrim{position:fixed;inset:0;z-index:140;background:rgba(8,20,36,.42);display:grid;place-items:center;
@@ -716,11 +727,11 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
       <div><b>MeetingCard</b><small>PMU-B · บพค.</small></div>
     </div>
     <div class="nav" id="nav"></div>
-    <div class="rail-foot">
+    <div class="d3f">
+      <a class="d3f-btn" id="d3oneBtn" href="/D3-One/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>D3-One</span></a>
       <div class="rail-sync" id="railSyncPill"><i></i><span></span><div class="rs-bar"><b></b></div></div>
-      <a class="btn btn-ghost btn-sm" id="d3oneBtn" href="/D3-One/" style="display:none;text-decoration:none">◧ D3-One</a>
-      <div class="app-ver" id="app-ver"></div>
-      <button class="btn btn-ghost btn-sm" id="btn-logout"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg><span data-i="nav.logout">ออกจากระบบ</span></button>
+      <div class="d3f-meta"><span id="app-ver" hidden></span><span id="railSyncLine"></span><br><b id="railVer"></b> · <span id="railGroup"></span></div>
+      <button class="d3f-out" id="btn-logout"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg><span data-i="nav.logout">ออกจากระบบ</span></button>
     </div>
   </nav>
 
@@ -1832,7 +1843,7 @@ function selOpts(set,val,withAll){
 
 /* ---------------- language ---------------- */
 /* Bump both on every release, so it is obvious which copy a device is running. */
-const APP_VERSION = '7.5';
+const APP_VERSION = '7.7';
 const APP_BUILD   = '2026-10-05';
 function renderVersion(){
   const el = document.getElementById('app-ver'); if(!el) return;
@@ -1967,7 +1978,7 @@ async function unlock(){
 }
 
 async function logout(){
-  if(localStorage.getItem('mc:sso')==='1'){ APP_READY=false; localStorage.removeItem('mc:sso'); await endSession(); return d3oneSignOut(); }
+  APP_READY=false; localStorage.removeItem('mc:sso'); await endSession(); return d3oneSignOut();
   APP_READY=false;
   await endSession();
   $('#app').classList.remove('on');
@@ -4933,12 +4944,21 @@ function progOpen(titleKey){
 const RS_TXT={th:{local:'เก็บในเครื่องนี้',busy:'กำลังซิงค์',ok:'ออนไลน์ · ซิงค์แล้ว',dirty:'ยังไม่ได้อัปโหลด',err:'ซิงค์ไม่สำเร็จ'},
               en:{local:'Saved on this device',busy:'Syncing',ok:'Online · synced',dirty:'Not uploaded yet',err:'Sync failed'}};
 let RS_BUSY=false, RS_PCT=0, RS_ERR=false;
+function d3GroupName(){try{const s=JSON.parse(localStorage.getItem('d3one:auth')||'null');const n=s&&s.groupName;return n?n[(typeof LANG!=='undefined'&&LANG==='en')?1:0]:''}catch(e){return ''}}
+function d3FootPaint(){
+  const v=document.getElementById('railVer'); if(v) v.textContent='V'+APP_VERSION;
+  const g=document.getElementById('railGroup'); if(g) g.textContent=d3GroupName();
+  const s=document.getElementById('railSyncLine');
+  if(s){ try{ s.textContent = (typeof SECRETS!=='undefined' && SECRETS.lastPull) ? (t('sync.lastPull')+' '+agoText(SECRETS.lastPull)) : ''; }catch(e){} }
+}
+document.addEventListener('click',e=>{ if(e.target.closest('#railSyncPill') && typeof syncReady==='function' && syncReady()){ if(syncDirty()) syncPushQuick(); else confirmPull(); } });
 function rsPaint(state){
   const el=document.getElementById('railSyncPill'); if(!el) return;
   const L=RS_TXT[(typeof LANG!=='undefined'&&LANG==='en')?'en':'th'];
   el.className='rail-sync '+state;
   el.querySelector('span').textContent = state==='busy' ? L.busy+' '+RS_PCT+'%' : L[state];
   el.querySelector('.rs-bar b').style.width = RS_PCT+'%';
+  try{d3FootPaint()}catch(e){}
 }
 function rsUpdate(){
   if(document.getElementById('sync-prog')){ RS_BUSY=true; return rsPaint('busy'); }
@@ -5419,9 +5439,9 @@ function boot(){
     .then(async ()=>{
       const sso = d3oneAuth();
       if(sso && sso.apps && sso.apps.indexOf('meeting')>-1){ localStorage.setItem('mc:sso','1'); await unlock(); return; }
-      if(localStorage.getItem('mc:sso')==='1'){ localStorage.removeItem('mc:sso'); await endSession(); }
-      else if(await sessionAlive()){ await unlock(); return; }
-      $('#lg-pass').focus();
+      /* 7.6: ตั้งแต่เวอร์ชันนี้ เข้าใช้งานผ่าน D3-One เท่านั้น — ไม่มีหน้าใส่รหัสของระบบนี้แล้ว */
+      localStorage.removeItem('mc:sso'); await endSession();
+      location.replace(D3ONE_URL);
     });
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot);
