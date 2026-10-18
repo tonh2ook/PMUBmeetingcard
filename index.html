@@ -438,6 +438,8 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .rel-list{display:flex;flex-direction:column;gap:2px;min-width:0}
 .rel{display:flex;gap:10px;align-items:center;padding:9px 12px;border-radius:var(--r-s);text-align:left;width:100%;min-width:0;font-size:14px}
 .rel:hover{background:var(--wash-2)}
+.rel .av.pp{border-radius:50%;overflow:hidden}
+.rel .av.pp img{width:100%;height:100%;object-fit:cover;display:block}
 .rel .av{width:32px;height:32px;border-radius:9px;background:var(--wash-2);color:var(--navy);display:grid;place-items:center;font-size:12.5px;font-weight:600;flex-shrink:0}
 .rel .r-b{flex:1;min-width:0}
 .rel .r-b b{font-weight:500;display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1843,7 +1845,7 @@ function selOpts(set,val,withAll){
 
 /* ---------------- language ---------------- */
 /* Bump both on every release, so it is obvious which copy a device is running. */
-const APP_VERSION = '7.7';
+const APP_VERSION = '7.8';
 const APP_BUILD   = '2026-10-05';
 function renderVersion(){
   const el = document.getElementById('app-ver'); if(!el) return;
@@ -2567,10 +2569,18 @@ const REL = {
   cFollowups:    id => DB.followups.filter(f=>f.contactId===id),
   pMeetings:     id => DB.meetings.filter(m=>(m.participantIds||[]).includes(id)).sort((a,b)=>String(b.date).localeCompare(String(a.date)))
 };
+/* 7.8: แสดงรูปบุคคลในรายการที่เกี่ยวข้อง (ถ้ามีรูป) — ส่ง avP(rec) แทนตัวอักษรย่อ */
+function avP(rec){ return {photo: personPhotoId(rec), txt: initials(personName(rec))}; }
+let RR_T = 0;
 function relRow(hash, title, sub, av, right){
   /* Shortened on screen with the full text kept in the tooltip, so nothing is lost. */
   const full = [title, sub].filter(Boolean).join(' · ');
-  return '<button class="rel" onclick="go(\''+hash+'\')" title="'+esc(full)+'"><span class="av">'+esc(av)+'</span>'
+  let avHtml;
+  if(av && typeof av==='object'){
+    avHtml = '<span class="av pp"'+(av.photo?' data-photo="'+esc(av.photo)+'"':'')+'>'+esc(av.txt||'')+'</span>';
+    if(av.photo && !RR_T) RR_T = setTimeout(()=>{ RR_T=0; loadPhotos(); }, 0);
+  } else avHtml = '<span class="av">'+esc(av)+'</span>';
+  return '<button class="rel" onclick="go(\''+hash+'\')" title="'+esc(full)+'">'+avHtml
     + '<span class="r-b"><b>'+esc(title)+'</b><small>'+esc(sub||'')+'</small></span>'+(right||'')+'</button>';
 }
 function relCard(titleKey, rowsHtml, ctaHtml){
@@ -2696,10 +2706,10 @@ function meetingDetail(el,id){
   h += '</div><div>';
 
   h += relCard('g.relatedParticipants', ps.map(p=>
-        relRow('#/participants/'+p.id, personName(p), [p.position,p.division].filter(Boolean).join(' · '), initials(personName(p)))).join(''));
+        relRow('#/participants/'+p.id, personName(p), [p.position,p.division].filter(Boolean).join(' · '), avP(p))).join(''));
 
   h += relCard('g.relatedContacts', cs.map(c=>
-        relRow('#/contacts/'+c.id, personName(c), [c.position,c.org].filter(Boolean).join(' · '), initials(personName(c)))).join(''));
+        relRow('#/contacts/'+c.id, personName(c), [c.position,c.org].filter(Boolean).join(' · '), avP(c))).join(''));
 
   h += relCard('g.relatedCards', cards.map(c=>
         relRow('#/cards/'+c.id, c.name||t('b.title'), [c.position,c.org].filter(Boolean).join(' · ')||fmtDate(c.received), '▤',
@@ -3031,7 +3041,7 @@ function followupDetail(el,id){
   h += attachSection('followups', f);
   h += '</div><div>';
   h += relCard('g.relatedMeetings', mt?relRow('#/meetings/'+mt.id, mt.title, fmtMeetingDate(mt), initials(mt.title), statusChip('mStatus',mt.status)):'');
-  h += relCard('g.relatedContacts', ct?relRow('#/contacts/'+ct.id, personName(ct), [ct.position,ct.org].filter(Boolean).join(' · '), initials(personName(ct))):'');
+  h += relCard('g.relatedContacts', ct?relRow('#/contacts/'+ct.id, personName(ct), [ct.position,ct.org].filter(Boolean).join(' · '), avP(ct)):'');
   const n=[];
   if(f.createdAt) n.push({when:fmtDateTime(f.createdAt), what:t('g.created'), c:'var(--ink-3)'});
   if(mt) n.push({when:fmtMeetingDate(mt), what:mt.title, note:t('nav.meetings'), hash:'#/meetings/'+mt.id, c:'var(--navy)'});
@@ -4641,10 +4651,10 @@ VIEWS.tags = function(el, raw){
       statusChip('mStatus',m.status))).join(''));
   if(c.participants.length) h += relCard('nav.participants', c.participants.map(p=>
     relRow('#/participants/'+p.id, personName(p), [p.position,p.division,p.org].filter(Boolean).join(' · '),
-      initials(personName(p)))).join(''));
+      avP(p))).join(''));
   if(c.contacts.length) h += relCard('nav.contacts', c.contacts.map(x=>
     relRow('#/contacts/'+x.id, personName(x), [x.position,x.org].filter(Boolean).join(' · '),
-      initials(personName(x)))).join(''));
+      avP(x))).join(''));
   if(c.followups.length) h += relCard('nav.followups', c.followups.map(f=>
     relRow('#/followups/'+f.id, f.title, f.due?fmtDate(f.due):t('g.none'), initials(f.title),
       statusChip('fStatus',f.status))).join(''));
