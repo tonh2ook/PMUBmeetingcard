@@ -1846,7 +1846,7 @@ function selOpts(set,val,withAll){
 
 /* ---------------- language ---------------- */
 /* Bump both on every release, so it is obvious which copy a device is running. */
-const APP_VERSION = '7.9';
+const APP_VERSION = '7.10';
 const APP_BUILD   = '2026-10-05';
 function renderVersion(){
   const el = document.getElementById('app-ver'); if(!el) return;
@@ -1958,7 +1958,8 @@ async function unlock(){
   await loadAll();
   if(localStorage.getItem('mc:sso')==='1'){          /* เข้ามาจาก D3-One */
     let ch=false;
-    if(!SECRETS.ghToken && d3oneToken()){ SECRETS.ghToken=d3oneToken(); ch=true; }
+    /* ใช้ token จาก D3-One เสมอ: token เก่าที่ค้างในเครื่อง (หมดอายุ/ถูกเปลี่ยน) ทำให้ซิงก์ขึ้น 401 */
+    if(d3oneToken() && SECRETS.ghToken!==d3oneToken()){ SECRETS.ghToken=d3oneToken(); ch=true; }
     if(!SECRETS.gistId && MC_DEFAULT_GIST){ SECRETS.gistId=MC_DEFAULT_GIST; ch=true; }
     if(ch) await saveSecrets();
     const dl=d3oneLang(); if(dl) DB.settings.lang=dl;
