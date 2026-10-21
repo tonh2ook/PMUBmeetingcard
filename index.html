@@ -6,7 +6,7 @@
 <title>PMU-B MeetingCard — ระบบเก็บข้อมูลการติดต่อเครือข่ายต่างประเทศ</title>
 <meta name="description" content="PMU-B MeetingCard — International Network Contact Database. ระบบเก็บข้อมูลการติดต่อเครือข่ายต่างประเทศ สำหรับบันทึกการประชุม ผู้เข้าร่วม ผู้ติดต่อภายนอก นามบัตร และงานติดตาม">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#0B2E58">
+<meta name="theme-color" content="#141C3A">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob: https://flagcdn.com; connect-src 'self' https://api.anthropic.com https://api.github.com https://gist.githubusercontent.com; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png?v=2">
@@ -25,7 +25,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{
-  --navy:#0B2E58; --navy-2:#123E75; --navy-3:#1B5296;
+  /* โทนน้ำเงินเข้มชุดเดียวกับ D3-One ใช้ทุกระบบ */
+  --navy:#141C3A; --navy-2:#2A3352; --navy-3:#3156D3;
   --teal:#0F9E9E; --teal-2:#16C0BC; --teal-soft:#E4F5F4;
   --orange:#EF6C1F; --orange-soft:#FDEEE4;
   --ink:#12213A; --ink-2:#41536E; --ink-3:#75859C;
@@ -34,9 +35,9 @@
   --ok:#16875A; --ok-soft:#E4F3EC;
   --warn:#B7791F; --warn-soft:#FBF2E0;
   --bad:#C0392B; --bad-soft:#FBEAE7;
-  --shadow-s:0 1px 2px rgba(11,46,88,.06),0 1px 3px rgba(11,46,88,.05);
-  --shadow-m:0 4px 14px rgba(11,46,88,.09);
-  --shadow-l:0 18px 48px rgba(11,46,88,.20);
+  --shadow-s:0 1px 2px rgba(20,28,58,.06),0 1px 3px rgba(20,28,58,.05);
+  --shadow-m:0 4px 14px rgba(20,28,58,.09);
+  --shadow-l:0 18px 48px rgba(20,28,58,.20);
   --r-s:8px; --r-m:12px; --r-l:18px;
   --rail:236px;
   --fs:15px;
@@ -71,7 +72,7 @@ a:hover{text-decoration:underline}
   background:
     radial-gradient(900px 460px at 12% 96%, rgba(22,192,188,.30), transparent 62%),
     radial-gradient(620px 420px at 96% 6%, rgba(239,108,31,.24), transparent 60%),
-    linear-gradient(160deg,#0B2E58 0%,#08234A 100%);
+    linear-gradient(160deg,#141C3A 0%,#0E142B 100%);
   z-index:0;
 }
 .lg-art>*{position:relative;z-index:1}
@@ -214,7 +215,7 @@ a:hover{text-decoration:underline}
 .chip-ok{background:var(--ok-soft);color:var(--ok)}
 .chip-warn{background:var(--warn-soft);color:var(--warn)}
 .chip-bad{background:var(--bad-soft);color:var(--bad)}
-.chip-navy{background:#E6EDF7;color:var(--navy-2)}
+.chip-navy{background:#E6ECFD;color:var(--navy-2)}
 .chip button{margin-left:2px;opacity:.6;line-height:1;font-size:15px}
 .chip button:hover{opacity:1}
 .chip-link{cursor:pointer;border:0;font-family:inherit}
@@ -476,7 +477,7 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .att small{color:var(--ink-3);font-size:12.5px;white-space:nowrap}
 
 /* ---------- MODAL ---------- */
-.scrim{position:fixed;inset:0;background:rgba(11,33,58,.52);z-index:90;display:none;padding:24px;overflow-y:auto;backdrop-filter:blur(2px)}
+.scrim{position:fixed;inset:0;background:rgba(20,28,58,.52);z-index:90;display:none;padding:24px;overflow-y:auto;backdrop-filter:blur(2px)}
 .scrim.on{display:flex;align-items:flex-start;justify-content:center}
 .modal{background:var(--paper);border-radius:var(--r-l);width:100%;max-width:660px;box-shadow:var(--shadow-l);margin:auto;animation:pop .18s ease}
 .modal.wide{max-width:940px}
@@ -498,7 +499,7 @@ td small{color:var(--ink-3);display:block;font-size:12.5px}
 .toast.ok{background:var(--ok)}
 
 /* ---------- MOBILE ---------- */
-.scrim-nav{position:fixed;inset:0;background:rgba(11,33,58,.45);z-index:55;display:none}
+.scrim-nav{position:fixed;inset:0;background:rgba(20,28,58,.45);z-index:55;display:none}
 .scrim-nav.on{display:block}
 @media(max-width:960px){
   .rail{transform:translateX(-100%);transition:transform .22s ease}
@@ -1845,7 +1846,7 @@ function selOpts(set,val,withAll){
 
 /* ---------------- language ---------------- */
 /* Bump both on every release, so it is obvious which copy a device is running. */
-const APP_VERSION = '7.8';
+const APP_VERSION = '7.9';
 const APP_BUILD   = '2026-10-05';
 function renderVersion(){
   const el = document.getElementById('app-ver'); if(!el) return;
@@ -2469,9 +2470,9 @@ VIEWS.dashboard = function(el){
 
   /* numbers and what is coming on the left, the month beside them on the right */
   h += '<div class="dash-top"><div class="dash-col"><div class="kpis">'
-    + kpi('#0B2E58', t('dash.kMeetings'), DB.meetings.length, t('dash.thisMonth',{n:thisMonth}), '#/meetings')
+    + kpi('#141C3A', t('dash.kMeetings'), DB.meetings.length, t('dash.thisMonth',{n:thisMonth}), '#/meetings')
     + kpi('#0F9E9E', t('dash.kUpcoming'), upcoming.length, t('dash.upcoming'), '#/meetings')
-    + kpi('#123E75', t('dash.kContacts'), DB.contacts.length, t('nav.contacts'), '#/contacts')
+    + kpi('#3156D3', t('dash.kContacts'), DB.contacts.length, t('nav.contacts'), '#/contacts')
     + kpi('#EF6C1F', t('dash.kCards'), toReview.length, t('dash.needReview'), '#/cards')
     + kpi('#B7791F', t('dash.kOpen'), openFu.length, t('dash.dueSoon')+': '+dueSoon, '#/followups')
     + kpi('#C0392B', t('dash.kOverdue'), overdue.length, t('f.overdue'), '#/followups')
